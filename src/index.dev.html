@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pixel Wars</title>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <!-- Engine -->
+  <script src="engine.js"></script>
+  <script src="engine/entities.js"></script>
+  <script src="engine/systems.js"></script>
+  <script src="engine/input.js"></script>
+  <!-- Game -->
+  <script src="game.js"></script>
+  <script src="game/components.js"></script>
+  <script src="game/systems.js"></script>
+  <script src="game/main.js"></script>
+  <script>
+    game.Pixelwars.init(document.getElementById('c'));
+    game.Pixelwars.run();
+  </script>
+</body>
+</html>
