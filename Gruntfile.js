@@ -16,7 +16,8 @@ module.exports = function(grunt) {
       dist: {
         options: {
           archive: 'dist/pixelwars.zip',
-          mode: 'zip'
+          mode: 'zip',
+          level: 9
         },
         files: [
           {expand: true, cwd: 'dist/', src: ['*.min.js']},
@@ -36,6 +37,7 @@ module.exports = function(grunt) {
       dist: {
         options: {
           hoist_funs: false,
+          report: 'min'
         },
         files: {
           'dist/engine.min.js': ['dist/engine.js'],
