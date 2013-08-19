@@ -6,6 +6,7 @@
   game.Pixelwars = {
     init: function(canvas) {
       SystemManager.register(new game.MovementSystem());
+      SystemManager.register(new game.RenderingSystem(canvas));
     },
     run: function() {
       SystemManager.start();

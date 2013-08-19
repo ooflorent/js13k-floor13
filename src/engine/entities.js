@@ -69,13 +69,14 @@
      * @param {String} component name
      */
     add: function(entity, component, name) {
-      entitiesToComponents[entity][name] = component;
-
       if (!componentsToEntities[name]) {
         componentsToEntities[name] = [];
       }
 
       componentsToEntities[name][entity] = true;
+      entitiesToComponents[entity][name] = component;
+
+      engine.EventManager.emit('componentAdded', entity, component, name);
     },
     /**
      * Remove a component from the specified entity.
@@ -84,6 +85,8 @@
      * @param {String} component name
      */
     remove: function(entity, name) {
+      engine.EventManager.emit('componentRemoved', entity, entitiesToComponents[entity][name], name);
+
       delete entitiesToComponents[entity][name];
       delete componentsToEntities[name][entity];
     },

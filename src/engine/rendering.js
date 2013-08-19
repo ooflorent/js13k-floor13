@@ -4,22 +4,21 @@
   // Renderer
   // --------
 
-  function Renderer(width, height) {
-    var view = document.createElement('canvas');
-    this.view = view;
-    this.context = view.getContext("2d");
-    this.width = view.width = width;
-    this.height = view.height = height;
+  function Renderer(width, height, canvas) {
+    this.ctx = canvas.getContext("2d");
+    this.w = canvas.width = width;
+    this.h = canvas.height = height;
   }
 
   Renderer.prototype.constructor = Renderer;
 
   Renderer.prototype.render = function(stage) {
-    if (this.view.style.backgroundColor !== stage.color) {
-      this.view.style.backgroundColor = stage.color;
-    }
-
     stage._update();
+
+    var ctx = this.ctx;
+    ctx.setTransform(1, 0, 0, 1);
+    ctx.clearRect(0, 0, this.w, this.h);
+
     this._renderObject(stage);
   };
 
@@ -91,7 +90,7 @@
   DisplayObjectContainer.prototype = Object.create(DisplayObject.prototype);
   DisplayObjectContainer.prototype.constructor = DisplayObjectContainer;
 
-  DisplayObjectContainer.prototype.addChild = function(child) {
+  DisplayObjectContainer.prototype.add = function(child) {
     if (child.parent !== null) {
       child.parent.removeChild(child);
     }
@@ -100,7 +99,7 @@
     child.parent = this;
   };
 
-  DisplayObjectContainer.prototype.removeChild = function(child) {
+  DisplayObjectContainer.prototype.remove = function(child) {
     var i = this.children.indexOf(child);
     if (i >= 0) {
       this.children.splice(i, 1);
@@ -127,9 +126,8 @@
   // Stage
   // -----
 
-  function Stage(color) {
+  function Stage() {
     DisplayObjectContainer.call(this);
-    this.color = color;
   }
 
   Stage.prototype = Object.create(DisplayObjectContainer.prototype);
