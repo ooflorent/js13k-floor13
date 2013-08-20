@@ -2,7 +2,8 @@
   'use strict';
 
   var currentId = 0;
-  var entities = {};
+  var entitiesToTags = {};
+  var tagsToEntities = {};
   var entitiesToComponents = {};
   var componentsToEntities = {};
 
@@ -13,7 +14,7 @@
    * @param {array} An array to compare values against
    * @return {array}
    */
-  var intersect = function(a, b) {
+  function intersect(a, b) {
     var results = [];
 
     var i = 0;
@@ -26,7 +27,7 @@
     }
 
     return results;
-  };
+  }
 
   /**
    * Manage entities.
@@ -42,7 +43,9 @@
       var id = currentId++;
       var tag = '$' + (name || id);
 
-      entities[id] = tag;
+      entitiesToTags[id] = tag;
+      tagsToEntities[tag] = id;
+
       entitiesToComponents[id] = {};
 
       return id;
@@ -59,7 +62,9 @@
         EntityManager.remove(entity, component);
       }
 
-      delete entities[id];
+      var tag = entitiesToTags[entity];
+      delete entitiesToTags[entity];
+      delete tagsToEntities[tag];
     },
     /**
      * Add a component to the specified entity.
@@ -91,6 +96,15 @@
       delete componentsToEntities[name][entity];
     },
     /**
+     * Get the entity with the specified tag.
+     *
+     * @param {String} entity tag
+     * @return {int} int
+     */
+    tag: function(tag) {
+      return tagsToEntities[tag];
+    },
+    /**
      * Get a component from the specified entity.
      *
      * @param {int} entity
@@ -99,6 +113,25 @@
      */
     get: function(entity, name) {
       return entitiesToComponents[entity][name];
+    },
+    /**
+     * Check if an entity matches the given components.
+     *
+     * @param {int} entity
+     * @param {String} component name
+     * @return {Boolean}
+     */
+    match: function(entity, components) {
+      var i = 0;
+      var n = components.length;
+
+      for (; i < n; i++) {
+        if (!entitiesToComponents[entity][name]) {
+          return false;
+        }
+      }
+
+      return true;
     },
     /**
      * Get entities with specified components.
