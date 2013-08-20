@@ -28,7 +28,7 @@
     }
 
     if (object instanceof DisplayContainer) {
-      var children = object.children;
+      var children = object._c;
       var i = 0;
       var n = children.length;
 

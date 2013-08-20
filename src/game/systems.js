@@ -1,44 +1,33 @@
 (function (game, engine) {
   'use strict';
 
-  var EntityManager = engine.EntityManager;
-  var EventManager = engine.EventManager;
   var Position = game.Position;
   var Motion = game.Motion;
   var Display = game.Display;
 
   game.MovementSystem = function() {
-    this.update = function(elapsed) {
-      var entities = EntityManager.filter(Position.name, Motion.name);
-      var i = 0;
-      var n = entities.length;
+    engine.IteratingSystem.call(this, [Position.name, Motion.name], function(entity, elapsed) {
+      var position = game.c(entity, Position.name);
+      var motion = game.c(entity, Motion.name);
 
-      for (; i < n; i++) {
-        var position = EntityManager.get(entities[i], Position.name);
-        var motion = EntityManager.get(entities[i], Motion.name);
-
-        position.x = elapsed * motion.dx;
-        position.y = elapsed * motion.dy;
-      }
-    };
+      position.x = elapsed * motion.dx;
+      position.y = elapsed * motion.dy;
+    });
   };
 
   game.RenderingSystem = function(canvas) {
+    engine.System.call(this, [Position.name, Display.name]);
+
     var renderer = new engine.Renderer(960, 720, canvas);
     var stage = new engine.Stage();
-    var previousEntities = [];
 
-    EventManager.add('componentAdded', function(entity, name, component) {
-      if (name === Display.name) {
-        stage.add(component.gfx);
-      }
-    });
+    this.add = function(entity) {
+      stage.add(game.c(entity, Display.name).gfx);
+    };
 
-    EventManager.add('componentRemoved', function(entity, name, component) {
-      if (name === Display.name) {
-        stage.remove(component.gfx);
-      }
-    });
+    this.remove = function(entity) {
+      stage.remove(game.c(entity, Display.name).gfx);
+    };
 
     this.update = function(elapsed) {
       renderer.render(stage);

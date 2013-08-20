@@ -1,8 +1,29 @@
-(function(global) {
+(function(window, engine) {
   'use strict';
 
-  global.game = {
-    debug: false
+  var Input = engine.Input;
+  var EventManager = engine.EventManager;
+  var EntityManager = engine.EntityManager;
+  var SystemManager = engine.SystemManager;
+
+  window.game = {
+    debug: false,
+
+    evt: EventManager,
+    em: EntityManager,
+    sm: SystemManager,
+
+    // EntityManager shortcuts
+    e: EntityManager.create,
+    c: EntityManager.get,
+    f: EntityManager.filter,
+    m: EntityManager.match,
+
+    // SystemManager shortcuts
+    r: SystemManager.register,
+
+    // Input shortcuts
+    k: Input.get
   };
 
-})(window);
+})(window, engine);
