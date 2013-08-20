@@ -8,6 +8,13 @@
 </head>
 <body>
   <canvas id="c"></canvas>
+  <!-- Constants -->
+  <script src="../dist/constants.js"></script>
+  <script>
+    for (var c in __PW_CONSTANTS) {
+      window['__PW_' + c] = __PW_CONSTANTS[c];
+    }
+  </script>
   <!-- Engine -->
   <script src="engine.js"></script>
   <script src="engine/entities.js"></script>

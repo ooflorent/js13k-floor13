@@ -7,8 +7,7 @@
   var SystemManager = engine.SystemManager;
 
   window.game = {
-    debug: false,
-
+    // Managers
     evt: EventManager,
     em: EntityManager,
     sm: SystemManager,

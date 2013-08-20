@@ -1,5 +1,12 @@
 module.exports = function(grunt) {
 
+  var processedConstants = Object.create(null);
+  var rawConstants = grunt.file.readJSON('src/constants.json');
+
+  for (var c in rawConstants) {
+    processedConstants['__PW_' + c] = rawConstants[c];
+  }
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     clean: {
@@ -31,13 +38,26 @@ module.exports = function(grunt) {
           'dist/engine.js': ['src/engine.js', 'src/engine/*.js'],
           'dist/game.js': ['src/game.js', 'src/game/*.js']
         }
+      },
+      dev: {
+        options: {
+          process: function(src) {
+            return 'var __PW_CONSTANTS = ' + src;
+          }
+        },
+        files: {
+          'dist/constants.js': ['src/constants.json']
+        }
       }
     },
     uglify: {
       dist: {
         options: {
           hoist_funs: false,
-          report: 'min'
+          report: 'min',
+          compress: {
+            global_defs: processedConstants
+          }
         },
         files: {
           'dist/engine.min.js': ['dist/engine.js'],
@@ -66,7 +86,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('dev', ['jshint']);
+  grunt.registerTask('dev', ['jshint', 'concat:dev']);
   grunt.registerTask('package', ['jshint', 'clean', 'concat', 'uglify', 'htmlmin', 'compress']);
 
   grunt.registerTask('default', ['package']);
