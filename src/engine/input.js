@@ -40,22 +40,20 @@
 
   // Listen `keypress` events
   addDocumentListener('keypress', function(e) {
-    var key = e.keyCode;
-    if (capture.indexOf(key) >= 0) {
+    if (capture.indexOf(e.keyCode) >= 0) {
       e.preventDefault();
     }
 
-    active[key] = true;
+    active[e.keyCode] = true;
   });
 
   // Listen `keyup` events
   addDocumentListener('keyup', function(e) {
-    var key = e.keyCode;
-    if (capture.indexOf(key) >= 0) {
+    if (capture.indexOf(e.keyCode) >= 0) {
       e.preventDefault();
     }
 
-    active[key] = false;
+    active[e.keyCode] = false;
   });
 
   engine.Input = Input;

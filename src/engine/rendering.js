@@ -1,4 +1,4 @@
-(function (engine, document) {
+(function (engine) {
   'use strict';
 
   // Renderer
@@ -10,9 +10,10 @@
     this.h = canvas.height = height;
   }
 
-  Renderer.prototype.constructor = Renderer;
+  var RendererPrototype = Renderer.prototype;
+  RendererPrototype.constructor = Renderer;
 
-  Renderer.prototype.render = function(stage) {
+  RendererPrototype.render = function(stage) {
     stage._update();
 
     var ctx = this.ctx;
@@ -22,7 +23,7 @@
     this._renderObject(stage);
   };
 
-  Renderer.prototype._renderObject = function(object) {
+  RendererPrototype._renderObject = function(object) {
     if (!object.visible || !object._a) {
       return;
     }
@@ -48,7 +49,7 @@
     }
   };
 
-  Renderer.prototype._renderGraphics = function(graphics) {
+  RendererPrototype._renderGraphics = function(graphics) {
   };
 
   // DisplayObject
@@ -66,9 +67,10 @@
     this._p = null;
   }
 
-  DisplayObject.prototype.constructor = DisplayObject;
+  var DisplayObjectPrototype = DisplayObject.prototype;
+  DisplayObjectPrototype.constructor = DisplayObject;
 
-  DisplayObject.prototype._update = function() {
+  DisplayObjectPrototype._update = function() {
     var parent = this._p;
 
     // Calculate effective position
@@ -87,10 +89,10 @@
     this._c = [];
   }
 
-  DisplayContainer.prototype = Object.create(DisplayObject.prototype);
-  DisplayContainer.prototype.constructor = DisplayContainer;
+  var DisplayContainerPrototype = DisplayContainer.prototype = Object.create(DisplayObjectPrototype);
+  DisplayContainerPrototype.constructor = DisplayContainer;
 
-  DisplayContainer.prototype.add = function(child) {
+  DisplayContainerPrototype.add = function(child) {
     if (child._p) {
       child._p.remove(child);
     }
@@ -99,7 +101,7 @@
     child._p = this;
   };
 
-  DisplayContainer.prototype.remove = function(child) {
+  DisplayContainerPrototype.remove = function(child) {
     var children = this._c;
     var i = children.indexOf(child);
     if (i >= 0) {
@@ -108,18 +110,17 @@
     }
   };
 
-  DisplayContainer.prototype._update = function() {
+  DisplayContainerPrototype._update = function() {
     if (!this.visible || !this._a) {
       return;
     }
 
-    DisplayObject._update.call(this);
+    DisplayObjectPrototype._update.call(this);
 
     var children = this._c;
-    var i = 0;
-    var n = children.length;
+    var i = children.length;
 
-    for (; i < n; i++) {
+    for (; i--;) {
       children[i]._update();
     }
   };
@@ -131,15 +132,14 @@
     DisplayContainer.call(this);
   }
 
-  Stage.prototype = Object.create(DisplayContainer.prototype);
-  Stage.prototype.constructor = Stage;
+  var StagePrototype = Stage.prototype = Object.create(DisplayContainerPrototype);
+  StagePrototype.constructor = Stage;
 
-  Stage.prototype._update = function() {
+  StagePrototype._update = function() {
     var children = this._c;
-    var i = 0;
-    var n = children.length;
+    var i = children.length;
 
-    for (; i < n; i++) {
+    for (; i--;) {
       children[i]._update();
     }
   };
@@ -152,4 +152,4 @@
   engine.DisplayContainer = DisplayContainer;
   engine.Stage = Stage;
 
-})(engine, document);
+})(engine);

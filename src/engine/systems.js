@@ -24,7 +24,7 @@
       systems.push(system);
     },
     start: function() {
-      if (requestID === -1) {
+      if (requestID == -1) {
         var previousTime = +new Date();
         var update = function(timestamp) {
           var tmp = previousTime;
@@ -37,7 +37,7 @@
       }
     },
     stop: function() {
-      if (requestID !== -1) {
+      if (requestID != -1) {
         cancelAnimationFrame(requestID);
         requestID = -1;
       }
@@ -65,12 +65,11 @@
     System.call(this, components);
 
     this.update = function(elapsed) {
-      var e = EntityManager.filter(components);
-      var i = 0;
-      var n = e.length;
+      var entities = EntityManager.filter(components);
+      var i = entities.length;
 
-      for (; i < n; i++) {
-        onUpdate.call(this, e[i], elapsed);
+      for (; i--;) {
+        onUpdate(entities[i], elapsed);
       }
     };
   }

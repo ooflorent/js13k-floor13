@@ -34,6 +34,11 @@ module.exports = function(grunt) {
     },
     concat: {
       dist: {
+        options: {
+          process: function(src) {
+            return src.replace(/('use strict'|"use strict");/g, '');
+          }
+        },
         files: {
           'dist/engine.js': ['src/engine.js', 'src/engine/*.js'],
           'dist/game.js': ['src/game.js', 'src/game/*.js']

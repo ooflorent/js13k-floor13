@@ -17,10 +17,7 @@
   function intersect(a, b) {
     var results = [];
 
-    var i = 0;
-    var n = a.length;
-
-    for (; i < n; i++) {
+    for (var i = a.length; i--;) {
       if (b.indexOf(a[i]) >= 0) {
         results.push(a[i]);
       }
@@ -122,11 +119,8 @@
      * @return {Boolean}
      */
     match: function(entity, components) {
-      var i = 0;
-      var n = components.length;
-
-      for (; i < n; i++) {
-        if (!entitiesToComponents[entity][name]) {
+      for (var i = components.length; i--;) {
+        if (!entitiesToComponents[entity][components[i]]) {
           return false;
         }
       }
@@ -141,7 +135,7 @@
     filter: function() {
       var entities = Object.keys(componentsToEntities[arguments[0]] || {});
 
-      for (var i = 0; i < arguments.length; i++) {
+      for (var i = 1; i < arguments.length; i++) {
         entities = intersect(entities, Object.keys(componentsToEntities[arguments[i]] || {}));
       }
 
