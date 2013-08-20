@@ -23,6 +23,12 @@
     register: function(system) {
       systems.push(system);
     },
+    init: function() {
+      var i = systems.length;
+      for (; i--;) {
+        systems[i].init();
+      }
+    },
     start: function() {
       if (requestID == -1) {
         var previousTime = +new Date();
@@ -53,6 +59,7 @@
   };
 
   function System(components) {
+    this.init = function() {};
     this.add = function(entity) {};
     this.remove = function(entity) {};
     this.update = function(elapsed) {};

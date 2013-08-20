@@ -7,6 +7,7 @@
       game.r(new game.RenderingSystem(canvas));
     },
     run: function() {
+      game.sm.init();
       game.sm.start();
     }
   };
