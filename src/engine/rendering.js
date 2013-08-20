@@ -5,7 +5,7 @@
   // --------
 
   function Renderer(width, height, canvas) {
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas.getContext('2d');
     this.w = canvas.width = width;
     this.h = canvas.height = height;
   }
@@ -23,11 +23,11 @@
   };
 
   Renderer.prototype._renderObject = function(object) {
-    if (!object.visible || object._alpha === 0) {
+    if (!object.visible || !object._a) {
       return;
     }
 
-    if (object instanceof DisplayObjectContainer) {
+    if (object instanceof DisplayContainer) {
       var children = object.children;
       var i = 0;
       var n = children.length;
@@ -59,62 +59,63 @@
     this.y = 0;
     this.alpha = 1;
     this.visible = true;
-    this.parent = null;
 
     this._x = 0;
     this._y = 0;
-    this._alpha = 1;
+    this._a = 1;
+    this._p = null;
   }
 
   DisplayObject.prototype.constructor = DisplayObject;
 
   DisplayObject.prototype._update = function() {
-    var parent = this.parent;
+    var parent = this._p;
 
     // Calculate effective position
     this._x = parent._x + this.x;
     this._y = parent._y + this.y;
 
     // Calculate effective alpha
-    this._alpha = this.alpha * parent._alpha;
+    this._a = this.alpha * parent._a;
   };
 
-  // DisplayObjectContainer
-  // ----------------------
+  // DisplayContainer
+  // ----------------
 
-  function DisplayObjectContainer() {
+  function DisplayContainer() {
     DisplayObject.call(this);
-    this.children = [];
+    this._c = [];
   }
 
-  DisplayObjectContainer.prototype = Object.create(DisplayObject.prototype);
-  DisplayObjectContainer.prototype.constructor = DisplayObjectContainer;
+  DisplayContainer.prototype = Object.create(DisplayObject.prototype);
+  DisplayContainer.prototype.constructor = DisplayContainer;
 
-  DisplayObjectContainer.prototype.add = function(child) {
-    if (child.parent !== null) {
-      child.parent.removeChild(child);
+  DisplayContainer.prototype.add = function(child) {
+    if (child._p) {
+      child._p.remove(child);
     }
 
-    this.children.push(child);
-    child.parent = this;
+    this._c.push(child);
+    child._p = this;
   };
 
-  DisplayObjectContainer.prototype.remove = function(child) {
-    var i = this.children.indexOf(child);
+  DisplayContainer.prototype.remove = function(child) {
+    var children = this._c;
+    var i = children.indexOf(child);
     if (i >= 0) {
-      this.children.splice(i, 1);
-      child.parent = null;
+      children.splice(i, 1);
+      child._p = null;
     }
   };
 
-  DisplayObjectContainer.prototype._update = function() {
-    if (!this.visible) {
+  DisplayContainer.prototype._update = function() {
+    if (!this.visible || !this._a) {
       return;
     }
 
     DisplayObject._update.call(this);
 
-    var children = this.children;
+    var children = this._c;
     var i = 0;
     var n = children.length;
 
@@ -127,14 +128,14 @@
   // -----
 
   function Stage() {
-    DisplayObjectContainer.call(this);
+    DisplayContainer.call(this);
   }
 
-  Stage.prototype = Object.create(DisplayObjectContainer.prototype);
+  Stage.prototype = Object.create(DisplayContainer.prototype);
   Stage.prototype.constructor = Stage;
 
   Stage.prototype._update = function() {
-    var children = this.children;
+    var children = this._c;
     var i = 0;
     var n = children.length;
 
@@ -148,7 +149,7 @@
 
   engine.Renderer = Renderer;
   engine.DisplayObject = DisplayObject;
-  engine.DisplayObjectContainer = DisplayObjectContainer;
+  engine.DisplayContainer = DisplayContainer;
   engine.Stage = Stage;
 
 })(engine, document);

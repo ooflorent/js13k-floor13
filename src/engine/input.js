@@ -12,18 +12,18 @@
      * Specify keys to capture.
      * Capturing a key stops the default behavior.
      *
-     * @param {int[]} keys
+     * @param {int[]} key codes
      */
-    capture: function(keys) {
-      capture = keys;
+    keys: function(codes) {
+      capture = codes;
     },
     /**
      * Get the state of the specified key.
      *
-     * @param {int} code
+     * @param {int} key code
      * @return {Boolean}
      */
-    key: function(code) {
+    get: function(code) {
       return !!active[code];
     }
   };
@@ -34,12 +34,12 @@
    * @param {String} event name
    * @param {Function} listener
    */
-  var bind = function(name, listener) {
+  function addDocumentListener(name, listener) {
     document.addEventListener(name, listener, false);
-  };
+  }
 
   // Listen `keypress` events
-  bind('keypress', function(e) {
+  addDocumentListener('keypress', function(e) {
     var key = e.keyCode;
     if (capture.indexOf(key) >= 0) {
       e.preventDefault();
@@ -49,7 +49,7 @@
   });
 
   // Listen `keyup` events
-  bind('keyup', function(e) {
+  addDocumentListener('keyup', function(e) {
     var key = e.keyCode;
     if (capture.indexOf(key) >= 0) {
       e.preventDefault();

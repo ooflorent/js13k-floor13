@@ -1,7 +1,7 @@
-(function(global) {
+(function(window) {
   'use strict';
 
-  global.engine = {
+  window.engine = {
     debug: false
   };
 
