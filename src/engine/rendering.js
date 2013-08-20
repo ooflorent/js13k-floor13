@@ -30,10 +30,9 @@
 
     if (object instanceof DisplayContainer) {
       var children = object._c;
-      var i = 0;
-      var n = children.length;
+      var i = children.length;
 
-      for (; i < n; i++) {
+      while (i--) {
         this._renderObject(children[i]);
       }
 
@@ -49,8 +48,7 @@
     }
   };
 
-  RendererPrototype._renderGraphics = function(graphics) {
-  };
+  RendererPrototype._renderGraphics = function(graphics) {};
 
   // DisplayObject
   // -------------
@@ -120,7 +118,7 @@
     var children = this._c;
     var i = children.length;
 
-    for (; i--;) {
+    while (i--) {
       children[i]._update();
     }
   };
@@ -139,7 +137,7 @@
     var children = this._c;
     var i = children.length;
 
-    for (; i--;) {
+    while (i--) {
       children[i]._update();
     }
   };

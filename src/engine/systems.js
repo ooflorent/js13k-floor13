@@ -21,11 +21,11 @@
 
   var SystemManager = {
     register: function(system) {
-      systems.push(system);
+      systems.unshift(system);
     },
     init: function() {
       var i = systems.length;
-      for (; i--;) {
+      while (i--) {
         systems[i].init();
       }
     },
@@ -49,10 +49,8 @@
       }
     },
     update: function(elapsed) {
-      var i = 0;
-      var n = systems.length;
-
-      for (; i < n; i++) {
+      var i = systems.length;
+      while (i--) {
         systems[i].update(elapsed);
       }
     }
@@ -75,7 +73,7 @@
       var entities = EntityManager.filter(components);
       var i = entities.length;
 
-      for (; i--;) {
+      while (i--) {
         onUpdate(entities[i], elapsed);
       }
     };

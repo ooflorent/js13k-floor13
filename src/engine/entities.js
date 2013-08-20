@@ -16,8 +16,9 @@
    */
   function intersect(a, b) {
     var results = [];
+    var i = a.length;
 
-    for (var i = a.length; i--;) {
+    while (i--) {
       if (b.indexOf(a[i]) >= 0) {
         results.push(a[i]);
       }
@@ -119,7 +120,8 @@
      * @return {Boolean}
      */
     match: function(entity, components) {
-      for (var i = components.length; i--;) {
+      var i = components.length;
+      while (i--) {
         if (!entitiesToComponents[entity][components[i]]) {
           return false;
         }
