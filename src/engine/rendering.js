@@ -1,76 +1,82 @@
 (function (engine) {
   'use strict';
 
-  function setPixel(image, x, y, color) {
-    var i = (x + y * image.width) * 4;
-    var data = image.data;
-
-    data[i]     = 0xFF & (color >> 16);
-    data[i + 1] = 0xFF & (color >> 8);
-    data[i + 2] = 0xFF & (color);
-    data[i + 3] = 0xFF & (color >> 24);
+  function createCanvas() {
+    return document.createElement('canvas');
   }
 
-  // Buffer
-  // ------
-
-  function Buffer(width, height, scale, canvas) {
-    var rendererCanvas = document.createElement('canvas');
-    var renderer = new Renderer(width, height, rendererCanvas);
-
-    var w = canvas.width = width * scale;
-    var h = canvas.height = height * scale;
-
-    var ctx = canvas.getContext('2d');
-
-    var patternCanvas = document.createElement('canvas');
-
-    patternCanvas.width = patternCanvas.height = scale;
-    var patternCtx = patternCanvas.getContext('2d');
-    var patternData = patternCtx.createImageData(scale, scale);
-
-    var i;
-    var n = scale - 1;
-
-    setPixel(patternData, 0, 0, 0x33FFFFFF);
-    setPixel(patternData, n, n, 0x33000000);
-
-    for (i = 0; i < n; i++) {
-      setPixel(patternData, i, 0, 0x33E0E0E0);
-      setPixel(patternData, i, n, 0x33000000);
-    }
-
-    for (i = 0; i < n; i++) {
-      setPixel(patternData, 0, i, 0x33FFFFFF);
-      setPixel(patternData, n, i, 0x33000000);
-    }
-
-    patternCtx.putImageData(patternData, 0, 0);
-
-    var pattern = ctx.createPattern(patternCanvas, 'repeat');
-
-    this.render = function(stage) {
-      renderer.render(stage);
-
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.drawImage(rendererCanvas, 0, 0, w, h);
-      ctx.rect(0, 0, w, h);
-      ctx.fillStyle = pattern;
-      ctx.fill();
+  function toRGBA(color) {
+    return {
+      a: 0xFF & (color >> 24),
+      r: 0xFF & (color >> 16),
+      g: 0xFF & (color >> 8),
+      b: 0xFF & (color)
     };
+  }
+
+  function setPixel(imageData, x, y, color) {
+    var i = (x + y * imageData.width) * 4;
+    var data = imageData.data;
+    var rgba = toRGBA(color);
+
+    data[i]     = rgba.r;
+    data[i + 1] = rgba.g;
+    data[i + 2] = rgba.b;
+    data[i + 3] = rgba.a;
+  }
+
+  function blendOverlay(a, b) {
+    if (a > 128) {
+      return a - (255 - a) + b * (255 - a) / 128;
+    } else {
+      return b * a / 128;
+    }
   }
 
   // Renderer
   // --------
 
-  function Renderer(width, height, canvas) {
+  function Renderer(width, height, scale, canvas) {
     this.ctx = canvas.getContext('2d');
     this.w = canvas.width = width;
     this.h = canvas.height = height;
+    this.s = scale;
+    this.m = undefined;
   }
 
   var RendererPrototype = Renderer.prototype;
   RendererPrototype.constructor = Renderer;
+
+  RendererPrototype.mosaic = function() {
+    var patternCanvas = this.m;
+    if (!patternCanvas) {
+      var scale = this.s;
+
+      patternCanvas = this.m = createCanvas();
+      patternCanvas.width = patternCanvas.height = scale;
+
+      var patternCtx = patternCanvas.getContext('2d');
+      var patternData = patternCtx.createImageData(scale, scale);
+
+      var i;
+      var n = scale - 1;
+
+      setPixel(patternData, 0, 0, 0x33FFFFFF);
+      setPixel(patternData, n, n, 0x33000000);
+
+      for (i = 1; i < n; i++) {
+        setPixel(patternData, i, 0, 0x33E0E0E0);
+        setPixel(patternData, i, n, 0x33000000);
+      }
+
+      for (i = 1; i < n; i++) {
+        setPixel(patternData, 0, i, 0x33FFFFFF);
+        setPixel(patternData, n, i, 0x33000000);
+      }
+    }
+
+    return patternCanvas;
+  };
 
   RendererPrototype.render = function(stage) {
     stage._update();
@@ -98,20 +104,21 @@
       return;
     }
 
-    if (object instanceof Graphics) {
-      this.ctx.setTransform(1, 0, 0, 1, object._x, object._y);
-      this._renderGraphics(object);
-      return;
-    }
-  };
-
-  RendererPrototype._renderGraphics = function(graphics) {
     var ctx = this.ctx;
 
-    ctx.fillStyle = graphics._f;
-    ctx.strokeStyle = graphics._s;
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, object._x, object._y);
+    ctx.globalAlpha = object._a;
 
-    graphics._b(this.ctx);
+    if (object instanceof Sprite) {
+      ctx.drawImage(object._i, 0, 0);
+    } else if (object instanceof Graphics) {
+      ctx.fillStyle = object._f;
+      ctx.strokeStyle = object._s;
+      object._b(ctx);
+    }
+
+    ctx.restore();
   };
 
   // DisplayObject
@@ -155,6 +162,17 @@
 
   var GraphicsPrototype = Graphics.prototype = Object.create(DisplayObjectPrototype);
   GraphicsPrototype.constructor = Graphics;
+
+  // Sprite
+  // ------
+
+  function Sprite(image) {
+    DisplayObject.call(this);
+    this._i = image;
+  }
+
+  var SpritePrototype = Sprite.prototype = Object.create(DisplayObjectPrototype);
+  SpritePrototype.constructor = Sprite;
 
   // DisplayContainer
   // ----------------
@@ -222,11 +240,11 @@
   // exports
   // -------
 
-  engine.Buffer = Buffer;
   engine.Renderer = Renderer;
   engine.DisplayObject = DisplayObject;
   engine.DisplayContainer = DisplayContainer;
   engine.Graphics = Graphics;
+  engine.Sprite = Sprite;
   engine.Stage = Stage;
 
 })(engine);
