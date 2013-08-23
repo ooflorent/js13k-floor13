@@ -1,36 +1,42 @@
-(function (game, engine) {
-  'use strict';
+var MovementSystem = (function(_super) {
+  function MovementSystem() {
+    _super.call(this, [Position.name, Motion.name]);
+  }
 
-  var Position = game.Position;
-  var Motion = game.Motion;
-  var Display = game.Display;
-
-  game.MovementSystem = function() {
-    engine.IteratingSystem.call(this, [Position.name, Motion.name], function(entity, elapsed) {
-      var position = game.c(entity, Position.name);
-      var motion = game.c(entity, Motion.name);
+  extend(MovementSystem, _super);
+  define(MovementSystem.prototype, {
+    onUpdate: function(entity, elapsed) {
+      var position = Pixelwars.c(entity, Position.name);
+      var motion = Pixelwars.c(entity, Motion.name);
 
       position.x = elapsed * motion.dx;
       position.y = elapsed * motion.dy;
-    });
-  };
+    }
+  });
 
-  game.RenderingSystem = function(canvas) {
-    engine.System.call(this, [Position.name, Display.name]);
+  return MovementSystem;
+})(IteratingSystem);
 
-    var renderer = new engine.Buffer(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas);
-    var stage = new engine.Stage();
+var RenderingSystem = (function(_super) {
+  function RenderingSystem(canvas) {
+    _super.call(this, [Position.name, Display.name]);
+    this.canvas = canvas;
+  }
 
-    this.init = function() {
-
+  extend(RenderingSystem, _super);
+  define(RenderingSystem.prototype, {
+    init: function() {
       function gfx(x, y, pattern) {
-        var g = new engine.Graphics(game.Patterns[pattern.charCodeAt(0)], '#f00', '#f00');
+        var g = new Graphics(Patterns[pattern.charCodeAt(0)], '#f00');
         g.x = x * 10;
         g.y = y * 10;
 
         return g;
       }
 
+      Buffer.init(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, this.canvas);
+
+      var stage = Buffer.stage;
       stage.add(gfx(1, 1, '╔'));
       stage.add(gfx(2, 1, '═'));
       stage.add(gfx(3, 1, '╦'));
@@ -60,19 +66,17 @@
       stage.add(gfx(3, 5, '╩'));
       stage.add(gfx(4, 5, '═'));
       stage.add(gfx(5, 5, '╝'));
-    };
+    },
+    add: function(entity) {
+      Buffer.stage.add(Pixelwars.c(entity, Display.name).gfx);
+    },
+    remove: function(entity) {
+      Buffer.stage.remove(Pixelwars.c(entity, Display.name).gfx);
+    },
+    update: function(elapsed) {
+      Buffer.render();
+    }
+  });
 
-    this.add = function(entity) {
-      stage.add(game.c(entity, Display.name).gfx);
-    };
-
-    this.remove = function(entity) {
-      stage.remove(game.c(entity, Display.name).gfx);
-    };
-
-    this.update = function(elapsed) {
-      renderer.render(stage);
-    };
-  };
-
-})(game, engine);
+  return RenderingSystem;
+})(System);

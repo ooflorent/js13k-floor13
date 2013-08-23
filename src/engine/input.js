@@ -1,32 +1,6 @@
-(function (engine, document) {
-  'use strict';
-
+var Input = (function () {
   var capture = [];
   var active = {};
-
-  /**
-   * Manage keyboard events.
-   */
-  var Input = {
-    /**
-     * Specify keys to capture.
-     * Capturing a key stops the default behavior.
-     *
-     * @param {int[]} key codes
-     */
-    keys: function(codes) {
-      capture = codes;
-    },
-    /**
-     * Get the state of the specified key.
-     *
-     * @param {int} key code
-     * @return {Boolean}
-     */
-    get: function(code) {
-      return !!active[code];
-    }
-  };
 
   /**
    * Bind a listener on `document`.
@@ -56,6 +30,27 @@
     active[e.keyCode] = false;
   });
 
-  engine.Input = Input;
-
-})(engine, document);
+  /**
+   * Manage keyboard events.
+   */
+  return {
+    /**
+     * Specify keys to capture.
+     * Capturing a key stops the default behavior.
+     *
+     * @param {int[]} key codes
+     */
+    keys: function(codes) {
+      capture = codes;
+    },
+    /**
+     * Get the state of the specified key.
+     *
+     * @param {int} key code
+     * @return {Boolean}
+     */
+    get: function(code) {
+      return !!active[code];
+    }
+  };
+})();

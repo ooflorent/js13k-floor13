@@ -1,9 +1,4 @@
-(function(engine, window) {
-  'use strict';
-
-  var EntityManager = engine.EntityManager;
-  var EventManager = engine.EventManager;
-
+var SystemManager = (function(window) {
   var systems = [];
   var requestID = -1;
 
@@ -11,15 +6,7 @@
   var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                               window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 
-  function createMatcher(components, callback) {
-    return function(entity) {
-      if (EntityManager.match(entity, components)) {
-        callback(entity);
-      }
-    };
-  }
-
-  var SystemManager = {
+  return {
     register: function(system) {
       systems.unshift(system);
     },
@@ -55,32 +42,51 @@
       }
     }
   };
+})(window);
 
-  function System(components) {
-    this.init = function() {};
-    this.add = function(entity) {};
-    this.remove = function(entity) {};
-    this.update = function(elapsed) {};
-
-    EventManager.add('componentAdded', createMatcher(components, this.add));
-    EventManager.add('componentRemoved', createMatcher(components, this.remove));
-  }
-
-  function IteratingSystem(components, onUpdate) {
-    System.call(this, components);
-
-    this.update = function(elapsed) {
-      var entities = EntityManager.filter(components);
-      var i = entities.length;
-
-      while (i--) {
-        onUpdate(entities[i], elapsed);
+var System = (function() {
+  function createMatcher(components, callback) {
+    return function(entity) {
+      if (EntityManager.match(entity, components)) {
+        callback(entity);
       }
     };
   }
 
-  engine.SystemManager = SystemManager;
-  engine.System = System;
-  engine.IteratingSystem = IteratingSystem;
+  function System(components) {
+    this.c = components;
+    EventManager.add('componentAdded', createMatcher(components, this.add));
+    EventManager.add('componentRemoved', createMatcher(components, this.remove));
+  }
 
-})(engine, window);
+  define(System.prototype, {
+    init: function() {},
+    add: function(entity) {},
+    remove: function(entity) {},
+    update: function(elapsed) {}
+  });
+
+  return System;
+})();
+
+var IteratingSystem = (function(_super) {
+  function IteratingSystem(components) {
+    _super.call(this, components);
+  }
+
+  extend(IteratingSystem, System);
+  define(IteratingSystem.prototype, {
+    onUpdate: function(entity, elapsed) {},
+    update: function(elapsed) {
+      var onUpdate = this.onUpdate;
+      var entities = EntityManager.filter(this.c);
+      var i = entities.length;
+
+      while (i--) {
+        onUpdate.call(this, entities[i], elapsed);
+      }
+    }
+  });
+
+  return IteratingSystem;
+})(System);

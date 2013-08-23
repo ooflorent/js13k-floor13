@@ -1,6 +1,4 @@
-(function (engine) {
-  'use strict';
-
+var EntityManager = (function () {
   var currentId = 0;
   var entitiesToTags = {};
   var tagsToEntities = {};
@@ -30,7 +28,7 @@
   /**
    * Manage entities.
    */
-  var EntityManager = {
+  return {
     /**
      * Create a new entity.
      *
@@ -57,7 +55,7 @@
       var components = Object.keys(entitiesToComponents[entity]);
       var component;
       for (component in components) {
-        EntityManager.remove(entity, component);
+        this.remove(entity, component);
       }
 
       var tag = entitiesToTags[entity];
@@ -144,7 +142,4 @@
       return entities;
     }
   };
-
-  engine.EntityManager = EntityManager;
-
-})(engine);
+})();

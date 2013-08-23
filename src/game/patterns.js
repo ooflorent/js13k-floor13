@@ -1,19 +1,20 @@
-(function(game) {
-
-  var Patterns = game.Patterns = [];
+var Patterns = (function() {
+  var Patterns = [];
 
   function charCode(char) {
     return char.charCodeAt(0);
   }
 
   function fillPattern(commands) {
-    return function(ctx) {
+    return function(ctx, color) {
+      ctx.fillStyle = color;
       commands(ctx);
     };
   }
 
   function strokePattern(width, commands) {
-    return function(ctx) {
+    return function(ctx, color) {
+      ctx.strokeStyle = color;
       ctx.lineWidth = width;
       ctx.beginPath();
 
@@ -119,5 +120,6 @@
     }
   });
 
-})(game);
+  return Patterns;
+})();
 

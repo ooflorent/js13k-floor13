@@ -1,15 +1,14 @@
-(function (game) {
-  'use strict';
+var Pixelwars = {
+  e: EntityManager.create,
+  c: EntityManager.get,
+  k: Input.get,
 
-  game.Pixelwars = {
-    init: function(canvas) {
-      game.r(new game.MovementSystem());
-      game.r(new game.RenderingSystem(canvas));
-    },
-    run: function() {
-      game.sm.init();
-      game.sm.start();
-    }
-  };
-
-})(game);
+  init: function(canvas) {
+    SystemManager.register(new MovementSystem());
+    SystemManager.register(new RenderingSystem(canvas));
+  },
+  run: function() {
+    SystemManager.init();
+    SystemManager.start();
+  }
+};
