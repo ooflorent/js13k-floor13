@@ -8,6 +8,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
+  grunt.loadTasks('tasks');
+
   var processedConstants = Object.create(null);
   var rawConstants = grunt.file.readJSON('src/constants.json');
 
@@ -26,6 +28,7 @@ module.exports = function(grunt) {
     ],
     game: [
       '<%= dirs.game %>/main.js',
+      '<%= dirs.game %>/spritelib.js',
       '<%= dirs.game %>/patterns.js',
       '<%= dirs.game %>/components.js',
       '<%= dirs.game %>/systems.js',
@@ -65,21 +68,21 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         options: {
-          banner: "var Pixelwars = (function() {\n",
-          footer: "return Pixelwars;\n})()\n",
+          banner: "var Pixelwars = (function(window, document) {\n",
+          footer: "return Pixelwars;\n})(window, document)\n",
         },
         files: {
           'dist/pixelwars.js': [files.engine, files.game],
         },
       },
+    },
+    constants: {
       dev: {
         options: {
-          process: function(src) {
-            return 'var __PW_CONSTANTS = ' + src;
-          },
+          namespace: '__PW_',
         },
         files: {
-          'dist/constants.js': ['src/constants.json']
+          'dist/constants.js': ['src/constants.json', 'src/constants.dev.json'],
         },
       },
     },
@@ -109,7 +112,7 @@ module.exports = function(grunt) {
     },
   });
 
-  grunt.registerTask('dev', ['jshint', 'concat:dev']);
+  grunt.registerTask('dev', ['jshint', 'constants']);
   grunt.registerTask('package', ['jshint', 'clean', 'concat', 'uglify', 'htmlmin', 'compress']);
 
   grunt.registerTask('default', ['package']);
