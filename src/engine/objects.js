@@ -1,3 +1,7 @@
+/**
+ * @param {any} classA
+ * @param {any} classB
+ */
 function extend(classA, classB) {
   define(classA, classB);
 
@@ -9,6 +13,10 @@ function extend(classA, classB) {
   classA.prototype = new __();
 }
 
+/**
+ * @param {any} classA
+ * @param {any} props
+ */
 function define(classA, props) {
   for (var prop in props) {
     if (props.hasOwnProperty(prop)) {
