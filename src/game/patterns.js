@@ -7,7 +7,9 @@
   }
 
   function fillPattern(commands) {
-    return commands;
+    return function(ctx) {
+      commands(ctx);
+    };
   }
 
   function strokePattern(width, commands) {

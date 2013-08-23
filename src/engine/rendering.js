@@ -33,50 +33,68 @@
     }
   }
 
+  // Buffer
+  // ------
+
+  function Buffer(width, height, scale, canvas) {
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+
+    var ctx = this.ctx = canvas.getContext('2d');
+
+    ctx.webkitImageSmoothingEnabled = ctx.mozImageSmoothingEnabled = false;
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
+
+    this.rendererCanvas = createCanvas(canvas);
+    this.renderer = new Renderer(width, height, this.rendererCanvas);
+  }
+
+  var BufferPrototype = Buffer.prototype;
+  BufferPrototype.constructor = Buffer;
+
+  Buffer.mosaic = function(scale) {
+    var patternCanvas = createCanvas();
+    var patternCtx = patternCanvas.getContext('2d');
+    var patternData = patternCtx.createImageData(scale, scale);
+
+    patternCanvas.width = patternCanvas.height = scale;
+
+    var i;
+    var n = scale - 1;
+
+    setPixel(patternData, 0, 0, 0x33FFFFFF);
+    setPixel(patternData, n, n, 0x33000000);
+
+    for (i = 1; i < n; i++) {
+      setPixel(patternData, i, 0, 0x33E0E0E0);
+      setPixel(patternData, i, n, 0x33000000);
+    }
+
+    for (i = 1; i < n; i++) {
+      setPixel(patternData, 0, i, 0x33FFFFFF);
+      setPixel(patternData, n, i, 0x33000000);
+    }
+
+    return patternCanvas;
+  };
+
+  BufferPrototype.render = function(stage) {
+    this.renderer.render(stage);
+    this.ctx.drawImage(this.rendererCanvas, 0, 0);
+  }
+
   // Renderer
   // --------
 
-  function Renderer(width, height, scale, canvas) {
+  function Renderer(width, height, canvas) {
     this.ctx = canvas.getContext('2d');
     this.w = canvas.width = width;
     this.h = canvas.height = height;
-    this.s = scale;
     this.m = undefined;
   }
 
   var RendererPrototype = Renderer.prototype;
   RendererPrototype.constructor = Renderer;
-
-  RendererPrototype.mosaic = function() {
-    var patternCanvas = this.m;
-    if (!patternCanvas) {
-      var scale = this.s;
-
-      patternCanvas = this.m = createCanvas();
-      patternCanvas.width = patternCanvas.height = scale;
-
-      var patternCtx = patternCanvas.getContext('2d');
-      var patternData = patternCtx.createImageData(scale, scale);
-
-      var i;
-      var n = scale - 1;
-
-      setPixel(patternData, 0, 0, 0x33FFFFFF);
-      setPixel(patternData, n, n, 0x33000000);
-
-      for (i = 1; i < n; i++) {
-        setPixel(patternData, i, 0, 0x33E0E0E0);
-        setPixel(patternData, i, n, 0x33000000);
-      }
-
-      for (i = 1; i < n; i++) {
-        setPixel(patternData, 0, i, 0x33FFFFFF);
-        setPixel(patternData, n, i, 0x33000000);
-      }
-    }
-
-    return patternCanvas;
-  };
 
   RendererPrototype.render = function(stage) {
     stage._update();
@@ -240,6 +258,7 @@
   // exports
   // -------
 
+  engine.Buffer = Buffer;
   engine.Renderer = Renderer;
   engine.DisplayObject = DisplayObject;
   engine.DisplayContainer = DisplayContainer;

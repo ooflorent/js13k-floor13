@@ -18,7 +18,7 @@
   game.RenderingSystem = function(canvas) {
     engine.System.call(this, [Position.name, Display.name]);
 
-    var renderer = new engine.Renderer(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas);
+    var renderer = new engine.Buffer(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas);
     var stage = new engine.Stage();
 
     this.init = function() {
