@@ -1,6 +1,7 @@
 var Pixelwars = {
   e: EntityManager.create,
   c: EntityManager.get,
+  t: EntityManager.tag,
   k: Input.get,
 
   run: function(canvas) {
@@ -16,13 +17,30 @@ var Pixelwars = {
       TextureManager.anim('s', [1, 2], 80);
       TextureManager.anim('w', [8, 9], 80);
 
+      // Initialize rendering engine
+      Buffer.init(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas);
+
       // Initialize game systems
+      SystemManager.register(new PlayerControlSystem());
       SystemManager.register(new MovementSystem());
-      SystemManager.register(new RenderingSystem(canvas));
+      SystemManager.register(new RenderingSystem());
+
+      // Create player
+      var player = EntityCreator.player();
 
       // Run the game
       SystemManager.init();
       SystemManager.start();
     });
+  }
+};
+
+var EntityCreator = {
+  player: function() {
+    var player = Pixelwars.e('player');
+    EntityManager.add(player, new Position());
+    EntityManager.add(player, new Motion());
+    EntityManager.add(player, new Display(new Sprite('player')));
+    return player;
   }
 };

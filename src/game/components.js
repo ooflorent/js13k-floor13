@@ -1,13 +1,19 @@
-function Display(gfx) {
-  this.gfx = gfx;
+function Position(x, y, direction) {
+  this.x = x || 0;
+  this.y = y || 0;
+  this.dir = direction;
 }
 
-function Position(x, y) {
-  this.x = x;
-  this.y = y;
-}
+Position.N = 'n';
+Position.E = 'e';
+Position.S = 's';
+Position.W = 'w';
 
 function Motion(dx, dy) {
-  this.dx = dx;
-  this.dy = dy;
+  this.dx = dx || 0;
+  this.dy = dy || 0;
+}
+
+function Display(gfx) {
+  this.gfx = gfx;
 }

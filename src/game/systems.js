@@ -1,3 +1,37 @@
+var PlayerControlSystem = (function(_super) {
+  function PlayerControlSystem() {
+    _super.call(this);
+  }
+
+  extend(PlayerControlSystem, _super);
+  define(PlayerControlSystem.prototype, {
+    init: function() {
+      //Input.capture = [37, 38, 39, 40];
+    },
+    update: function(elapsed) {
+      var player = Pixelwars.t('player');
+      var motion = Pixelwars.c(player, Motion.name);
+
+      // Reset component
+      motion.dx = motion.dy = 0;
+
+      if (Pixelwars.k(38)) { // UP
+        motion.dy = -200;
+      } else if (Pixelwars.k(40)) { // DOWN
+        motion.dy = 200;
+      }
+
+      if (Pixelwars.k(37)) { // LEFT
+        motion.dx = -200;
+      } else if (Pixelwars.k(39)) { // RIGHT
+        motion.dx = 200;
+      }
+    }
+  });
+
+  return PlayerControlSystem;
+})(System);
+
 var MovementSystem = (function(_super) {
   function MovementSystem() {
     _super.call(this, [Position.name, Motion.name]);
@@ -9,8 +43,15 @@ var MovementSystem = (function(_super) {
       var position = Pixelwars.c(entity, Position.name);
       var motion = Pixelwars.c(entity, Motion.name);
 
-      position.x = elapsed * motion.dx;
-      position.y = elapsed * motion.dy;
+      if (motion.dx || motion.dy) {
+        var hDir = motion.dx < 0 ? Position.W : Position.E;
+        var vDir = motion.dy < 0 ? Position.N : Position.S;
+
+        position.dir = Math.abs(motion.dx) < Math.abs(motion.dy) ? vDir : hDir;
+      }
+
+      position.x += elapsed * motion.dx;
+      position.y += elapsed * motion.dy;
     }
   });
 
@@ -18,9 +59,8 @@ var MovementSystem = (function(_super) {
 })(IteratingSystem);
 
 var RenderingSystem = (function(_super) {
-  function RenderingSystem(canvas) {
+  function RenderingSystem() {
     _super.call(this, [Position.name, Display.name]);
-    this.canvas = canvas;
   }
 
   extend(RenderingSystem, _super);
@@ -33,8 +73,6 @@ var RenderingSystem = (function(_super) {
 
         return g;
       }
-
-      Buffer.init(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, this.canvas);
 
       var stage = Buffer.stage;
       stage.add(gfx(1, 1, '╔'));
@@ -66,13 +104,6 @@ var RenderingSystem = (function(_super) {
       stage.add(gfx(3, 5, '╩'));
       stage.add(gfx(4, 5, '═'));
       stage.add(gfx(5, 5, '╝'));
-
-      var s = new Sprite('player');
-      s.play('e');
-      s.x = 80;
-      s.y = 20;
-
-      stage.add(s);
     },
     add: function(entity) {
       Buffer.stage.add(Pixelwars.c(entity, Display.name).gfx);
@@ -81,9 +112,21 @@ var RenderingSystem = (function(_super) {
       Buffer.stage.remove(Pixelwars.c(entity, Display.name).gfx);
     },
     update: function(elapsed) {
+      _super.prototype.update.call(this, elapsed);
       Buffer.render(elapsed);
+    },
+    onUpdate: function(entity, elapsed) {
+      var position = Pixelwars.c(entity, Position.name);
+      var display = Pixelwars.c(entity, Display.name);
+
+      if (position.dir) {
+        display.gfx.play(position.dir);
+      }
+
+      display.gfx.x = position.x | 0;
+      display.gfx.y = position.y | 0;
     }
   });
 
   return RenderingSystem;
-})(System);
+})(IteratingSystem);
