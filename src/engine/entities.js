@@ -77,7 +77,7 @@ var EntityManager = (function () {
       componentsToEntities[name][entity] = true;
       entitiesToComponents[entity][name] = component;
 
-      engine.EventManager.emit('componentAdded', entity, component, name);
+      EventManager.emit('_ca', entity, component, name);
     },
     /**
      * Remove a component from the specified entity.
@@ -86,7 +86,7 @@ var EntityManager = (function () {
      * @param {String} component name
      */
     remove: function(entity, name) {
-      engine.EventManager.emit('componentRemoved', entity, entitiesToComponents[entity][name], name);
+      EventManager.emit('_cr', entity, entitiesToComponents[entity][name], name);
 
       delete entitiesToComponents[entity][name];
       delete componentsToEntities[name][entity];

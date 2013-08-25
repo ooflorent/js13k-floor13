@@ -86,8 +86,8 @@ var System = (function() {
     this.c = components;
 
     // Listen entities changes
-    EventManager.add('componentAdded', createMatcher(components, this.add));
-    EventManager.add('componentRemoved', createMatcher(components, this.remove));
+    EventManager.add('_ca', createMatcher(components, this.add));
+    EventManager.add('_cr', createMatcher(components, this.remove));
   }
 
   define(System.prototype, {

@@ -13,19 +13,20 @@
   <script src="../dist/constants.js"></script>
   <!-- Engine -->
   <script src="engine/objects.js"></script>
+  <script src="engine/utils.js"></script>
   <script src="engine/events.js"></script>
   <script src="engine/entities.js"></script>
   <script src="engine/systems.js"></script>
   <script src="engine/input.js"></script>
   <script src="engine/rendering.js"></script>
   <!-- Game -->
+  <script src="game/patterns.js"></script>
+  <script src="game/dungeon.js"></script>
   <script src="game/main.js"></script>
   <script src="game/components.js"></script>
   <script src="game/systems.js"></script>
-  <script src="game/patterns.js"></script>
   <script>
-    Pixelwars.init(document.getElementById('c'));
-    Pixelwars.run();
+    Pixelwars.run($('c'));
   </script>
 </body>
 </html>

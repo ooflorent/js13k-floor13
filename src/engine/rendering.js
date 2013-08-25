@@ -56,14 +56,51 @@ function mosaic(scale) {
   return patternCanvas;
 }
 
-var Buffer = (function (engine) {
+var TextureManager = (function() {
+  return {
+    i: null,
+    a: {},
+    g: {},
+    init: function(spritesheet, onLoad) {
+      var img = this.i = new Image();
+      img.src = spritesheet;
+      img.onload = function() {
+        onLoad();
+      };
+    },
+    slice: function(name, x, y, width, height, repeatX, repeatY) {
+      repeatX = repeatX || 1;
+      repeatY = repeatY || 1;
+
+      var group = this.g[name] = [];
+      for (var iy = 0; iy < repeatY; iy++) {
+        for (var ix = 0; ix < repeatX; ix++) {
+          group.push({
+            x: x + ix * width,
+            y: y + iy * height,
+            w: width,
+            h: height
+          });
+        }
+      }
+    },
+    anim: function(name, frames, duration) {
+      this.a[name] = {
+        f: frames,
+        d: duration || 0xFFFFFFFF
+      };
+    }
+  };
+})();
+
+var Buffer = (function () {
   var bufferCtx;
   var rendererCanvas;
   var rendererCtx;
   var width;
   var height;
 
-  function renderObject(ctx, object) {
+  function renderObject(ctx, object, elapsed) {
     if (!object._a) {
       return;
     }
@@ -73,7 +110,7 @@ var Buffer = (function (engine) {
       var i = children.length;
 
       while (i--) {
-        renderObject(ctx, children[i]);
+        renderObject(ctx, children[i], elapsed);
       }
 
       return;
@@ -84,7 +121,9 @@ var Buffer = (function (engine) {
     ctx.globalAlpha = object._a;
 
     if (object instanceof Sprite) {
-      ctx.drawImage(object._i, 0, 0);
+      var rect = object.group[object.frame];
+      ctx.drawImage(TextureManager.i, rect.x, rect.y, rect.w, rect.h, 0, 0, rect.w, rect.h);
+      object.advance(elapsed);
     } else if (object instanceof Graphics) {
       object._batch(ctx, object._color);
     }
@@ -108,12 +147,13 @@ var Buffer = (function (engine) {
 
       this.stage = new Stage();
     },
-    render: function() {
+    render: function(elapsed) {
       rendererCtx.setTransform(1, 0, 0, 1, 0, 0);
-      rendererCtx.clearRect(0, 0, width, height);
+      rendererCtx.fillStyle = '#ffffff';
+      rendererCtx.fillRect(0, 0, width, height);
 
       this.stage._transform();
-      renderObject(rendererCtx, this.stage);
+      renderObject(rendererCtx, this.stage, elapsed * 1000 | 0);
 
       bufferCtx.drawImage(rendererCanvas, 0, 0);
     }
@@ -160,12 +200,34 @@ var Graphics = (function(_super) {
 })(DisplayObject);
 
 var Sprite = (function(_super) {
-  function Sprite(img) {
+  function Sprite(group, frame) {
     _super.call(this);
-    this._img = img;
+    this.group = TextureManager.g[group];
+    this.frame = frame || 0;
+    this.anim = null;
+    this.i = this.t = 0;
   }
 
   extend(Sprite, _super);
+  define(Sprite.prototype, {
+    play: function(anim) {
+      this.anim = TextureManager.a[anim];
+      this.frame = this.anim.f[this.i = this.t = 0];
+    },
+    advance: function(elapsed) {
+      // Go to the next frame
+      var frames = this.anim.f;
+      var duration = this.anim.d;
+
+      this.t += elapsed;
+      while (this.t >= duration) {
+        this.t -= duration;
+        this.i = (this.i + 1) % frames.length;
+        this.frame = frames[this.i];
+      }
+    }
+  });
+
   return Sprite;
 })(DisplayObject);
 

@@ -99,7 +99,7 @@ var Patterns = (function() {
       var x = i % 10;
       var y = i / 10 | 0;
 
-      if (((y & 1) === 0) != (x & 1)) {
+      if (!(y & 1) != (x & 1)) {
         ctx.fillRect(x, y, 1, 1);
       }
     }
@@ -113,7 +113,7 @@ var Patterns = (function() {
       var y = i / 10 | 0;
 
       if (!(x & 1)) {
-        if (x % 4 === 0 && (y & 1) || x % 4 !== 0 && !(y & 1)) {
+        if (!(x % 4) && (y & 1) || (x % 4) && !(y & 1)) {
           ctx.clearRect(x, y, 1, 1);
         }
       }

@@ -66,6 +66,13 @@ var RenderingSystem = (function(_super) {
       stage.add(gfx(3, 5, '╩'));
       stage.add(gfx(4, 5, '═'));
       stage.add(gfx(5, 5, '╝'));
+
+      var s = new Sprite('player');
+      s.play('e');
+      s.x = 80;
+      s.y = 20;
+
+      stage.add(s);
     },
     add: function(entity) {
       Buffer.stage.add(Pixelwars.c(entity, Display.name).gfx);
@@ -74,7 +81,7 @@ var RenderingSystem = (function(_super) {
       Buffer.stage.remove(Pixelwars.c(entity, Display.name).gfx);
     },
     update: function(elapsed) {
-      Buffer.render();
+      Buffer.render(elapsed);
     }
   });
 

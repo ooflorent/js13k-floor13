@@ -20,6 +20,7 @@ module.exports = function(grunt) {
   var files = {
     engine: [
       '<%= dirs.engine %>/objects.js',
+      '<%= dirs.engine %>/utils.js',
       '<%= dirs.engine %>/events.js',
       '<%= dirs.engine %>/entities.js',
       '<%= dirs.engine %>/systems.js',
@@ -27,9 +28,10 @@ module.exports = function(grunt) {
       '<%= dirs.engine %>/rendering.js',
     ],
     game: [
+      '<%= dirs.game %>/patterns.js',
+      '<%= dirs.game %>/dungeon.js',
       '<%= dirs.game %>/main.js',
       '<%= dirs.game %>/spritelib.js',
-      '<%= dirs.game %>/patterns.js',
       '<%= dirs.game %>/components.js',
       '<%= dirs.game %>/systems.js',
     ],
@@ -46,6 +48,9 @@ module.exports = function(grunt) {
       build: ['dist/'],
     },
     jshint: {
+      options: {
+        '-W018': true,
+      },
       files: ['Gruntfile.js', '<%= dirs.engine %>/*.js', '<%= dirs.game %>/*.js'],
     },
     watch: {
@@ -60,8 +65,8 @@ module.exports = function(grunt) {
           level: 9,
         },
         files: [
-          {expand: true, cwd: 'dist/', src: ['pixelwars.min.js']},
-          {expand: true, cwd: 'dist/', src: ['index.html']},
+          {expand: true, cwd: 'dist/', src: ['pixelwars.min.js', 'index.html']},
+          {expand: true, flatten: true, src: ['assets/*.png']},
         ],
       },
     },
@@ -113,8 +118,8 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('dev', ['jshint', 'constants']);
-  grunt.registerTask('package', ['jshint', 'clean', 'concat', 'uglify', 'htmlmin', 'compress']);
+  grunt.registerTask('package', ['concat', 'uglify', 'htmlmin', 'compress']);
 
-  grunt.registerTask('default', ['package']);
+  grunt.registerTask('default', ['clean', 'dev', 'package']);
 
 };
