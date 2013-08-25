@@ -2,7 +2,7 @@ var EntityManager = (function () {
   var currentId = 0;
   var entitiesToTags = {};
   var tagsToEntities = {};
-  var entitiesToComponents = {};
+  var entitiesToComponents = [];
   var componentsToEntities = {};
 
   /**
@@ -70,6 +70,10 @@ var EntityManager = (function () {
      * @param {String} component name
      */
     add: function(entity, component, name) {
+      if (!name) {
+        name = component.constructor.name;
+      }
+
       if (!componentsToEntities[name]) {
         componentsToEntities[name] = [];
       }
@@ -98,7 +102,7 @@ var EntityManager = (function () {
      * @return {int} int
      */
     tag: function(tag) {
-      return tagsToEntities[tag];
+      return tagsToEntities['$' + tag];
     },
     /**
      * Get a component from the specified entity.
@@ -130,13 +134,13 @@ var EntityManager = (function () {
     /**
      * Get entities with specified components.
      *
+     * @param {String[]} components
      * @return {int[]} entities
      */
-    filter: function() {
-      var entities = Object.keys(componentsToEntities[arguments[0]] || {});
-
-      for (var i = 1; i < arguments.length; i++) {
-        entities = intersect(entities, Object.keys(componentsToEntities[arguments[i]] || {}));
+    filter: function(components) {
+      var entities = Object.keys(componentsToEntities[components[0]] || {});
+      for (var i = 1; i < components.length; i++) {
+        entities = intersect(entities, Object.keys(componentsToEntities[components[i]] || {}));
       }
 
       return entities;

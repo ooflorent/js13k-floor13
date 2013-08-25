@@ -86,6 +86,7 @@ var TextureManager = (function() {
     },
     anim: function(name, frames, duration) {
       this.a[name] = {
+        n: name,
         f: frames,
         d: duration || 0xFFFFFFFF
       };
@@ -211,19 +212,23 @@ var Sprite = (function(_super) {
   extend(Sprite, _super);
   define(Sprite.prototype, {
     play: function(anim) {
-      this.anim = TextureManager.a[anim];
-      this.frame = this.anim.f[this.i = this.t = 0];
+      if (!this.anim || this.anim.n != anim) {
+        this.anim = TextureManager.a[anim];
+        this.frame = this.anim.f[this.i = this.t = 0];
+      }
     },
     advance: function(elapsed) {
-      // Go to the next frame
-      var frames = this.anim.f;
-      var duration = this.anim.d;
+      if (this.anim) {
+        // Go to the next frame
+        var frames = this.anim.f;
+        var duration = this.anim.d;
 
-      this.t += elapsed;
-      while (this.t >= duration) {
-        this.t -= duration;
-        this.i = (this.i + 1) % frames.length;
-        this.frame = frames[this.i];
+        this.t += elapsed;
+        while (this.t >= duration) {
+          this.t -= duration;
+          this.i = (this.i + 1) % frames.length;
+          this.frame = frames[this.i];
+        }
       }
     }
   });

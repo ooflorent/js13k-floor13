@@ -85,9 +85,11 @@ var System = (function() {
   function System(components) {
     this.c = components;
 
-    // Listen entities changes
-    EventManager.add('_ca', createMatcher(components, this.add));
-    EventManager.add('_cr', createMatcher(components, this.remove));
+    if (components) {
+      // Listen entities changes
+      EventManager.add('_ca', createMatcher(components, this.add));
+      EventManager.add('_cr', createMatcher(components, this.remove));
+    }
   }
 
   define(System.prototype, {

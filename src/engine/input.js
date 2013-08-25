@@ -9,11 +9,14 @@ var Input = (function () {
    * @param {Function} listener
    */
   function addDocumentListener(name, listener) {
-    document.addEventListener(name, listener, false);
+    var events = name.split(' ');
+    for (var i = events.length; i--;) {
+      document.addEventListener(events[i], listener, false);
+    }
   }
 
-  // Listen `keypress` events
-  addDocumentListener('keypress', function(e) {
+  // Listen `keypress` and `keydown` events
+  addDocumentListener('keypress keydown', function(e) {
     if (capture.indexOf(e.keyCode) >= 0) {
       e.preventDefault();
     }
