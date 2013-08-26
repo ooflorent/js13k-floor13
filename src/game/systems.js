@@ -28,8 +28,8 @@ var PlayerControlSystem = (function(_super) {
 
       var length = Math.sqrt(x * x + y * y);
       if (length) {
-        motion.dx = x / length * 200;
-        motion.dy = y / length * 200;
+        motion.dx = x / length * 60;
+        motion.dy = y / length * 60;
         motion.dr = 180 * Math.atan2(motion.dx, motion.dy) / Math.PI;
         gfx.play(Position.d(motion.dr));
       } else {
@@ -69,46 +69,6 @@ var RenderingSystem = (function(_super) {
 
   extend(RenderingSystem, _super);
   define(RenderingSystem.prototype, {
-    init: function() {
-      function gfx(x, y, pattern) {
-        var g = new Graphics(Patterns[pattern.charCodeAt(0)], '#f00');
-        g.x = x * 10;
-        g.y = y * 10;
-
-        return g;
-      }
-
-      var stage = Buffer.stage;
-      stage.add(gfx(1, 1, '╔'));
-      stage.add(gfx(2, 1, '═'));
-      stage.add(gfx(3, 1, '╦'));
-      stage.add(gfx(4, 1, '═'));
-      stage.add(gfx(5, 1, '╗'));
-
-      stage.add(gfx(1, 2, '║'));
-      stage.add(gfx(2, 2, '░'));
-      stage.add(gfx(3, 2, '║'));
-      stage.add(gfx(4, 2, '░'));
-      stage.add(gfx(5, 2, '║'));
-
-      stage.add(gfx(1, 3, '╠'));
-      stage.add(gfx(2, 3, '═'));
-      stage.add(gfx(3, 3, '╬'));
-      stage.add(gfx(4, 3, '═'));
-      stage.add(gfx(5, 3, '╣'));
-
-      stage.add(gfx(1, 4, '║'));
-      stage.add(gfx(2, 4, '▓'));
-      stage.add(gfx(3, 4, '║'));
-      stage.add(gfx(4, 4, '▓'));
-      stage.add(gfx(5, 4, '║'));
-
-      stage.add(gfx(1, 5, '╚'));
-      stage.add(gfx(2, 5, '═'));
-      stage.add(gfx(3, 5, '╩'));
-      stage.add(gfx(4, 5, '═'));
-      stage.add(gfx(5, 5, '╝'));
-    },
     add: function(entity) {
       Buffer.stage.add(Pixelwars.c(entity, Display.name).gfx);
     },
@@ -123,6 +83,10 @@ var RenderingSystem = (function(_super) {
       var position = Pixelwars.c(entity, Position.name);
       var gfx = Pixelwars.c(entity, Display.name).gfx;
 
+      // Update asset orientation
+      gfx.sx = (Position.d(position.r) == 'w') ? -1 : 1;
+
+      // Update asset position
       gfx.x = position.x | 0;
       gfx.y = position.y | 0;
     }

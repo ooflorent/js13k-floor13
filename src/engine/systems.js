@@ -21,12 +21,11 @@ var SystemManager = (function(window) {
       systems.unshift(system);
     },
     /**
-     * Initialize all systems.
+     * Remove all systems.
      */
-    init: function() {
-      var i = systems.length;
-      while (i--) {
-        systems[i].init();
+    clear: function() {
+      while (systems.length) {
+        systems.pop().clear();
       }
     },
     /**
@@ -87,16 +86,19 @@ var System = (function() {
 
     if (components) {
       // Listen entities changes
-      EventManager.add('_ca', createMatcher(components, this.add));
-      EventManager.add('_cr', createMatcher(components, this.remove));
+      EventManager.add('_ca', this._ca = createMatcher(components, this.add));
+      EventManager.add('_cr', this._cr = createMatcher(components, this.remove));
     }
   }
 
   define(System.prototype, {
     /**
-     * Called by the SystemManager during the initialization.
+     * Called by the SystemManager during the destruction.
      */
-    init: function() {},
+    clear: function() {
+      EventManager.remove('_ca', this._ca);
+      EventManager.remove('_cr', this._cr);
+    },
     /**
      * Called when a new entity is added to the system.
      * @param {int} entity

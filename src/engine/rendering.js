@@ -85,10 +85,16 @@ var TextureManager = (function() {
       }
     },
     anim: function(name, frames, duration) {
+      if (duration) {
+        duration = 1 / duration * 1000 | 0;
+      } else {
+        duration = 0xFFFFFFFF;
+      }
+
       this.a[name] = {
         n: name,
         f: frames,
-        d: duration || 0xFFFFFFFF
+        d: duration
       };
     }
   };
@@ -118,12 +124,12 @@ var Buffer = (function () {
     }
 
     ctx.save();
-    ctx.setTransform(1, 0, 0, 1, object._x, object._y);
+    ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
     ctx.globalAlpha = object._a;
 
     if (object instanceof Sprite) {
       var rect = object.group[object.frame];
-      ctx.drawImage(TextureManager.i, rect.x, rect.y, rect.w, rect.h, 0, 0, rect.w, rect.h);
+      ctx.drawImage(TextureManager.i, rect.x, rect.y, rect.w, rect.h, object.sx < 0 ? object.sx * rect.w : 0, object.sy < 0 ? object.sy * rect.h : 0, rect.w, rect.h);
       object.advance(elapsed);
     } else if (object instanceof Graphics) {
       object._batch(ctx, object._color);
@@ -135,7 +141,7 @@ var Buffer = (function () {
   return {
     init: function(w, h, s, canvas) {
       canvas.width = w * s;
-      canvas.height = w * s;
+      canvas.height = h * s;
 
       bufferCtx = canvas.getContext('2d');
       bufferCtx.webkitImageSmoothingEnabled = bufferCtx.mozImageSmoothingEnabled = false;
@@ -166,6 +172,7 @@ var DisplayObject = (function() {
     this.x = 0;
     this.y = 0;
     this.a = 1;
+    this.sx = this.sy = 1;
 
     this._x = 0;
     this._y = 0;

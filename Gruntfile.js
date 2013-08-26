@@ -28,10 +28,9 @@ module.exports = function(grunt) {
       '<%= dirs.engine %>/rendering.js',
     ],
     game: [
-      '<%= dirs.game %>/patterns.js',
       '<%= dirs.game %>/dungeon.js',
+      '<%= dirs.game %>/states.js',
       '<%= dirs.game %>/main.js',
-      '<%= dirs.game %>/spritelib.js',
       '<%= dirs.game %>/components.js',
       '<%= dirs.game %>/systems.js',
     ],

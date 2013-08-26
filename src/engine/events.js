@@ -6,6 +6,12 @@ var EventManager = (function () {
    */
   return {
     /**
+     * Unregister all event listeners.
+     */
+    clear: function() {
+      handlers = {};
+    },
+    /**
      * Add an event handler.
      *
      * @param  {String} event name
@@ -26,7 +32,10 @@ var EventManager = (function () {
      */
     remove: function(event, handler) {
       var h = handlers[event];
-      h.splice(h.indexOf(handler), 1);
+      var i = h.indexOf(handler);
+      if (i >= 0) {
+        h.splice(i, 1);
+      }
     },
     /**
      * Emit an event.

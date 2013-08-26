@@ -209,4 +209,4 @@ if (__PW_DEBUG) {
   };
 }
 
-//console.log(dumpDungeon(generateDungeon(80, 50, 4, 12)));
+console.log(dumpDungeon(generateDungeon(80, 50, 4, 12)));

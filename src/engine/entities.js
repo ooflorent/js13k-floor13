@@ -1,6 +1,6 @@
 var EntityManager = (function () {
   var currentId = 0;
-  var entitiesToTags = {};
+  var entitiesToTags = [];
   var tagsToEntities = {};
   var entitiesToComponents = [];
   var componentsToEntities = {};
@@ -29,6 +29,16 @@ var EntityManager = (function () {
    * Manage entities.
    */
   return {
+    /**
+     * Unregister all entities.
+     */
+    clear: function() {
+      currentId = 0;
+      entitiesToTags = [];
+      tagsToEntities = {};
+      entitiesToComponents = [];
+      componentsToEntities = {};
+    },
     /**
      * Create a new entity.
      *
