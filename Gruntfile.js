@@ -50,6 +50,7 @@ module.exports = function(grunt) {
     jshint: {
       options: {
         '-W018': true,
+        '-W120': true,
       },
       files: ['Gruntfile.js', '<%= dirs.engine %>/*.js', '<%= dirs.game %>/*.js'],
     },
@@ -73,8 +74,8 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         options: {
-          banner: "var Pixelwars = (function(window, document) {\n",
-          footer: "return Pixelwars;\n})(window, document)\n",
+          banner: "var Pixelwars = (function(window, document, Math) {\n",
+          footer: "return Pixelwars;\n})(window, document, Math)\n",
         },
         files: {
           'dist/pixelwars.js': [files.engine, files.game],

@@ -1,17 +1,24 @@
-function Position(x, y, direction) {
+function Position(x, y, r) {
   this.x = x || 0;
   this.y = y || 0;
-  this.dir = direction;
+  this.r = r || 0;
 }
 
-Position.N = 'n';
-Position.E = 'e';
-Position.S = 's';
-Position.W = 'w';
+Position.d = function(r) {
+  rabs = Math.abs(r);
+  if (r == 180 || rabs == 135) {
+    return 'n';
+  } else if (!r || rabs == 45) {
+    return 's';
+  }
 
-function Motion(dx, dy) {
+  return r > 0 ? 'e' : 'w';
+};
+
+function Motion(dx, dy, dr) {
   this.dx = dx || 0;
   this.dy = dy || 0;
+  this.dr = dr || 0;
 }
 
 function Display(gfx) {
