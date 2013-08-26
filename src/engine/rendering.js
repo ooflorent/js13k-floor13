@@ -100,12 +100,14 @@ var TextureManager = (function() {
   };
 })();
 
-var Buffer = (function () {
-  var bufferCtx;
-  var rendererCanvas;
-  var rendererCtx;
-  var width;
-  var height;
+var Renderer = (function() {
+  function Renderer(width, height) {
+    var canvas = this.canvas = createCanvas();
+    var ctx = this.ctx = canvas.getContext('2d');
+
+    this.w = canvas.width = width;
+    this.h = canvas.height = height;
+  }
 
   function renderObject(ctx, object, elapsed) {
     if (!object._a) {
@@ -138,31 +140,44 @@ var Buffer = (function () {
     ctx.restore();
   }
 
+  define(Renderer.prototype, {
+    render: function(stage, elapsed) {
+      var ctx = this.ctx;
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, this.w, this.h);
+
+      stage._transform();
+      renderObject(ctx, stage, elapsed * 1000 | 0);
+    }
+  });
+
+  return Renderer;
+})();
+
+var Buffer = (function() {
+  var ctx;
+  var renderer;
+  var width;
+  var height;
+
   return {
     init: function(w, h, s, canvas) {
       canvas.width = w * s;
       canvas.height = h * s;
 
-      bufferCtx = canvas.getContext('2d');
-      bufferCtx.webkitImageSmoothingEnabled = bufferCtx.mozImageSmoothingEnabled = false;
-      bufferCtx.setTransform(s, 0, 0, s, 0, 0);
+      ctx = canvas.getContext('2d');
+      ctx.webkitImageSmoothingEnabled = ctx.mozImageSmoothingEnabled = false;
+      ctx.setTransform(s, 0, 0, s, 0, 0);
 
-      rendererCanvas = createCanvas(canvas);
-      rendererCanvas.width = width = w;
-      rendererCanvas.height = height = h;
-      rendererCtx = rendererCanvas.getContext('2d');
+      renderer = new Renderer(w, h);
 
       this.stage = new Stage();
     },
     render: function(elapsed) {
-      rendererCtx.setTransform(1, 0, 0, 1, 0, 0);
-      rendererCtx.fillStyle = '#ffffff';
-      rendererCtx.fillRect(0, 0, width, height);
-
-      this.stage._transform();
-      renderObject(rendererCtx, this.stage, elapsed * 1000 | 0);
-
-      bufferCtx.drawImage(rendererCanvas, 0, 0);
+      renderer.render(this.stage, elapsed);
+      ctx.drawImage(renderer.canvas, 0, 0);
     }
   };
 })();
