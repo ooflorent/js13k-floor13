@@ -1,8 +1,9 @@
 /**
- * @param {any} classA
- * @param {any} classB
+ * @param {Function} classA
+ * @param {Function} classB
+ * @param {any} props
  */
-function extend(classA, classB) {
+function extend(classA, classB, props) {
   define(classA, classB);
 
   function __() {
@@ -11,6 +12,10 @@ function extend(classA, classB) {
 
   __.prototype = classB.prototype;
   classA.prototype = new __();
+
+  if (props) {
+    define(classA.prototype, props);
+  }
 }
 
 /**

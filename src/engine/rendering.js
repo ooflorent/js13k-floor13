@@ -103,59 +103,55 @@ var TextureManager = (function() {
   };
 })();
 
-var Renderer = (function() {
-  function Renderer(width, height) {
-    var canvas = this.canvas = createCanvas();
-    var ctx = this.ctx = canvas.getContext('2d');
+function Renderer(width, height) {
+  var canvas = this.canvas = createCanvas();
+  var ctx = this.ctx = canvas.getContext('2d');
 
-    this.w = canvas.width = width;
-    this.h = canvas.height = height;
-  }
+  this.w = canvas.width = width;
+  this.h = canvas.height = height;
+}
 
-  define(Renderer.prototype, {
-    render: function(stage, elapsed) {
-      var ctx = this.ctx;
-      var canvas = this.canvas;
+define(Renderer.prototype, {
+  render: function(stage, elapsed) {
+    var ctx = this.ctx;
+    var canvas = this.canvas;
 
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.fillRect(0, 0, this.w, this.h);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillRect(0, 0, this.w, this.h);
 
-      stage._transform();
-      this.renderObject(stage, elapsed * 1000 | 0);
-    },
-    renderObject: function(object, elapsed) {
-      if (!object._a) {
-        return;
-      }
-
-      if (object instanceof DisplayObjectContainer) {
-        var children = object._c;
-        var i = children.length;
-
-        while (i--) {
-          this.renderObject(children[i], elapsed);
-        }
-
-        return;
-      }
-
-      var ctx = this.ctx;
-
-      ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
-      ctx.globalAlpha = object._a;
-
-      if (object instanceof Sprite) {
-        var rect = object.group[object.frame];
-        ctx.drawImage(TextureManager.i, rect.x, rect.y, rect.w, rect.h, object.sx < 0 ? object.sx * rect.w : 0, object.sy < 0 ? object.sy * rect.h : 0, rect.w, rect.h);
-        object.advance(elapsed);
-      } else if (object instanceof Graphics) {
-        object._batch(ctx, object._color);
-      }
+    stage._transform();
+    this.renderObject(stage, elapsed * 1000 | 0);
+  },
+  renderObject: function(object, elapsed) {
+    if (!object._a) {
+      return;
     }
-  });
 
-  return Renderer;
-})();
+    if (object instanceof DisplayObjectContainer) {
+      var children = object._c;
+      var i = children.length;
+
+      while (i--) {
+        this.renderObject(children[i], elapsed);
+      }
+
+      return;
+    }
+
+    var ctx = this.ctx;
+
+    ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
+    ctx.globalAlpha = object._a;
+
+    if (object instanceof Sprite) {
+      var rect = object.group[object.frame];
+      ctx.drawImage(TextureManager.i, rect.x, rect.y, rect.w, rect.h, object.sx < 0 ? object.sx * rect.w : 0, object.sy < 0 ? object.sy * rect.h : 0, rect.w, rect.h);
+      object.advance(elapsed);
+    } else if (object instanceof Graphics) {
+      object._batch(ctx, object._color);
+    }
+  }
+});
 
 var Buffer = (function() {
   var ctx;
@@ -185,137 +181,115 @@ var Buffer = (function() {
   };
 })();
 
-var DisplayObject = (function() {
-  function DisplayObject() {
-    this.x = 0;
-    this.y = 0;
-    this.a = 1;
-    this.sx = this.sy = 1;
+function DisplayObject() {
+  this.x = 0;
+  this.y = 0;
+  this.a = 1;
+  this.sx = this.sy = 1;
 
-    this._x = 0;
-    this._y = 0;
-    this._a = 1;
-    this._p = null;
+  this._x = 0;
+  this._y = 0;
+  this._a = 1;
+  this._p = null;
+}
+
+define(DisplayObject.prototype, {
+  _transform: function() {
+    var parent = this._p;
+
+    // Calculate effective position
+    this._x = parent._x + this.x;
+    this._y = parent._y + this.y;
+
+    // Calculate effective alpha
+    this._a = this.a * parent._a;
   }
+});
 
-  define(DisplayObject.prototype, {
-    _transform: function() {
-      var parent = this._p;
+function Graphics(batch, color) {
+  DisplayObject.call(this);
+  this._batch = batch;
+  this._color = color;
+}
 
-      // Calculate effective position
-      this._x = parent._x + this.x;
-      this._y = parent._y + this.y;
+extend(Graphics, DisplayObject);
 
-      // Calculate effective alpha
-      this._a = this.a * parent._a;
+function Sprite(group, frame) {
+  DisplayObject.call(this);
+  this.group = TextureManager.g[group];
+  this.frame = frame || 0;
+  this.anim = null;
+  this.i = this.t = 0;
+}
+
+extend(Sprite, DisplayObject, {
+  play: function(anim) {
+    if (!this.anim || this.anim.n != anim) {
+      this.anim = TextureManager.a[anim];
+      this.frame = this.anim.f[this.i = this.t = 0];
     }
-  });
+  },
+  advance: function(elapsed) {
+    if (this.anim) {
+      // Go to the next frame
+      var frames = this.anim.f;
+      var duration = this.anim.d;
 
-  return DisplayObject;
-})();
-
-var Graphics = (function(_super) {
-  function Graphics(batch, color) {
-    _super.call(this);
-    this._batch = batch;
-    this._color = color;
-  }
-
-  extend(Graphics, _super);
-  return Graphics;
-})(DisplayObject);
-
-var Sprite = (function(_super) {
-  function Sprite(group, frame) {
-    _super.call(this);
-    this.group = TextureManager.g[group];
-    this.frame = frame || 0;
-    this.anim = null;
-    this.i = this.t = 0;
-  }
-
-  extend(Sprite, _super);
-  define(Sprite.prototype, {
-    play: function(anim) {
-      if (!this.anim || this.anim.n != anim) {
-        this.anim = TextureManager.a[anim];
-        this.frame = this.anim.f[this.i = this.t = 0];
-      }
-    },
-    advance: function(elapsed) {
-      if (this.anim) {
-        // Go to the next frame
-        var frames = this.anim.f;
-        var duration = this.anim.d;
-
-        this.t += elapsed;
-        while (this.t >= duration) {
-          this.t -= duration;
-          this.i = (this.i + 1) % frames.length;
-          this.frame = frames[this.i];
-        }
+      this.t += elapsed;
+      while (this.t >= duration) {
+        this.t -= duration;
+        this.i = (this.i + 1) % frames.length;
+        this.frame = frames[this.i];
       }
     }
-  });
-
-  return Sprite;
-})(DisplayObject);
-
-var DisplayObjectContainer = (function(_super) {
-  function DisplayObjectContainer() {
-    _super.call(this);
-    this._c = [];
   }
+});
 
-  extend(DisplayObjectContainer, _super);
-  define(DisplayObjectContainer.prototype, {
-    add: function(child) {
-      if (child._p) {
-        child._p.remove(child);
-      }
+function DisplayObjectContainer() {
+  DisplayObject.call(this);
+  this._c = [];
+}
 
-      this._c.push(child);
-      child._p = this;
-    },
-    remove: function(child) {
-      var children = this._c;
-      var i = children.indexOf(child);
-      if (i >= 0) {
-        children.splice(i, 1);
-        child._p = null;
-      }
-    },
-    _transform: function() {
-      _super.prototype._transform.call(this);
-
-      var children = this._c;
-      var i = children.length;
-
-      while (i--) {
-        children[i]._transform();
-      }
+extend(DisplayObjectContainer, DisplayObject, {
+  add: function(child) {
+    if (child._p) {
+      child._p.remove(child);
     }
-  });
 
-  return DisplayObjectContainer;
-})(DisplayObject);
+    this._c.push(child);
+    child._p = this;
+  },
+  remove: function(child) {
+    var children = this._c;
+    var i = children.indexOf(child);
+    if (i >= 0) {
+      children.splice(i, 1);
+      child._p = null;
+    }
+  },
+  _transform: function() {
+    DisplayObject.prototype._transform.call(this);
 
-var Stage = (function(_super) {
-  function Stage() {
-    _super.call(this);
+    var children = this._c;
+    var i = children.length;
+
+    while (i--) {
+      children[i]._transform();
+    }
   }
+});
 
-  extend(Stage, _super);
-  define(Stage.prototype, {
-    _transform: function() {
-      var children = this._c;
-      var i = children.length;
+function Stage() {
+  DisplayObjectContainer.call(this);
+}
 
-      while (i--) {
-        children[i]._transform();
-      }
+extend(Stage, DisplayObjectContainer, {
+  _transform: function() {
+    var children = this._c;
+    var i = children.length;
+
+    while (i--) {
+      children[i]._transform();
     }
-  });
-
-  return Stage;
-})(DisplayObjectContainer);
+  }
+});

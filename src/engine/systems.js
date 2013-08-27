@@ -120,38 +120,33 @@ var System = (function() {
   return System;
 })();
 
-var IteratingSystem = (function(_super) {
+/**
+ * @param {string[]} components
+ */
+function IteratingSystem(components) {
+  System.call(this, components);
+}
+
+extend(IteratingSystem, System, {
   /**
-   * @param {string[]} components
+   * Process tick with an entity.
+   *
+   * @param {int} entity
+   * @param {float} elapsed
    */
-  function IteratingSystem(components) {
-    _super.call(this, components);
-  }
+  onUpdate: function(entity, elapsed) {},
+  /**
+   * Process tick.
+   *
+   * @param {float} elapsed
+   */
+  update: function(elapsed) {
+    var onUpdate = this.onUpdate;
+    var entities = EntityManager.filter(this.c);
+    var i = entities.length;
 
-  extend(IteratingSystem, System);
-  define(IteratingSystem.prototype, {
-    /**
-     * Process tick with an entity.
-     *
-     * @param {int} entity
-     * @param {float} elapsed
-     */
-    onUpdate: function(entity, elapsed) {},
-    /**
-     * Process tick.
-     *
-     * @param {float} elapsed
-     */
-    update: function(elapsed) {
-      var onUpdate = this.onUpdate;
-      var entities = EntityManager.filter(this.c);
-      var i = entities.length;
-
-      while (i--) {
-        onUpdate.call(this, entities[i], elapsed);
-      }
+    while (i--) {
+      onUpdate.call(this, entities[i], elapsed);
     }
-  });
-
-  return IteratingSystem;
-})(System);
+  }
+});
