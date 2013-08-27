@@ -65,7 +65,7 @@ module.exports = function(grunt) {
           level: 9,
         },
         files: [
-          {expand: true, cwd: 'dist/', src: ['pixelwars.min.js', 'index.html']},
+          {expand: true, cwd: 'dist/', src: ['p.js', 'index.html']},
           {expand: true, flatten: true, src: ['assets/*.png']},
         ],
       },
@@ -73,8 +73,11 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         options: {
-          banner: "var Pixelwars = (function(window, document, Math) {\n",
-          footer: "return Pixelwars;\n})(window, document, Math)\n",
+          // Globals must be adjusted before packaging the final version.
+          // Dropping some of them produce a bigger JavaScript file but
+          // smaller ZIP archive. RLY? WTF!
+          banner: "var G = (function(window, document, Object, Math) {\n",
+          footer: "return Pixelwars;\n})(window, document, Object, Math)\n",
         },
         files: {
           'dist/pixelwars.js': [files.engine, files.game],
@@ -100,7 +103,7 @@ module.exports = function(grunt) {
           },
         },
         files: {
-          'dist/pixelwars.min.js': ['dist/pixelwars.js'],
+          'dist/p.js': ['dist/pixelwars.js'],
         },
       },
     },
