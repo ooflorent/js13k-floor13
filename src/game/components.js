@@ -5,7 +5,7 @@ function Position(x, y, r) {
 }
 
 Position.d = function(r) {
-  rabs = Math.abs(r);
+  var rabs = Math.abs(r);
   if (r == 180 || rabs == 135) {
     return 'n';
   } else if (!r || rabs == 45) {

@@ -96,6 +96,9 @@ var TextureManager = (function() {
         f: frames,
         d: duration
       };
+    },
+    random: function(name) {
+      return getRandomElement(this.g[name]);
     }
   };
 })();
@@ -109,47 +112,45 @@ var Renderer = (function() {
     this.h = canvas.height = height;
   }
 
-  function renderObject(ctx, object, elapsed) {
-    if (!object._a) {
-      return;
-    }
-
-    if (object instanceof DisplayObjectContainer) {
-      var children = object._c;
-      var i = children.length;
-
-      while (i--) {
-        renderObject(ctx, children[i], elapsed);
-      }
-
-      return;
-    }
-
-    ctx.save();
-    ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
-    ctx.globalAlpha = object._a;
-
-    if (object instanceof Sprite) {
-      var rect = object.group[object.frame];
-      ctx.drawImage(TextureManager.i, rect.x, rect.y, rect.w, rect.h, object.sx < 0 ? object.sx * rect.w : 0, object.sy < 0 ? object.sy * rect.h : 0, rect.w, rect.h);
-      object.advance(elapsed);
-    } else if (object instanceof Graphics) {
-      object._batch(ctx, object._color);
-    }
-
-    ctx.restore();
-  }
-
   define(Renderer.prototype, {
     render: function(stage, elapsed) {
       var ctx = this.ctx;
+      var canvas = this.canvas;
 
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, this.w, this.h);
 
       stage._transform();
-      renderObject(ctx, stage, elapsed * 1000 | 0);
+      this.renderObject(stage, elapsed * 1000 | 0);
+    },
+    renderObject: function(object, elapsed) {
+      if (!object._a) {
+        return;
+      }
+
+      if (object instanceof DisplayObjectContainer) {
+        var children = object._c;
+        var i = children.length;
+
+        while (i--) {
+          this.renderObject(children[i], elapsed);
+        }
+
+        return;
+      }
+
+      var ctx = this.ctx;
+
+      ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
+      ctx.globalAlpha = object._a;
+
+      if (object instanceof Sprite) {
+        var rect = object.group[object.frame];
+        ctx.drawImage(TextureManager.i, rect.x, rect.y, rect.w, rect.h, object.sx < 0 ? object.sx * rect.w : 0, object.sy < 0 ? object.sy * rect.h : 0, rect.w, rect.h);
+        object.advance(elapsed);
+      } else if (object instanceof Graphics) {
+        object._batch(ctx, object._color);
+      }
     }
   });
 
@@ -177,6 +178,8 @@ var Buffer = (function() {
     },
     render: function(elapsed) {
       renderer.render(this.stage, elapsed);
+
+      ctx.clearRect(0, 0, width, height);
       ctx.drawImage(renderer.canvas, 0, 0);
     }
   };

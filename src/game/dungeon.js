@@ -1,12 +1,13 @@
+var TILE_BLANK = 0;
+var TILE_FLOOR = 1;
+var TILE_CORNER = 2;
+var TILE_WALL_N = 3;
+var TILE_WALL_E = 4;
+var TILE_WALL_S = 5;
+var TILE_WALL_W = 6;
+var TILE_DOOR = 7;
+
 var generateDungeon = (function() {
-  var TILE_BLANK = 0;
-  var TILE_FLOOR = 1;
-  var TILE_CORNER = 2;
-  var TILE_WALL_N = 3;
-  var TILE_WALL_E = 4;
-  var TILE_WALL_S = 5;
-  var TILE_WALL_W = 6;
-  var TILE_DOOR = 7;
 
   var DIRECTION = [];
   var DIRECTION_N = DIRECTION[TILE_WALL_N] = 1;
@@ -14,25 +15,32 @@ var generateDungeon = (function() {
   var DIRECTION_S = DIRECTION[TILE_WALL_S] = 3;
   var DIRECTION_W = DIRECTION[TILE_WALL_W] = 4;
 
-  var Dungeon = (function(_super) {
-    function Dungeon(width, height) {
-      _super.call(this, width, height);
-      this.r = [];
-    }
+  function Dungeon(width, height) {
+    Array2.call(this, width, height);
+    this.r = [];
+  }
 
-    extend(Dungeon, _super);
-    return Dungeon;
-  })(Array2);
+  extend(Dungeon, Array2);
 
-  var Room = (function(_super) {
-    function Room(width, height) {
-      _super.call(this, width, height);
+  function Room(width, height) {
+    Array2.call(this, width, height);
       this.x = this.y = 0;
+  }
+
+  extend(Room, Array2);
+
+  function isWall(dungeon, x, y) {
+    if (x < 0 || y < 0 || x >= dungeon.w || y >= dungeon.h) {
+      return false;
     }
 
-    extend(Room, _super);
-    return Room;
-  })(Array2);
+    var t = dungeon.g(x, y);
+    return t > TILE_FLOOR && t < TILE_DOOR;
+  }
+
+  function isCorner(a, b, ab) {
+    return a && b && !ab || !a && !b;
+  }
 
   function generateDungeon(width, height, minSize, maxSize) {
     var dungeon = new Dungeon(width, height);
@@ -40,15 +48,15 @@ var generateDungeon = (function() {
 
     placeRoom(dungeon, room, (width - room.w) / 2 | 0, (height - room.h) / 2 | 0);
 
-    var n = width * height * 2;
-    for (var i = 0; i < n; i++) {
+    var x, y;
+    var it = width * height * 2;
+    for (var i = 0; i < it; i++) {
       var branchingPos = getBranchingPosition(dungeon);
       var direction = DIRECTION[dungeon.g(branchingPos.x, branchingPos.y)];
 
       if (direction) {
         room = generateRoom(minSize, maxSize);
 
-        var x, y;
         if (direction == DIRECTION_N) {
           x = branchingPos.x - room.w / 2;
           y = branchingPos.y - room.h / 2;
@@ -71,6 +79,33 @@ var generateDungeon = (function() {
           connectRooms(dungeon, branchingPos, direction);
         } else {
           i++;
+        }
+      }
+    }
+
+    // Some corners may have been turned into normal wall.
+    // Let's fix this.
+    for (y = height; y--;) {
+      for (x = width; x--;) {
+        if (dungeon.g(x, y) != TILE_CORNER) {
+          continue;
+        }
+
+        var n = isWall(dungeon, x, y - 1);
+        var s = isWall(dungeon, x, y + 1);
+        var w = isWall(dungeon, x - 1, y);
+        var e = isWall(dungeon, x + 1, y);
+        var nw = isWall(dungeon, x - 1, y - 1);
+        var ne = isWall(dungeon, x + 1, y - 1);
+        var sw = isWall(dungeon, x - 1, y + 1);
+        var se = isWall(dungeon, x + 1, y + 1);
+
+        if (!isCorner(n, w, nw) && !isCorner(n, e, ne) && !isCorner(s, w, sw) && !isCorner(s, e, se)) {
+          if (n && s) {
+            dungeon.s(x, y, e ? TILE_WALL_E : TILE_WALL_W); // Vertical wall
+          } else {
+            dungeon.s(x, y, n ? TILE_WALL_N : TILE_WALL_S); // Horizontal wall
+          }
         }
       }
     }
@@ -123,17 +158,11 @@ var generateDungeon = (function() {
       var y = room.y + getRandomInt(0, room.h - 1);
 
       if (dungeon.g(x, y) > TILE_CORNER) {
-        return {
-          x: x,
-          y: y
-        };
+        return {x: x, y: y};
       }
     }
 
-    return {
-      x: 0,
-      y: 0
-    };
+    return {x: 0, y: 0};
   }
 
   function hasEnoughtSpaceForRoom(dungeon, room, gridX, gridY) {
@@ -152,17 +181,29 @@ var generateDungeon = (function() {
   }
 
   function connectRooms(dungeon, branchingPos, direction) {
-    dungeon.s(branchingPos.x, branchingPos.y, TILE_DOOR);
+    var corners = [];
 
     if (direction == DIRECTION_N) {
+      corners.push([-1, 0], [-1, -1], [1, 0], [1, -1]);
       dungeon.s(branchingPos.x, branchingPos.y - 1, TILE_FLOOR);
     } else if (direction == DIRECTION_E) {
+      corners.push([0, -1], [1, -1], [0, 1], [1, 1]);
       dungeon.s(branchingPos.x + 1, branchingPos.y,  TILE_FLOOR);
     } else if (direction == DIRECTION_S) {
+      corners.push([-1, 0], [-1, 1], [1, 0], [1, 1]);
       dungeon.s(branchingPos.x, branchingPos.y + 1,  TILE_FLOOR);
     } else { // WEST
+      corners.push([0, -1], [-1, -1], [0, 1], [-1, 1]);
       dungeon.s(branchingPos.x - 1, branchingPos.y,  TILE_FLOOR);
     }
+
+    // Mark adjacent tiles as corners
+    for (var i = 4; i--;) {
+      dungeon.s(branchingPos.x + corners[i][0], branchingPos.y + corners[i][1], TILE_CORNER);
+    }
+
+    // Open the wall and put a door
+    dungeon.s(branchingPos.x, branchingPos.y, TILE_DOOR);
   }
 
   return generateDungeon;
@@ -173,8 +214,9 @@ if (__PW_DEBUG) {
     var s = '';
     for (var y = 0; y < dungeon.h; y++) {
       for (var x = 0; x < dungeon.w; x++) {
+        var t = dungeon.g(x, y);
         var tile;
-        switch (dungeon.g(x, y)) {
+        switch (t) {
           case 1:
             tile = ' ';
             break;
@@ -188,7 +230,7 @@ if (__PW_DEBUG) {
           case 5:
           case 4:
           case 6:
-            tile = '░';
+            tile = t;
             break;
 
           case 7:
@@ -208,5 +250,3 @@ if (__PW_DEBUG) {
     return s;
   };
 }
-
-console.log(dumpDungeon(generateDungeon(80, 50, 4, 12)));
