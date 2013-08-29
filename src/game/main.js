@@ -16,14 +16,14 @@ var Pixelwars = {
       TextureManager.slice('c4', 16, 16, 16, 16);
       TextureManager.slice('r', 80, 0, 16, 16, 1, 2); // Roof
       TextureManager.slice('f', 0, 16, 16, 16);       // Floor
-      TextureManager.slice('p', 0, 32, 9, 10, 8);      // Player
+      TextureManager.slice('p', 0, 32, 9, 10, 8);     // Player
 
       TextureManager.anim('_n', [5]);
       TextureManager.anim('_h', [0]);
       TextureManager.anim('_s', [2]);
-      TextureManager.anim('n', [6, 7], 6);
-      TextureManager.anim('h', [0, 1], 8);
-      TextureManager.anim('s', [3, 4], 6);
+      TextureManager.anim('n', [7, 6], 6);
+      TextureManager.anim('h', [1, 0], 8);
+      TextureManager.anim('s', [4, 3], 6);
 
       // Run game
       GameState.enter(canvas);

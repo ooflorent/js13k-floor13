@@ -257,7 +257,7 @@ function AnimatedSprite(textures, animations, defaultAnimation) {
   Sprite.call(this);
   this.t = textures;
   this.a = animations;
-  this.play(defaultAnimation)
+  this.play(defaultAnimation);
 }
 
 __extend(AnimatedSprite, Sprite, {
