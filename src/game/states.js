@@ -1,72 +1,107 @@
 var EntityCreator = {
   player: function() {
-    var player = Pixelwars.e('player');
+    var player = Pixelwars.e('p');
     EntityManager.add(player, new Position());
     EntityManager.add(player, new Motion());
-    EntityManager.add(player, new Display(new Sprite('player')));
+    EntityManager.add(player, new Display(new AnimatedSprite(TextureManager.get('p'), {
+      _n: TextureManager.a('_n'), // Idle north
+      _s: TextureManager.a('_s'), // Idle south
+      _h: TextureManager.a('_h'), // Idle east or west
+      n: TextureManager.a('n'),   // Walk north
+      s: TextureManager.a('s'),   // Walk south
+      h: TextureManager.a('h')    // Walk east of west
+    }, '_s')));
     return player;
   },
   dungeon: function() {
-    var dungeon = Pixelwars.e('djn');
-    var map = generateDungeon(80, 50, 4, 12);
-    console.log(dumpDungeon(map));
+    var dungeon = Pixelwars.e('d');
+    var map = generateDungeon(20, 15, 4, 7);
     EntityManager.add(dungeon, new Position());
-    //EntityManager.add(dungeon, new Display(new Tilemap(map)));
+    EntityManager.add(dungeon, new Display(new Sprite(new Tilemap(map))));
     return dungeon;
   }
 };
-/*
-var Tilemap = (function(_super) {
-  function Tilemap(map) {
-    _super.call(this);
 
-    var renderer = new Renderer(map.w * 16, map.h * 16);
-    for (var y = map.h; y--;) {
-      for (var x = map.w; x--;) {
-        var tile;
-        var sx = sy = 1;
+function Tilemap(map) {
+  RenderTexture.call(this, map.w * 16, map.h * 16);
 
-        switch (map.g(x, y)) {
-          case TILE_BLANK:
-            tile = 'roof');
-            break;
+  var tile = new Sprite();
+  for (var y = map.h; y--;) {
+    for (var x = map.w; x--;) {
+      var texture;
+      var sx = sy = 1;
 
-          case TILE_FLOOR:
-            tile = 'floor');
-            break;
+      switch (map.g(x, y)) {
+        case TILE_BLANK:
+          texture = 'r';
+          break;
 
-          case TILE_WALL_N:
-            tile = 'wall_n');
-            break;
+        case TILE_WALL_N:
+          texture = 'wn';
+          break;
 
-          case TILE_WALL_S:
-            tile = 'wall_h';
-            break;
+        case TILE_WALL_S:
+          texture = 'ws';
+          break;
 
-          case TILE_WALL_W:
-            sy = -1;
-            // no break!
+        case TILE_WALL_W:
+          sx = -1;
+          // no break!
 
-          case TILE_WALL_E:
-            tile = 'wall_v';
-            break;
+        case TILE_WALL_E:
+          texture = 'wh';
+          break;
 
-          // Corners are a bit special and need a special treatment!
-          case TILE_CORNER:
-            break;
+        // Corners are a bit special and need a special treatment!
+        case TILE_CORNER:
+          var n = isWall(map, x, y - 1);
+          var s = isWall(map, x, y + 1);
+          var w = isWall(map, x - 1, y);
+          var e = isWall(map, x + 1, y);
+          var nw = isWall(map, x - 1, y - 1);
+          var ne = isWall(map, x + 1, y - 1);
+          var sw = isWall(map, x - 1, y + 1);
+          var se = isWall(map, x + 1, y + 1);
 
-          default:
-            continue;
-        }
+          if (!s && !w) {
+            texture = 'c1';
+          } else if (!s && !e) {
+            texture = 'c1';
+            sx = -1;
+          } else if (!n && !w) {
+            texture = 'c2';
+          } else if (!n && !e) {
+            texture = 'c2';
+            sx = -1;
+          } else if (n && e && !ne) {
+            texture = 'c3';
+            sx = -1;
+          } else if (n && w && !nw) {
+            texture = 'c3';
+          } else if (s && e && !se) {
+            texture = 'c4';
+            sx = -1;
+          } else {
+            texture = 'c4';
+          }
+          break;
 
-        renderer.renderObject(new Sprite(TextureManager.random(texture)));
+        case TILE_FLOOR:
+        default:
+          texture = 'f';
       }
+
+      tile.texture = TextureManager.random(texture);
+      tile.sx = sx;
+      tile.sy = sy;
+
+      this.render(tile, {x: x * 16, y: y * 16});
     }
   }
+}
 
-  return Tilemap;
-})(DisplayObject);
-*/
+__extend(Tilemap, RenderTexture);
+
 var GameState = {
   enter: function(canvas) {
     // Initialize rendering engine

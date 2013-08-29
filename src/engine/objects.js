@@ -3,8 +3,8 @@
  * @param {Function} classB
  * @param {any} props
  */
-function extend(classA, classB, props) {
-  define(classA, classB);
+function __extend(classA, classB, props) {
+  __mixin(classA, classB);
 
   function __() {
     this.constructor = classA;
@@ -14,7 +14,7 @@ function extend(classA, classB, props) {
   classA.prototype = new __();
 
   if (props) {
-    define(classA.prototype, props);
+    __define(classA, props);
   }
 }
 
@@ -22,10 +22,18 @@ function extend(classA, classB, props) {
  * @param {any} classA
  * @param {any} props
  */
-function define(classA, props) {
-  for (var prop in props) {
-    if (props.hasOwnProperty(prop)) {
-      classA[prop] = props[prop];
+function __define(classA, props) {
+  __mixin(classA.prototype, props);
+}
+
+/**
+ * @param {any} classA
+ * @param {any} props
+ */
+function __mixin(objA, objB) {
+  for (var prop in objB) {
+    if (objB.hasOwnProperty(prop)) {
+      objA[prop] = objB[prop];
     }
   }
 }

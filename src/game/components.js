@@ -12,7 +12,7 @@ Position.d = function(r) {
     return 's';
   }
 
-  return r > 0 ? 'e' : 'w';
+  return 'h';
 };
 
 function Motion(dx, dy, dr) {

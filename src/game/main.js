@@ -7,23 +7,23 @@ var Pixelwars = {
   run: function(canvas) {
     TextureManager.init(__PW_ASSETS_DIR + 'tiles.png', function() {
       // Define tiles
-      TextureManager.slice('wall_n', 0, 0, 16, 16, 3);
-      TextureManager.slice('wall_v', 64, 0, 16, 16);
-      TextureManager.slice('wall_h', 48, 16, 16, 16);
-      TextureManager.slice('wall_c1', 48, 0, 16, 16);
-      TextureManager.slice('wall_c2', 32, 16, 16, 16);
-      TextureManager.slice('wall_c3', 64, 16, 16, 16);
-      TextureManager.slice('roof', 80, 0, 16, 16, 1, 4);
-      TextureManager.slice('floor', 0, 16, 16, 16, 2);
-      TextureManager.slice('player', 0, 32, 7, 8, 8);
-      TextureManager.anim('idl_n', [5]);
-      TextureManager.anim('idl_e', [0]);
-      TextureManager.anim('idl_s', [2]);
-      TextureManager.anim('idl_w', [0]);
+      TextureManager.slice('wn', 0, 0, 16, 16, 3);    // North wall
+      TextureManager.slice('wh', 64, 0, 16, 16);      // East and west walls
+      TextureManager.slice('ws', 48, 16, 16, 16);     // South wall
+      TextureManager.slice('c1', 48, 0, 16, 16);      // Corners
+      TextureManager.slice('c2', 32, 16, 16, 16);
+      TextureManager.slice('c3', 64, 16, 16, 16);
+      TextureManager.slice('c4', 16, 16, 16, 16);
+      TextureManager.slice('r', 80, 0, 16, 16, 1, 2); // Roof
+      TextureManager.slice('f', 0, 16, 16, 16);       // Floor
+      TextureManager.slice('p', 0, 32, 9, 10, 8);      // Player
+
+      TextureManager.anim('_n', [5]);
+      TextureManager.anim('_h', [0]);
+      TextureManager.anim('_s', [2]);
       TextureManager.anim('n', [6, 7], 6);
-      TextureManager.anim('e', [0, 1], 8);
+      TextureManager.anim('h', [0, 1], 8);
       TextureManager.anim('s', [3, 4], 6);
-      TextureManager.anim('w', [0, 1], 8);
 
       // Run game
       GameState.enter(canvas);

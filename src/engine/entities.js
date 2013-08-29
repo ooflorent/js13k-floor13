@@ -14,9 +14,8 @@ var EntityManager = (function () {
    */
   function intersect(a, b) {
     var results = [];
-    var i = a.length;
 
-    while (i--) {
+    for (var i = 0, n = a.length; i < n; i++) {
       if (b.indexOf(a[i]) >= 0) {
         results.push(a[i]);
       }

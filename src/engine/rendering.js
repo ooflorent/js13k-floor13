@@ -57,14 +57,15 @@ function mosaic(scale) {
 }
 
 var TextureManager = (function() {
+  var image;
+  var textures = {};
+  var animations = {};
+
   return {
-    i: null,
-    a: {},
-    g: {},
     init: function(spritesheet, onLoad) {
-      var img = this.i = new Image();
-      img.src = spritesheet;
-      img.onload = function() {
+      image = new Image();
+      image.src = spritesheet;
+      image.onload = function() {
         onLoad();
       };
     },
@@ -72,17 +73,20 @@ var TextureManager = (function() {
       repeatX = repeatX || 1;
       repeatY = repeatY || 1;
 
-      var group = this.g[name] = [];
+      var frames = textures[name] = [];
       for (var iy = 0; iy < repeatY; iy++) {
         for (var ix = 0; ix < repeatX; ix++) {
-          group.push({
+          frames.push(new Texture(image, {
             x: x + ix * width,
             y: y + iy * height,
             w: width,
             h: height
-          });
+          }));
         }
       }
+    },
+    get: function(name) {
+      return textures[name];
     },
     anim: function(name, frames, duration) {
       if (duration) {
@@ -91,17 +95,47 @@ var TextureManager = (function() {
         duration = 0xFFFFFFFF;
       }
 
-      this.a[name] = {
+      animations[name] = {
         n: name,
         f: frames,
         d: duration
       };
     },
+    a: function(name) {
+      return animations[name];
+    },
     random: function(name) {
-      return getRandomElement(this.g[name]);
+      return getRandomElement(textures[name]);
     }
   };
 })();
+
+function Texture(source, frame) {
+  this.source = source;
+  this.frame = frame;
+}
+
+function RenderTexture(width, height) {
+  this.frame = {
+    x: 0,
+    y: 0,
+    w: width,
+    h: height
+  };
+  this.r = new Renderer(width, height);
+  this.source = this.r.canvas;
+}
+
+__define(RenderTexture, {
+  render: function(object, position) {
+    if (position) {
+      object._x = position.x;
+      object._y = position.y;
+    }
+
+    this.r.renderObject(object);
+  }
+});
 
 function Renderer(width, height) {
   var canvas = this.canvas = createCanvas();
@@ -111,7 +145,7 @@ function Renderer(width, height) {
   this.h = canvas.height = height;
 }
 
-define(Renderer.prototype, {
+__define(Renderer, {
   render: function(stage, elapsed) {
     var ctx = this.ctx;
     var canvas = this.canvas;
@@ -129,9 +163,7 @@ define(Renderer.prototype, {
 
     if (object instanceof DisplayObjectContainer) {
       var children = object._c;
-      var i = children.length;
-
-      while (i--) {
+      for (var i = 0, n = children.length; i < n; i++) {
         this.renderObject(children[i], elapsed);
       }
 
@@ -144,11 +176,14 @@ define(Renderer.prototype, {
     ctx.globalAlpha = object._a;
 
     if (object instanceof Sprite) {
-      var rect = object.group[object.frame];
-      ctx.drawImage(TextureManager.i, rect.x, rect.y, rect.w, rect.h, object.sx < 0 ? object.sx * rect.w : 0, object.sy < 0 ? object.sy * rect.h : 0, rect.w, rect.h);
-      object.advance(elapsed);
+      var frame = object.texture.frame;
+      ctx.drawImage(object.texture.source, frame.x, frame.y, frame.w, frame.h, object.sx < 0 ? object.sx * frame.w : 0, object.sy < 0 ? object.sy * frame.h : 0, frame.w, frame.h);
     } else if (object instanceof Graphics) {
       object._batch(ctx, object._color);
+    }
+
+    if (object instanceof AnimatedSprite) {
+      object.advance(elapsed);
     }
   }
 });
@@ -182,18 +217,15 @@ var Buffer = (function() {
 })();
 
 function DisplayObject() {
-  this.x = 0;
-  this.y = 0;
-  this.a = 1;
-  this.sx = this.sy = 1;
+  this.x = this.y = 0;
+  this.alpha = this.sx = this.sy = 1;
 
-  this._x = 0;
-  this._y = 0;
+  this._x = this._y = 0;
   this._a = 1;
   this._p = null;
 }
 
-define(DisplayObject.prototype, {
+__define(DisplayObject, {
   _transform: function() {
     var parent = this._p;
 
@@ -202,7 +234,7 @@ define(DisplayObject.prototype, {
     this._y = parent._y + this.y;
 
     // Calculate effective alpha
-    this._a = this.a * parent._a;
+    this._a = this.alpha * parent._a;
   }
 });
 
@@ -212,34 +244,41 @@ function Graphics(batch, color) {
   this._color = color;
 }
 
-extend(Graphics, DisplayObject);
+__extend(Graphics, DisplayObject);
 
-function Sprite(group, frame) {
+function Sprite(texture) {
   DisplayObject.call(this);
-  this.group = TextureManager.g[group];
-  this.frame = frame || 0;
-  this.anim = null;
-  this.i = this.t = 0;
+  this.texture = texture;
 }
 
-extend(Sprite, DisplayObject, {
+__extend(Sprite, DisplayObject);
+
+function AnimatedSprite(textures, animations, defaultAnimation) {
+  Sprite.call(this);
+  this.t = textures;
+  this.a = animations;
+  this.play(defaultAnimation)
+}
+
+__extend(AnimatedSprite, Sprite, {
   play: function(anim) {
-    if (!this.anim || this.anim.n != anim) {
-      this.anim = TextureManager.a[anim];
-      this.frame = this.anim.f[this.i = this.t = 0];
+    if (this.c != anim) {
+      this.texture = this.t[this.a[this.c = anim].f[this.f = this.d = 0]];
     }
   },
   advance: function(elapsed) {
-    if (this.anim) {
-      // Go to the next frame
-      var frames = this.anim.f;
-      var duration = this.anim.d;
+    if (this.c) {
+      var frames = this.a[this.c].f;
+      var duration = this.a[this.c].d;
 
-      this.t += elapsed;
-      while (this.t >= duration) {
-        this.t -= duration;
-        this.i = (this.i + 1) % frames.length;
-        this.frame = frames[this.i];
+      //console.log(this);
+
+      // Go to the next frame
+      this.d += elapsed;
+      while (this.d >= duration) {
+        this.d -= duration;
+        this.f = (this.f + 1) % frames.length;
+        this.texture = this.t[frames[this.f]];
       }
     }
   }
@@ -250,7 +289,7 @@ function DisplayObjectContainer() {
   this._c = [];
 }
 
-extend(DisplayObjectContainer, DisplayObject, {
+__extend(DisplayObjectContainer, DisplayObject, {
   add: function(child) {
     if (child._p) {
       child._p.remove(child);
@@ -283,7 +322,7 @@ function Stage() {
   DisplayObjectContainer.call(this);
 }
 
-extend(Stage, DisplayObjectContainer, {
+__extend(Stage, DisplayObjectContainer, {
   _transform: function() {
     var children = this._c;
     var i = children.length;

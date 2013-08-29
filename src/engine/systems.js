@@ -1,4 +1,4 @@
-var SystemManager = (function(window) {
+var SystemManager = (function() {
   var systems = [];
   var requestID = -1;
 
@@ -65,60 +65,56 @@ var SystemManager = (function(window) {
       }
     }
   };
-})(window);
-
-var System = (function() {
-  function createMatcher(components, callback) {
-    return function(entity) {
-      if (EntityManager.match(entity, components)) {
-        callback(entity);
-      }
-    };
-  }
-
-  /**
-   * Basic game system.
-   *
-   * @param {string[]} components
-   */
-  function System(components) {
-    this.c = components;
-
-    if (components) {
-      // Listen entities changes
-      EventManager.add('_ca', this._ca = createMatcher(components, this.add));
-      EventManager.add('_cr', this._cr = createMatcher(components, this.remove));
-    }
-  }
-
-  define(System.prototype, {
-    /**
-     * Called by the SystemManager during the destruction.
-     */
-    clear: function() {
-      EventManager.remove('_ca', this._ca);
-      EventManager.remove('_cr', this._cr);
-    },
-    /**
-     * Called when a new entity is added to the system.
-     * @param {int} entity
-     */
-    add: function(entity) {},
-    /**
-     * Called when an entity is removed from the system.
-     * @param {int} entity
-     */
-    remove: function(entity) {},
-    /**
-     * Process tick.
-     *
-     * @param {float} elapsed
-     */
-    update: function(elapsed) {}
-  });
-
-  return System;
 })();
+
+/**
+ * Basic game system.
+ *
+ * @param {string[]} components
+ */
+function System(components) {
+  this.c = components;
+
+  if (components) {
+    var createMatcher = function(components, callback) {
+      return function(entity) {
+        if (EntityManager.match(entity, components)) {
+          callback(entity);
+        }
+      };
+    };
+
+    // Listen entities changes
+    EventManager.add('_ca', this._ca = createMatcher(components, this.add));
+    EventManager.add('_cr', this._cr = createMatcher(components, this.remove));
+  }
+}
+
+__define(System, {
+  /**
+   * Called by the SystemManager during the destruction.
+   */
+  clear: function() {
+    EventManager.remove('_ca', this._ca);
+    EventManager.remove('_cr', this._cr);
+  },
+  /**
+   * Called when a new entity is added to the system.
+   * @param {int} entity
+   */
+  add: function(entity) {},
+  /**
+   * Called when an entity is removed from the system.
+   * @param {int} entity
+   */
+  remove: function(entity) {},
+  /**
+   * Process tick.
+   *
+   * @param {float} elapsed
+   */
+  update: function(elapsed) {}
+});
 
 /**
  * @param {string[]} components
@@ -127,7 +123,7 @@ function IteratingSystem(components) {
   System.call(this, components);
 }
 
-extend(IteratingSystem, System, {
+__extend(IteratingSystem, System, {
   /**
    * Process tick with an entity.
    *
