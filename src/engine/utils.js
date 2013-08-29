@@ -33,6 +33,10 @@ __define(Array2, {
 // Math
 // ----
 
+function clamp(x, min, max) {
+  return x < min ? min : (x > max ? max : x);
+}
+
 function getRandomInt(min, max) {
   return min + Math.random() * (max - min + 1) | 0;
 }

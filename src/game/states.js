@@ -110,6 +110,7 @@ var GameState = {
     // Initialize game systems
     SystemManager.register(new PlayerControlSystem());
     SystemManager.register(new MovementSystem());
+    SystemManager.register(new CameraSystem());
     SystemManager.register(new RenderingSystem());
 
     // Generate world
