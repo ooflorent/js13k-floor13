@@ -21,10 +21,16 @@
   <script src="engine/rendering.js"></script>
   <!-- Game -->
   <script src="game/dungeon.js"></script>
-  <script src="game/states.js"></script>
+  <script src="game/tilemap.js"></script>
   <script src="game/main.js"></script>
   <script src="game/components.js"></script>
-  <script src="game/systems.js"></script>
+  <script src="game/systems/bounds-renderer.js"></script>
+  <script src="game/systems/camera.js"></script>
+  <script src="game/systems/dungeon-collision.js"></script>
+  <script src="game/systems/movement.js"></script>
+  <script src="game/systems/player-control.js"></script>
+  <script src="game/systems/sprite-renderer.js"></script>
+  <script src="game/screens/game.js"></script>
   <script>
     Pixelwars.run($('c'));
   </script>

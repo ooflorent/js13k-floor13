@@ -29,10 +29,15 @@ module.exports = function(grunt) {
     ],
     game: [
       '<%= dirs.game %>/dungeon.js',
-      '<%= dirs.game %>/states.js',
+      '<%= dirs.game %>/tilemap.js',
       '<%= dirs.game %>/main.js',
       '<%= dirs.game %>/components.js',
-      '<%= dirs.game %>/systems.js',
+      '<%= dirs.game %>/systems/camera.js',
+      '<%= dirs.game %>/systems/dungeon-collision.js',
+      '<%= dirs.game %>/systems/movement.js',
+      '<%= dirs.game %>/systems/player-control.js',
+      '<%= dirs.game %>/systems/sprite-renderer.js',
+      '<%= dirs.game %>/screens/game.js',
     ],
   };
 
@@ -54,7 +59,7 @@ module.exports = function(grunt) {
         '-W018': true,
         '-W120': true,
       },
-      files: ['Gruntfile.js', '<%= dirs.engine %>/*.js', '<%= dirs.game %>/*.js'],
+      files: ['Gruntfile.js', 'src/**/*.js'],
     },
     watch: {
       files: ['<%= jshint.files %>'],

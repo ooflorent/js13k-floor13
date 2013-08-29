@@ -26,7 +26,7 @@ var Pixelwars = {
       TextureManager.anim('s', [4, 3], 6);
 
       // Run game
-      GameState.enter(canvas);
+      GameScreen.enter(canvas);
     });
   }
 };
