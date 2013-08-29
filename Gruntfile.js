@@ -48,6 +48,7 @@ module.exports = function(grunt) {
     },
     jshint: {
       options: {
+        '-W082': true,
         '-W084': true,
         '-W086': true,
         '-W018': true,

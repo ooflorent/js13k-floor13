@@ -24,3 +24,10 @@ function Motion(dx, dy, dr) {
 function Display(gfx) {
   this.gfx = gfx;
 }
+
+function Bounds(x, y, width, height) {
+  this.x = x;
+  this.y = y;
+  this.w = width;
+  this.h = height;
+}

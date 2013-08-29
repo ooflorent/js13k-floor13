@@ -5,15 +5,18 @@ var TILE_WALL_N = 3;
 var TILE_WALL_E = 4;
 var TILE_WALL_S = 5;
 var TILE_WALL_W = 6;
-var TILE_DOOR = 7;
+
+function Dungeon(width, height) {
+  Array2.call(this, width, height);
+  this.r = []; // Rooms
+  this.d = []; // Doors
+  this.prev = this.next = null; // Entrance and exit
+}
+
+__extend(Dungeon, Array2);
 
 function isWall(dungeon, x, y) {
-  if (x < 0 || y < 0 || x >= dungeon.w || y >= dungeon.h) {
-    return false;
-  }
-
-  var t = dungeon.g(x, y);
-  return t == TILE_BLANK || t > TILE_FLOOR && t < TILE_DOOR;
+  return x >= 0 && y >= 0 && x < dungeon.w && y < dungeon.h && dungeon.g(x, y) != TILE_FLOOR;
 }
 
 var generateDungeon = (function() {
@@ -22,13 +25,6 @@ var generateDungeon = (function() {
   var DIRECTION_E = DIRECTION[TILE_WALL_E] = 2;
   var DIRECTION_S = DIRECTION[TILE_WALL_S] = 3;
   var DIRECTION_W = DIRECTION[TILE_WALL_W] = 4;
-
-  function Dungeon(width, height) {
-    Array2.call(this, width, height);
-    this.r = [];
-  }
-
-  __extend(Dungeon, Array2);
 
   function Room(width, height) {
     Array2.call(this, width, height);
@@ -108,6 +104,23 @@ var generateDungeon = (function() {
         }
       }
     }
+
+    // Define entrance and exit
+    var entrance = getRandomElement(dungeon.r);
+    var exit;
+    do {
+      exit = getRandomElement(dungeon.r);
+    } while (entrance === exit);
+
+    dungeon.prev = {
+      x: entrance.x + getRandomInt(1, entrance.w - 2),
+      y: entrance.y + getRandomInt(1, entrance.h - 2)
+    };
+
+    dungeon.next = {
+      x: exit.x + getRandomInt(1, exit.w - 2),
+      y: exit.y + getRandomInt(1, exit.h - 2)
+    };
 
     if (__PW_DEBUG) {
       console.log(dumpDungeon(dungeon));
@@ -206,7 +219,8 @@ var generateDungeon = (function() {
     }
 
     // Open the wall and put a door
-    dungeon.s(branchingPos.x, branchingPos.y, TILE_DOOR);
+    dungeon.s(branchingPos.x, branchingPos.y, TILE_FLOOR);
+    dungeon.d.push(branchingPos);
   }
 
   return generateDungeon;
@@ -225,7 +239,7 @@ if (__PW_DEBUG) {
             break;
 
           case 0:
-            tile = '▓';
+            tile = '#';
             break;
 
           case 2:
@@ -234,10 +248,6 @@ if (__PW_DEBUG) {
           case 4:
           case 6:
             tile = t;
-            break;
-
-          case 7:
-            tile = 'x';
             break;
 
           default:

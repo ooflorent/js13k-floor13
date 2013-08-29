@@ -74,19 +74,29 @@ var SystemManager = (function() {
  */
 function System(components) {
   this.c = components;
+  this.e = [];
 
   if (components) {
-    var createMatcher = function(components, callback) {
-      return function(entity) {
-        if (EntityManager.match(entity, components)) {
-          callback(entity);
-        }
-      };
+    var that = this;
+    var pos;
+
+    this._ca = function(entity) {
+      if (EntityManager.match(entity, components) && that.e.indexOf(entity) < 0) {
+        that.e.push(entity);
+        that.add(entity);
+      }
+    };
+
+    this._cr = function(entity) {
+      if (EntityManager.match(entity, components) && (pos = that.e.indexOf(entity)) >= 0) {
+        that.e.splice(pos, 1);
+        that.remove(entity);
+      }
     };
 
     // Listen entities changes
-    EventManager.add('_ca', this._ca = createMatcher(components, this.add));
-    EventManager.add('_cr', this._cr = createMatcher(components, this.remove));
+    EventManager.add('_ca', this._ca);
+    EventManager.add('_cr', this._cr);
   }
 }
 
@@ -138,7 +148,7 @@ __extend(IteratingSystem, System, {
    */
   update: function(elapsed) {
     var onUpdate = this.onUpdate;
-    var entities = EntityManager.filter(this.c);
+    var entities = this.e;
     var i = entities.length;
 
     while (i--) {

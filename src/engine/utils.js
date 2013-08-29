@@ -11,15 +11,15 @@ function $(id) {
 function Array2(width, height) {
   this.w = width;
   this.h = height;
-  this.d = new Uint8Array(width * height);
+  this.a = new Uint8Array(width * height);
 }
 
 __define(Array2, {
   g: function(x, y) {
-    return this.d[y * this.w + x];
+    return this.a[y * this.w + x];
   },
   s: function(x, y, value) {
-    this.d[y * this.w + x] = value;
+    this.a[y * this.w + x] = value;
   },
   p: function(arr2, x, y) {
     for (var ay = arr2.h; ay--;) {
