@@ -12,6 +12,13 @@ __extend(SpriteRendererSystem, IteratingSystem, {
   },
   update: function(elapsed) {
     IteratingSystem.prototype.update.call(this, elapsed);
+
+    // Sort elements
+    this.c.sort(function(objA, objB) {
+      return objA.y > objB.y ? 1 : -1;
+    });
+
+    // Render the frame
     Buffer.render(elapsed);
   },
   onUpdate: function(entity, elapsed) {
