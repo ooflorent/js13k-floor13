@@ -270,8 +270,6 @@ __extend(AnimatedSprite, Sprite, {
       var frames = this.a[this.c].f;
       var duration = this.a[this.c].d;
 
-      //console.log(this);
-
       // Go to the next frame
       this.d += elapsed;
       while (this.d >= duration) {

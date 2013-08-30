@@ -50,9 +50,13 @@ var GameScreen = {
 
     // Generate world
     var dungeon = EntityCreator.dungeon();
+    var map = Pixelwars.c(dungeon, Dungeon.name);
+
+    // Initialize path finder
+    AStar.init(map, isWallTile);
 
     // Create player
-    var player = EntityCreator.player(Pixelwars.c(dungeon, Dungeon.name).prev);
+    var player = EntityCreator.player(map.prev);
 
     // Run the game
     SystemManager.start();

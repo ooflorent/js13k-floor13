@@ -16,7 +16,11 @@ function Dungeon(width, height) {
 __extend(Dungeon, Array2);
 
 function isWall(dungeon, x, y) {
-  return x >= 0 && y >= 0 && x < dungeon.w && y < dungeon.h && dungeon.g(x, y) != TILE_FLOOR;
+  return x >= 0 && y >= 0 && x < dungeon.w && y < dungeon.h && isWallTile(dungeon.g(x, y));
+}
+
+function isWallTile(t) {
+  return t != TILE_FLOOR;
 }
 
 var generateDungeon = (function() {
