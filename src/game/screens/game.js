@@ -36,7 +36,7 @@ var GameScreen = {
     Buffer.init(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas, stage);
 
     // Initialize game systems
-    SystemManager.register(new PlayerControlSystem());
+    SystemManager.register(new KeyboardPlayerControlSystem());
     SystemManager.register(new MovementSystem());
     SystemManager.register(new DungeonCollisionSystem());
     SystemManager.register(new CameraSystem(cameraLayer));
