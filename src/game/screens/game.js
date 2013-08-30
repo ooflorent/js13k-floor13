@@ -26,23 +26,23 @@ var EntityCreator = {
 
 var GameScreen = {
   enter: function(canvas) {
-    // Initialize rendering engine
-    Buffer.init(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas);
+    // Create game layers
+    var stage = new Stage();
+    var cameraLayer = stage.add(new DisplayObjectContainer());
+    var hudLayer    = stage.add(new DisplayObjectContainer());
+    var gameLayer   = cameraLayer.add(new DisplayObjectContainer());
 
-    var stage = Buffer.stage;
-    var gameLayer = new DisplayObjectContainer();
-    stage.add(gameLayer);
+    // Initialize rendering engine
+    Buffer.init(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas, stage);
 
     // Initialize game systems
     SystemManager.register(new PlayerControlSystem());
     SystemManager.register(new MovementSystem());
     SystemManager.register(new DungeonCollisionSystem());
-    SystemManager.register(new CameraSystem());
+    SystemManager.register(new CameraSystem(cameraLayer));
 
     if (__PW_DEBUG) {
-      var debugLayer = new DisplayObjectContainer();
-      stage.add(debugLayer);
-
+      var debugLayer = cameraLayer.add(new DisplayObjectContainer());
       SystemManager.register(new BoundsRendererSystem(debugLayer));
     }
 

@@ -143,9 +143,6 @@ function Renderer(width, height) {
 
   this.w = canvas.width = width;
   this.h = canvas.height = height;
-
-  // Camera
-  this.cx = this.cy = 0;
 }
 
 __define(Renderer, {
@@ -175,7 +172,7 @@ __define(Renderer, {
 
     var ctx = this.ctx;
 
-    ctx.setTransform(object.sx, 0, 0, object.sy, -this.cx + object._x, -this.cy + object._y);
+    ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
     ctx.globalAlpha = object._a;
 
     if (object instanceof Sprite) {
@@ -198,7 +195,7 @@ var Buffer = (function() {
   var height;
 
   return {
-    init: function(w, h, s, canvas) {
+    init: function(w, h, s, canvas, stage) {
       canvas.width = width = w * s;
       canvas.height = height = h * s;
 
@@ -207,7 +204,7 @@ var Buffer = (function() {
       ctx.setTransform(s, 0, 0, s, 0, 0);
 
       this.renderer = renderer = new Renderer(w, h);
-      this.stage = new Stage();
+      this.stage = stage;
     },
     render: function(elapsed) {
       renderer.render(this.stage, elapsed);
@@ -299,6 +296,7 @@ __extend(DisplayObjectContainer, DisplayObject, {
 
     this._c.push(child);
     child._p = this;
+    return child;
   },
   remove: function(child) {
     var children = this._c;
@@ -307,6 +305,7 @@ __extend(DisplayObjectContainer, DisplayObject, {
       children.splice(i, 1);
       child._p = null;
     }
+    return child;
   },
   _transform: function() {
     DisplayObject.prototype._transform.call(this);
