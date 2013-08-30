@@ -11,7 +11,7 @@ var Input = (function () {
   function addDocumentListener(name, listener) {
     var events = name.split(' ');
     for (var i = events.length; i--;) {
-      document.addEventListener(events[i], listener, false);
+      document.addEventListener(events[i], listener);
     }
   }
 

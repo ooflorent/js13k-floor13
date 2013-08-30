@@ -1,4 +1,9 @@
 var EntityCreator = {
+  game: function(cameraLayer) {
+    var game = Pixelwars.e('g');
+    EntityManager.add(game, new Camera(cameraLayer));
+    return game;
+  },
   player: function(pos) {
     var player = Pixelwars.e('p');
     EntityManager.add(player, new Position(pos.x * 16 + 3, pos.y * 16 + 3));
@@ -37,6 +42,7 @@ var GameScreen = {
 
     // Initialize game systems
     SystemManager.register(new KeyboardPlayerControlSystem());
+    SystemManager.register(new MousePlayerControlSystem());
     SystemManager.register(new MovementSystem());
     SystemManager.register(new DungeonCollisionSystem());
     SystemManager.register(new CameraSystem(cameraLayer));
@@ -55,6 +61,9 @@ var GameScreen = {
     // Initialize path finder
     AStar.init(map, isWallTile);
 
+    // Create game
+    var game = EntityCreator.game(cameraLayer);
+
     // Create player
     var player = EntityCreator.player(map.prev);
 
@@ -62,6 +71,7 @@ var GameScreen = {
     SystemManager.start();
   },
   exit: function() {
+    Buffer.clear();
     SystemManager.stop();
     SystemManager.clear();
     EventManager.clear();

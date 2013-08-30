@@ -2,6 +2,8 @@ var Pixelwars = {
   e: EntityManager.create,
   c: EntityManager.get,
   t: EntityManager.tag,
+  a: EntityManager.add,
+  r: EntityManager.remove,
 
   run: function(canvas) {
     TextureManager.init(__PW_ASSETS_DIR + 'tiles.png', function() {

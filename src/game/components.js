@@ -21,6 +21,10 @@ function Motion(dx, dy, dr) {
   this.dr = dr || 0;
 }
 
+function Camera(layer) {
+  this.l = layer;
+}
+
 function Display(gfx) {
   this.gfx = gfx;
 }
@@ -30,4 +34,8 @@ function Bounds(x, y, width, height) {
   this.y = y;
   this.w = width;
   this.h = height;
+}
+
+function Path() {
+  this.p = [];
 }

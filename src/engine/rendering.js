@@ -191,11 +191,17 @@ __define(Renderer, {
 var Buffer = (function() {
   var ctx;
   var renderer;
+  var scale;
   var width;
   var height;
 
+  function clickHandler(event) {
+    EventManager.emit('click', {x: event.layerX / scale | 0 , y: event.layerY / scale | 0});
+  }
+
   return {
     init: function(w, h, s, canvas, stage) {
+      scale = s;
       canvas.width = width = w * s;
       canvas.height = height = h * s;
 
@@ -205,6 +211,11 @@ var Buffer = (function() {
 
       this.renderer = renderer = new Renderer(w, h);
       this.stage = stage;
+
+      canvas.addEventListener('click', clickHandler);
+    },
+    clear: function() {
+      canvas.removeEventListener('click', clickHandler);
     },
     render: function(elapsed) {
       renderer.render(this.stage, elapsed);
