@@ -2,60 +2,6 @@ function createCanvas() {
   return document.createElement('canvas');
 }
 
-function toRGBA(color) {
-  return {
-    a: 0xFF & (color >> 24),
-    r: 0xFF & (color >> 16),
-    g: 0xFF & (color >> 8),
-    b: 0xFF & (color)
-  };
-}
-
-function blendOverlay(a, b) {
-  if (a > 128) {
-    return a - (255 - a) + b * (255 - a) / 128;
-  } else {
-    return b * a / 128;
-  }
-}
-
-function setPixel(imageData, x, y, color) {
-  var i = (x + y * imageData.width) * 4;
-  var data = imageData.data;
-  var rgba = toRGBA(color);
-
-  data[i]     = rgba.r;
-  data[i + 1] = rgba.g;
-  data[i + 2] = rgba.b;
-  data[i + 3] = rgba.a;
-}
-
-function mosaic(scale) {
-  var patternCanvas = createCanvas();
-  var patternCtx = patternCanvas.getContext('2d');
-  var patternData = patternCtx.createImageData(scale, scale);
-
-  patternCanvas.width = patternCanvas.height = scale;
-
-  var i;
-  var n = scale - 1;
-
-  setPixel(patternData, 0, 0, 0x33FFFFFF);
-  setPixel(patternData, n, n, 0x33000000);
-
-  for (i = 1; i < n; i++) {
-    setPixel(patternData, i, 0, 0x33E0E0E0);
-    setPixel(patternData, i, n, 0x33000000);
-  }
-
-  for (i = 1; i < n; i++) {
-    setPixel(patternData, 0, i, 0x33FFFFFF);
-    setPixel(patternData, n, i, 0x33000000);
-  }
-
-  return patternCanvas;
-}
-
 var TextureManager = (function() {
   var image;
   var textures = {};
@@ -195,6 +141,10 @@ var Buffer = (function() {
   var width;
   var height;
 
+  var textureCanvas;
+  var textureCtx;
+  var texture;
+
   function clickHandler(event) {
     EventManager.emit('click', {x: event.layerX / scale | 0 , y: event.layerY / scale | 0});
   }
@@ -207,7 +157,17 @@ var Buffer = (function() {
 
       ctx = canvas.getContext('2d');
       ctx.webkitImageSmoothingEnabled = ctx.mozImageSmoothingEnabled = false;
-      ctx.setTransform(s, 0, 0, s, 0, 0);
+
+      textureCanvas = createCanvas();
+      textureCanvas.width = textureCanvas.height = scale;
+      textureCtx = textureCanvas.getContext('2d');
+      textureCtx.fillStyle = 'rgba(255,255,255,.05)';
+      textureCtx.fillRect(1, 0, scale - 2, 1);
+      textureCtx.fillRect(0, 1, 1, scale - 2);
+      textureCtx.fillStyle = 'rgba(0,0,0,.1)';
+      textureCtx.fillRect(1, scale - 1, scale - 2, 1);
+      textureCtx.fillRect(scale - 1, 1, 1, scale - 2);
+      texture = ctx.createPattern(textureCanvas, 'repeat');
 
       this.renderer = renderer = new Renderer(w, h);
       this.stage = stage;
@@ -220,8 +180,12 @@ var Buffer = (function() {
     render: function(elapsed) {
       renderer.render(this.stage, elapsed);
 
-      ctx.clearRect(0, 0, width, height);
-      ctx.drawImage(renderer.canvas, 0, 0);
+      // Draw game
+      ctx.drawImage(renderer.canvas, 0, 0, renderer.w, renderer.h, 0, 0, width, height);
+
+      // Draw pixel filter
+      ctx.fillStyle = texture;
+      ctx.fillRect(0, 0, width, height);
     }
   };
 })();

@@ -94,7 +94,7 @@ var AStar = {
       grid[y] = [];
       for (var x = map.w; x--;) {
         grid[y][x] = {
-          w: isWall(map.g(x, y)), // Wall
+          w: isWall(map[y][x]), // Wall
           x: x, // Position X
           y: y, // Position Y
           v: 0, // Visited

@@ -1,22 +1,17 @@
 var TILE_BLANK = 0;
 var TILE_FLOOR = 1;
-var TILE_CORNER = 2;
-var TILE_WALL_N = 3;
-var TILE_WALL_E = 4;
-var TILE_WALL_S = 5;
-var TILE_WALL_W = 6;
 
-function Dungeon(width, height) {
-  Array2.call(this, width, height);
-  this.r = []; // Rooms
-  this.d = []; // Doors
-  this.prev = this.next = null; // Entrance and exit
+function Dungeon(width, height, map, doors, prev, next) {
+  this.w = width;
+  this.h = height;
+  this.m = map;
+  this.d = doors;
+  this.prev = prev;
+  this.next = next;
 }
 
-__extend(Dungeon, Array2);
-
 function isWall(dungeon, x, y) {
-  return x >= 0 && y >= 0 && x < dungeon.w && y < dungeon.h && isWallTile(dungeon.g(x, y));
+  return x < 0 || y < 0 || x >= dungeon.w || y >= dungeon.h || isWallTile(dungeon.m[y][x]);
 }
 
 function isWallTile(t) {
@@ -24,207 +19,145 @@ function isWallTile(t) {
 }
 
 var generateDungeon = (function() {
-  var DIRECTION = [];
-  var DIRECTION_N = DIRECTION[TILE_WALL_N] = 1;
-  var DIRECTION_E = DIRECTION[TILE_WALL_E] = 2;
-  var DIRECTION_S = DIRECTION[TILE_WALL_S] = 3;
-  var DIRECTION_W = DIRECTION[TILE_WALL_W] = 4;
+  function getBranchingPosition(room) {
+    var x = room.x;
+    var y = room.y;
+    var w = room.w - 1;
+    var h = room.h - 1;
 
-  function Room(width, height) {
-    Array2.call(this, width, height);
-      this.x = this.y = 0;
-  }
+    // Get random branching wall
+    //   - 0: West
+    //   - 1: East
+    //   - 2: South
+    //   - 3: North
+    var direction = getRandomInt(0, 3);
 
-  __extend(Room, Array2);
+    // North or south
+    if (direction > 1) {
+      return {
+        d: direction,
+        x: x + getRandomInt(1, w - 1),
+        y: y + (direction > 2 ? 0 : h)
+      };
+    }
 
-  function isCorner(a, b, ab) {
-    return a && b && !ab || !a && !b;
+    // East or west
+    return {
+      d: direction,
+      x: x + (direction ? w : 0),
+      y: y + getRandomInt(1, h - 1)
+    };
   }
 
   function generateDungeon(width, height, minSize, maxSize) {
-    var dungeon = new Dungeon(width, height);
-    var room = generateRoom(minSize, maxSize);
+    var x, y, w, h;
+    var rooms = [], room;
+    var doors = [];
 
-    placeRoom(dungeon, room, (width - room.w) / 2 | 0, (height - room.h) / 2 | 0);
-
-    var x, y;
-    var it = width * height * 2;
-    for (var i = 0; i < it; i++) {
-      var branchingPos = getBranchingPosition(dungeon);
-      var direction = DIRECTION[dungeon.g(branchingPos.x, branchingPos.y)];
-
-      if (direction) {
-        room = generateRoom(minSize, maxSize);
-
-        if (direction == DIRECTION_N) {
-          x = branchingPos.x - room.w / 2;
-          y = branchingPos.y - room.h / 2;
-        } else if (direction == DIRECTION_E) {
-          x = branchingPos.x + 1;
-          y = branchingPos.y - room.h / 2;
-        } else if (direction == DIRECTION_S) {
-          x = branchingPos.x - room.w / 2;
-          y = branchingPos.y + 1;
-        } else { // WEST
-          x = branchingPos.x - room.w;
-          y = branchingPos.y - room.h / 2;
-        }
-
-        x |= 0;
-        y |= 0;
-
-        if (hasEnoughtSpaceForRoom(dungeon, room, x, y)) {
-          placeRoom(dungeon, room, x, y);
-          connectRooms(dungeon, branchingPos, direction);
-        } else {
-          i++;
-        }
+    // Create an empty map
+    var map = [];
+    for (y = height; y--;) {
+      map[y] = [];
+      for (x = width; x--;) {
+        map[y][x] = TILE_BLANK;
       }
     }
 
-    // Some corners may have been turned into normal wall.
-    // Let's fix this.
-    for (y = height; y--;) {
-      for (x = width; x--;) {
-        if (dungeon.g(x, y) != TILE_CORNER) {
-          continue;
-        }
+    // Generate the first room at the center of the map
+    w = getRandomInt(minSize, maxSize);
+    h = getRandomInt(minSize, maxSize);
+    rooms.push(room = new Rectangle((width - w) / 2 | 0, (height - h) / 2 | 0, w, h));
 
-        var n = isWall(dungeon, x, y - 1);
-        var s = isWall(dungeon, x, y + 1);
-        var w = isWall(dungeon, x - 1, y);
-        var e = isWall(dungeon, x + 1, y);
-        var nw = isWall(dungeon, x - 1, y - 1);
-        var ne = isWall(dungeon, x + 1, y - 1);
-        var sw = isWall(dungeon, x - 1, y + 1);
-        var se = isWall(dungeon, x + 1, y + 1);
+    // Draw it
+    dig(map, room.x + 1, room.y + 1, room.x + w - 2, room.y + h - 2);
 
-        if (!isCorner(n, w, nw) && !isCorner(n, e, ne) && !isCorner(s, w, sw) && !isCorner(s, e, se)) {
-          if (n && s) {
-            dungeon.s(x, y, e ? TILE_WALL_E : TILE_WALL_W); // Vertical wall
-          } else {
-            dungeon.s(x, y, s ? TILE_WALL_S : TILE_WALL_N); // Horizontal wall
-          }
+    for (var it = width * height * 2; it-- >= 0;) {
+      // Generate a new room
+      room = new Rectangle(0, 0, getRandomInt(minSize, maxSize), getRandomInt(minSize, maxSize));
+
+      // Get the branching position
+      var branchingPos = getBranchingPosition(getRandomElement(rooms));
+      var dx = branchingPos.x;
+      var dy = branchingPos.y;
+      if (branchingPos.d > 2) { // North
+        x = -room.w / 2;
+        y = -room.h;
+        dy--;
+      } else if (branchingPos.d > 1) { // South
+        x = -room.w / 2;
+        y = 1;
+        dy++;
+      } else if (branchingPos.d) { // East
+        x = 1;
+        y = -room.h / 2;
+        dx++;
+      } else { // West
+        x = -room.w;
+        y = -room.h / 2;
+        dx--;
+      }
+
+      // Ensure that we have integers
+      room.x = branchingPos.x + x | 0;
+      room.y = branchingPos.y + y | 0;
+
+      // Ensure that we have enough space for the room
+      var free = room.x >= 0 && room.y >= 0 && (room.x + room.w) < width && (room.y + room.h) < height;
+      for (var r = rooms.length; r-- && free;) {
+        if (room.overlap(rooms[r])) {
+          free = false;
         }
+      }
+
+      if (free) {
+        // Draw the room and dig a wall
+        dig(map, room.x + 1, room.y + 1, room.x + room.w - 2, room.y + room.h - 2);
+        dig(map, branchingPos.x, branchingPos.y, dx, dy);
+
+        // Put a door
+        doors.push(branchingPos);
+        rooms.push(room);
+      } else {
+        it--;
       }
     }
 
     // Define entrance and exit
-    var entrance = getRandomElement(dungeon.r);
+    var entrance = getRandomElement(rooms);
     var exit;
     do {
-      exit = getRandomElement(dungeon.r);
+      exit = getRandomElement(rooms);
     } while (entrance === exit);
 
-    dungeon.prev = {
+    entrance = {
       x: entrance.x + getRandomInt(1, entrance.w - 2),
       y: entrance.y + getRandomInt(1, entrance.h - 2)
     };
 
-    dungeon.next = {
+    exit = {
       x: exit.x + getRandomInt(1, exit.w - 2),
       y: exit.y + getRandomInt(1, exit.h - 2)
     };
 
-    if (__PW_DEBUG) {
-      console.log(dumpDungeon(dungeon));
-    }
-
-    return dungeon;
+    return new Dungeon(width, height, map, doors, entrance, exit);
   }
 
-  function generateRoom(minSize, maxSize) {
-    var sizeX = getRandomInt(minSize, maxSize);
-    var sizeY = getRandomInt(minSize, maxSize);
-    var room = new Room(sizeX, sizeY);
+  function dig(map, x1, y1, x2, y2) {
+    var tmp;
 
-    var maxX = sizeX - 1;
-    var maxY = sizeY - 1;
+    if (x1 > x2) {
+      tmp = x1; x1 = x2; x2 = tmp;
+    }
 
-    for (var y = 0; y < sizeY; y++) {
-      for (var x = 0; x < sizeX; x++) {
-        if (!x && !y || !x && y == maxY || x == maxX && !y || x == maxX && y == maxY) {
-          room.s(x, y, TILE_CORNER);
-        } else if (!x) {
-          room.s(x, y, TILE_WALL_W);
-        } else if (!y) {
-          room.s(x, y, TILE_WALL_N);
-        } else if (x == maxX) {
-          room.s(x, y, TILE_WALL_E);
-        } else if (y == maxY) {
-          room.s(x, y, TILE_WALL_S);
-        } else {
-          room.s(x, y, TILE_FLOOR);
-        }
+    if (y1 > y2) {
+      tmp = y1; y1 = y2; y2 = tmp;
+    }
+
+    for (var y = y1; y <= y2; y++) {
+      for (var x = x1; x <= x2; x++) {
+        map[y][x] = TILE_FLOOR;
       }
     }
-
-    return room;
-  }
-
-  function placeRoom(dungeon, room, roomX, roomY) {
-    room.x = roomX;
-    room.y = roomY;
-
-    dungeon.r.push(room);
-    dungeon.p(room, roomX, roomY);
-  }
-
-  function getBranchingPosition(dungeon) {
-    var room = getRandomElement(dungeon.r);
-
-    for (var i = room.w * room.h; i--;) {
-      var x = room.x + getRandomInt(0, room.w - 1);
-      var y = room.y + getRandomInt(0, room.h - 1);
-
-      if (dungeon.g(x, y) > TILE_CORNER) {
-        return {x: x, y: y};
-      }
-    }
-
-    return {x: 0, y: 0};
-  }
-
-  function hasEnoughtSpaceForRoom(dungeon, room, gridX, gridY) {
-    for (var y = room.h; y--;) {
-      for (var x = room.w; x--;) {
-        var roomX = x + gridX;
-        var roomY = y + gridY;
-
-        if (roomX < 0 || roomX >= dungeon.w || roomY < 0 || roomY >= dungeon.h || dungeon.g(roomX, roomY)) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }
-
-  function connectRooms(dungeon, branchingPos, direction) {
-    var corners = [];
-
-    if (direction == DIRECTION_N) {
-      corners.push([-1, 0], [-1, -1], [1, 0], [1, -1]);
-      dungeon.s(branchingPos.x, branchingPos.y - 1, TILE_FLOOR);
-    } else if (direction == DIRECTION_E) {
-      corners.push([0, -1], [1, -1], [0, 1], [1, 1]);
-      dungeon.s(branchingPos.x + 1, branchingPos.y,  TILE_FLOOR);
-    } else if (direction == DIRECTION_S) {
-      corners.push([-1, 0], [-1, 1], [1, 0], [1, 1]);
-      dungeon.s(branchingPos.x, branchingPos.y + 1,  TILE_FLOOR);
-    } else { // WEST
-      corners.push([0, -1], [-1, -1], [0, 1], [-1, 1]);
-      dungeon.s(branchingPos.x - 1, branchingPos.y,  TILE_FLOOR);
-    }
-
-    // Mark adjacent tiles as corners
-    for (var i = 4; i--;) {
-      dungeon.s(branchingPos.x + corners[i][0], branchingPos.y + corners[i][1], TILE_CORNER);
-    }
-
-    // Open the wall and put a door
-    dungeon.s(branchingPos.x, branchingPos.y, TILE_FLOOR);
-    dungeon.d.push(branchingPos);
   }
 
   return generateDungeon;
@@ -235,7 +168,7 @@ if (__PW_DEBUG) {
     var s = '';
     for (var y = 0; y < dungeon.h; y++) {
       for (var x = 0; x < dungeon.w; x++) {
-        var t = dungeon.g(x, y);
+        var t = dungeon.m[y][x];
         var tile;
         switch (t) {
           case 1:
@@ -246,16 +179,8 @@ if (__PW_DEBUG) {
             tile = '#';
             break;
 
-          case 2:
-          case 3:
-          case 5:
-          case 4:
-          case 6:
-            tile = t;
-            break;
-
           default:
-            tile = '?';
+            tile = t;
         }
 
         s += tile;

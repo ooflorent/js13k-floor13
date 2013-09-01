@@ -9,6 +9,7 @@ var EntityCreator = {
     EntityManager.add(player, new Position(pos.x * 16 + 3, pos.y * 16 + 3));
     EntityManager.add(player, new Motion());
     EntityManager.add(player, new Bounds(1, 5, 7, 5));
+    /*
     EntityManager.add(player, new Display(new AnimatedSprite(TextureManager.get('p'), {
       _n: TextureManager.a('_n'), // Idle north
       _s: TextureManager.a('_s'), // Idle south
@@ -17,11 +18,13 @@ var EntityCreator = {
       s: TextureManager.a('s'),   // Walk south
       h: TextureManager.a('h')    // Walk east of west
     }, '_s')));
+*/
     return player;
   },
   dungeon: function() {
     var dungeon = Pixelwars.e('d');
-    var map = generateDungeon(20, 15, 4, 7);
+    var map = generateDungeon(20, 16, 4, 7);
+    console.log(dumpDungeon(map));
     EntityManager.add(dungeon, map);
     EntityManager.add(dungeon, new Position());
     EntityManager.add(dungeon, new Display(new Sprite(new Tilemap(map))));
@@ -41,7 +44,7 @@ var GameScreen = {
     Buffer.init(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas, stage);
 
     // Initialize game systems
-    SystemManager.register(new KeyboardPlayerControlSystem());
+    //SystemManager.register(new KeyboardPlayerControlSystem());
     SystemManager.register(new MousePlayerControlSystem());
     SystemManager.register(new MovementSystem());
     SystemManager.register(new DungeonCollisionSystem());
@@ -49,7 +52,7 @@ var GameScreen = {
 
     if (__PW_DEBUG) {
       var debugLayer = cameraLayer.add(new DisplayObjectContainer());
-      SystemManager.register(new BoundsRendererSystem(debugLayer));
+      //SystemManager.register(new BoundsRendererSystem(debugLayer));
     }
 
     SystemManager.register(new SpriteRendererSystem(gameLayer));
@@ -59,7 +62,7 @@ var GameScreen = {
     var map = Pixelwars.c(dungeon, Dungeon.name);
 
     // Initialize path finder
-    AStar.init(map, isWallTile);
+    AStar.init(map.m, isWallTile);
 
     // Create game
     var game = EntityCreator.game(cameraLayer);

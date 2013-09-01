@@ -5,31 +5,6 @@ function $(id) {
   return document.getElementById(id);
 }
 
-// Collections
-// -----------
-
-function Array2(width, height) {
-  this.w = width;
-  this.h = height;
-  this.a = new Uint8Array(width * height);
-}
-
-__define(Array2, {
-  g: function(x, y) {
-    return this.a[y * this.w + x];
-  },
-  s: function(x, y, value) {
-    this.a[y * this.w + x] = value;
-  },
-  p: function(arr2, x, y) {
-    for (var ay = arr2.h; ay--;) {
-      for (var ax = arr2.w; ax--;) {
-        this.s(x + ax, y + ay, arr2.g(ax, ay));
-      }
-    }
-  }
-});
-
 // Math
 // ----
 
@@ -51,3 +26,20 @@ function getRandomElement(arr) {
 
   return null;
 }
+
+// Geom
+// ----
+
+function Rectangle(x, y, w, h) {
+  this.x = x;
+  this.y = y;
+  this.w = w;
+  this.h = h;
+}
+
+__define(Rectangle, {
+  overlap: function(other) {
+    return this.x < (other.x + other.w) && other.x < (this.x + this.w) &&
+      this.y < (other.y + other.h) && other.y < (this.y + this.h);
+  }
+});

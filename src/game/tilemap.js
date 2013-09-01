@@ -1,77 +1,75 @@
-function Tilemap(map) {
-  RenderTexture.call(this, map.w * 16, map.h * 16);
+function Tilemap(dungeon) {
+  RenderTexture.call(this, dungeon.w * 16, dungeon.h * 16);
 
-  var tile = new Sprite();
-  for (var y = map.h; y--;) {
-    for (var x = map.w; x--;) {
-      var texture;
-      var sx = sy = 1;
+  function isFrontWall(dungeon, x, y) {
+    return isWall(dungeon, x, y) && !isWall(dungeon, x, y + 1);
+  }
 
-      switch (map.g(x, y)) {
-        case TILE_BLANK:
-          texture = 'r';
-          break;
+  function isRoof(dungeon, x, y) {
+    return isWall(dungeon, x, y) && isWall(dungeon, x, y + 1);
+  }
 
-        case TILE_WALL_N:
-          texture = 'wn';
-          break;
+  function createEdge(x1, y1, x2, y2, c) {
+    return function(ctx, color) {
+      ctx.beginPath();
+      ctx.strokeStyle = c || color;
+      ctx.moveTo(x1 + 0.5, y1 - 0.5);
+      ctx.lineTo(x2 + 0.5, y2 - 0.5);
+      ctx.stroke();
+      ctx.closePath();
+    };
+  }
 
-        case TILE_WALL_S:
-          texture = 'ws';
-          break;
+  var shadow = 'rgba(0,0,0,.15)';
+  var texture;
+  for (var y = dungeon.h; y--;) {
+    for (var x = dungeon.w; x--;) {
+      var pos = {x: x * 16, y: y * 16};
+      var edges = [];
 
-        case TILE_WALL_W:
-          sx = -1;
-          // no break!
+      if (isFrontWall(dungeon, x, y)) {
+        texture = 'w';
 
-        case TILE_WALL_E:
-          texture = 'wh';
-          break;
+        if (!isWall(dungeon, x, y + 1)) {
+          edges.push(createEdge(0, 17, 16, 17, shadow));
+        }
 
-        // Corners are a bit special and need a special treatment!
-        case TILE_CORNER:
-          var n = isWall(map, x, y - 1);
-          var s = isWall(map, x, y + 1);
-          var w = isWall(map, x - 1, y);
-          var e = isWall(map, x + 1, y);
-          var nw = isWall(map, x - 1, y - 1);
-          var ne = isWall(map, x + 1, y - 1);
-          var sw = isWall(map, x - 1, y + 1);
-          var se = isWall(map, x + 1, y + 1);
+        if (!isWall(dungeon, x - 1, y)) {
+          edges.push(createEdge(0, 0, 0, 16));
+        }
 
-          if (!s && !w) {
-            texture = 'c1';
-          } else if (!s && !e) {
-            texture = 'c1';
-            sx = -1;
-          } else if (!n && !w) {
-            texture = 'c2';
-          } else if (!n && !e) {
-            texture = 'c2';
-            sx = -1;
-          } else if (n && e && !ne) {
-            texture = 'c3';
-            sx = -1;
-          } else if (n && w && !nw) {
-            texture = 'c3';
-          } else if (s && e && !se) {
-            texture = 'c4';
-            sx = -1;
-          } else {
-            texture = 'c4';
-          }
-          break;
+        if (!isWall(dungeon, x + 1, y)) {
+          edges.push(createEdge(15, 0, 15, 16));
+          edges.push(createEdge(16, 0, 16, 17, shadow));
+        }
+      } else if (isRoof(dungeon, x, y)) {
+        texture = 'r';
 
-        case TILE_FLOOR:
-        default:
+        if (!isRoof(dungeon, x, y - 1)) {
+          edges.push(createEdge(0, 1, 16, 1));
+        }
+
+        if (!isRoof(dungeon, x, y + 1)) {
+          edges.push(createEdge(0, 16, 16, 16));
+        }
+
+        if (!isRoof(dungeon, x - 1, y)) {
+          edges.push(createEdge(0, 0, 0, 16));
+        }
+
+        if (!isRoof(dungeon, x + 1, y)) {
+          edges.push(createEdge(15, 0, 15, 16));
+          edges.push(createEdge(16, 0, 16, 16, shadow));
+        }
+      } else {
           texture = 'f';
       }
 
-      tile.texture = TextureManager.random(texture);
-      tile.sx = sx;
-      tile.sy = sy;
+      this.render(new Sprite(TextureManager.random(texture)), pos);
 
-      this.render(tile, {x: x * 16, y: y * 16});
+      for (var e = edges.length; e--;) {
+        this.render(new Graphics(edges[e], '#2f2b2a'), pos);
+      }
     }
   }
 }
