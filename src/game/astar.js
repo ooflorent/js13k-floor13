@@ -79,20 +79,17 @@ function pushIfExists(results, grid, x, y) {
   }
 }
 
-function diagonalHeuristic(a, b) {
-  var dx = Math.abs(a.x - b.x);
-  var dy = Math.abs(a.y - b.y);
-
-  return 10 * Math.abs(dx - dy) + ((dx > dy) ? (14 * dy) : (14 * dx));
+function manhattanHeuristic(a, b) {
+  return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 }
 
 var AStar = {
   init: function(map, isWall) {
     // Build the grid
     var grid = this.g = [];
-    for (var y = map.h; y--;) {
+    for (var y = map.length; y--;) {
       grid[y] = [];
-      for (var x = map.w; x--;) {
+      for (var x = map[0].length; x--;) {
         grid[y][x] = {
           w: isWall(map[y][x]), // Wall
           x: x, // Position X
@@ -110,12 +107,21 @@ var AStar = {
       return node.h;
     });
 
+    // Reset grid
+    var y, x, current;
+    for (y = grid.length; y--;) {
+      for (x = grid[0].length; x--;) {
+        current = grid[y][x];
+        current.v = current.c = current.h = current.p = 0;
+      }
+    }
+
     start = grid[start.y][start.x];
     end = grid[end.y][end.x];
-
     heap.push(start);
+
     while (heap.n) {
-      var current = heap.pop();
+      current = heap.pop();
       if (current === end) {
         var curr = current;
         var ret = [];
@@ -138,10 +144,6 @@ var AStar = {
       pushIfExists(neighbors, grid, x + 1, y); // East
       pushIfExists(neighbors, grid, x, y - 1); // North
       pushIfExists(neighbors, grid, x, y + 1); // South
-      pushIfExists(neighbors, grid, x - 1, y - 1); // Northeast
-      pushIfExists(neighbors, grid, x - 1, y + 1); // Northeast
-      pushIfExists(neighbors, grid, x + 1, y - 1); // Southwest
-      pushIfExists(neighbors, grid, x + 1, y + 1); // Southeast
 
       for (var i = neighbors.length; i--;) {
         var neighbor = neighbors[i];
@@ -152,11 +154,13 @@ var AStar = {
         if (!neighbor.v) {
           neighbor.v = 1;
           neighbor.p = current;
-          neighbor.h = neighbor.h || diagonalHeuristic(neighbor, end);
+          neighbor.h = neighbor.h || manhattanHeuristic(neighbor, end);
 
           heap.push(neighbor);
         }
       }
     }
+
+    return [];
   }
 };

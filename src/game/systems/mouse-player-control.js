@@ -2,7 +2,15 @@ function MousePlayerControlSystem() {
   System.call(this);
   EventManager.add('click', function(pos) {
     var camera = Pixelwars.c(Pixelwars.t('g'), Camera.name);
-    console.log(pos, camera.l.x, camera.l.y);
+    var player = Pixelwars.t('p');
+    var position = Pixelwars.c(player, Position.name);
+    var path = Pixelwars.c(player, Path.name);
+
+    var from = toGrid(position.x, position.y);
+    var to = toGrid(pos.x - camera.l.x, pos.y - camera.l.y);
+
+    // Update player path
+    path.p = AStar.search(from, to);
   });
 }
 
@@ -10,7 +18,6 @@ __extend(MousePlayerControlSystem, System, {
   update: function(elapsed) {
     /*
     var player = Pixelwars.t('p');
-    var path = Pixelwars.c(player, Path.name);
     var map = Pixelwars.c(Pixelwars.t('p'), Dungeon.name);
 
     var position = Pixelwars.c(player, Position.name);

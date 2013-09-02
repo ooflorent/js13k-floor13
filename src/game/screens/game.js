@@ -8,8 +8,8 @@ var EntityCreator = {
     var player = Pixelwars.e('p');
     EntityManager.add(player, new Position(pos.x * 16 + 3, pos.y * 16 + 3));
     EntityManager.add(player, new Motion());
+    EntityManager.add(player, new Path());
     EntityManager.add(player, new Bounds(1, 5, 7, 5));
-    /*
     EntityManager.add(player, new Display(new AnimatedSprite(TextureManager.get('p'), {
       _n: TextureManager.a('_n'), // Idle north
       _s: TextureManager.a('_s'), // Idle south
@@ -18,7 +18,6 @@ var EntityCreator = {
       s: TextureManager.a('s'),   // Walk south
       h: TextureManager.a('h')    // Walk east of west
     }, '_s')));
-*/
     return player;
   },
   dungeon: function() {
@@ -46,8 +45,9 @@ var GameScreen = {
     // Initialize game systems
     //SystemManager.register(new KeyboardPlayerControlSystem());
     SystemManager.register(new MousePlayerControlSystem());
+    SystemManager.register(new PathFollowSystem());
     SystemManager.register(new MovementSystem());
-    SystemManager.register(new DungeonCollisionSystem());
+    //SystemManager.register(new DungeonCollisionSystem());
     SystemManager.register(new CameraSystem(cameraLayer));
 
     if (__PW_DEBUG) {
