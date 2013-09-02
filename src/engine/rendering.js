@@ -118,12 +118,15 @@ __define(Renderer, {
 
     var ctx = this.ctx;
 
-    ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
-    ctx.globalAlpha = object._a;
-
     if (object instanceof Sprite) {
-      var frame = object.texture.frame;
-      ctx.drawImage(object.texture.source, frame.x, frame.y, frame.w, frame.h, object.sx < 0 ? object.sx * frame.w : 0, object.sy < 0 ? object.sy * frame.h : 0, frame.w, frame.h);
+      if (object.texture instanceof RenderTexture) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.drawImage(object.texture.source, -object._x, -object._y, this.w, this.h, 0, 0, this.w, this.h);
+      } else {
+        var frame = object.texture.frame;
+        ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
+        ctx.drawImage(object.texture.source, frame.x, frame.y, frame.w, frame.h, object.sx < 0 ? object.sx * frame.w : 0, object.sy < 0 ? object.sy * frame.h : 0, frame.w, frame.h);
+      }
     } else if (object instanceof Graphics) {
       object._batch(ctx, object._color);
     }
