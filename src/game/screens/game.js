@@ -10,7 +10,7 @@ var EntityCreator = {
     EntityManager.add(player, new Motion());
     EntityManager.add(player, new Path());
     EntityManager.add(player, new Bounds(1, 5, 7, 5));
-    EntityManager.add(player, new Display(new AnimatedSprite(TextureManager.get('p'), {
+    EntityManager.add(player, new Display(new AnimatedSprite(TextureManager.g('p'), {
       _n: TextureManager.a('_n'), // Idle north
       _s: TextureManager.a('_s'), // Idle south
       _h: TextureManager.a('_h'), // Idle east or west

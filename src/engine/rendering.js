@@ -31,9 +31,6 @@ var TextureManager = (function() {
         }
       }
     },
-    get: function(name) {
-      return textures[name];
-    },
     anim: function(name, frames, duration) {
       if (duration) {
         duration = 1 / duration * 1000 | 0;
@@ -47,11 +44,11 @@ var TextureManager = (function() {
         d: duration
       };
     },
+    g: function(name) {
+      return textures[name];
+    },
     a: function(name) {
       return animations[name];
-    },
-    random: function(name) {
-      return getRandomElement(textures[name]);
     }
   };
 })();

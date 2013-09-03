@@ -18,7 +18,6 @@ __extend(PathFollowSystem, IteratingSystem, {
     if (path.length) {
       var pt = path[0];
       var a = Math.atan2((pt.y + 0.5) * 16 - position.y, (pt.x + 0.5) * 16 - position.x);
-      //console.log(a);
       motion.dx = Math.cos(a) * 60;
       motion.dy = Math.sin(a) * 60;
     } else {
