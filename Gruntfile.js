@@ -89,8 +89,8 @@ module.exports = function(grunt) {
           // Globals must be adjusted before packaging the final version.
           // Dropping some of them produce a bigger JavaScript file but
           // smaller ZIP archive. RLY? WTF!
-          banner: "var G = (function(window, document, Object, Math) {\n",
-          footer: "return Pixelwars;\n})(window, document, Object, Math)\n",
+          banner: "!function(window, document, Object, Math) {\n",
+          footer: "\nwindow.G = Pixelwars;\nwindow.$ = $;\n} (window, document, Object, Math)\n",
         },
         files: {
           'dist/pixelwars.js': [files.engine, files.game],
