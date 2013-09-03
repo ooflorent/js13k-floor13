@@ -1,9 +1,5 @@
 var EventManager = (function () {
-  var handlers = {};
-
-  /**
-   * Manage game events.
-   */
+  var handlers = {}, i, list, args, A = Array;
   return {
     /**
      * Unregister all event listeners.
@@ -14,45 +10,38 @@ var EventManager = (function () {
     /**
      * Add an event handler.
      *
-     * @param  {String} event name
-     * @param  {Function} handler
+     * @param  {String} type
+     * @param  {Function} func
+     * @param  {Object} ctx
      */
-    add: function(event, handler) {
-      if (handlers[event]) {
-        handlers[event].push(handler);
-      } else {
-        handlers[event] = [handler];
-      }
+    on: function(type, func, ctx) {
+      handlers[type] || (handlers[type] = []);
+      handlers[type].push({f: func, c: ctx});
     },
     /**
      * Remove an event handler.
      *
-     * @param  {String} event name
-     * @param  {Function} handler
+     * @param  {String} type
+     * @param  {Function} func
      */
-    remove: function(event, handler) {
-      var h = handlers[event];
-      var i = h.indexOf(handler);
-      if (i >= 0) {
-        h.splice(i, 1);
+    off: function(type, func) {
+      list = handlers[type] || [];
+      i = list.length;
+
+      while (~--i < 0) {
+        func == list[i].f && list.splice(i, 1);
       }
     },
     /**
      * Emit an event.
-     *
-     * @param  {String} event
-     * @param  {any} a
-     * @param  {any} b
-     * @param  {any} c
-     * @param  {any} d
      */
-    emit: function(event, a, b, c, d) {
-      var h = handlers[event] || [];
-      var i = 0;
-      var n = h.length;
+    emit: function() {
+      args = A.apply([], arguments);
+      list = handlers[args.shift()] || [];
+      i = list.length;
 
-      for (; i < n; i++) {
-        h[i](a, b, c, d);
+      while (~--i < 0) {
+        list[i].f.apply(list[i].c, args);
       }
     }
   };

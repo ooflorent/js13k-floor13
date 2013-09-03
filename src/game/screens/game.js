@@ -8,7 +8,6 @@ var EntityCreator = {
     var player = Pixelwars.e('p');
     EntityManager.add(player, new Position(pos.x * 16 + 3, pos.y * 16 + 3));
     EntityManager.add(player, new Motion());
-    EntityManager.add(player, new Path());
     EntityManager.add(player, new Bounds(1, 5, 7, 5));
     EntityManager.add(player, new Display(new AnimatedSprite(TextureManager.g('p'), {
       _n: TextureManager.a('_n'), // Idle north
@@ -43,16 +42,16 @@ var GameScreen = {
     Buffer.init(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas, stage);
 
     // Initialize game systems
-    //SystemManager.register(new KeyboardPlayerControlSystem());
-    SystemManager.register(new MousePlayerControlSystem());
+    SystemManager.register(new MouseControlSystem());
+    SystemManager.register(new DirectionFollowSystem());
     SystemManager.register(new PathFollowSystem());
     SystemManager.register(new MovementSystem());
-    //SystemManager.register(new DungeonCollisionSystem());
+    SystemManager.register(new DungeonCollisionSystem());
     SystemManager.register(new CameraSystem(cameraLayer));
 
     if (__PW_DEBUG) {
       var debugLayer = cameraLayer.add(new DisplayObjectContainer());
-      //SystemManager.register(new BoundsRendererSystem(debugLayer));
+      SystemManager.register(new BoundsRendererSystem(debugLayer));
     }
 
     SystemManager.register(new SpriteRendererSystem(gameLayer));

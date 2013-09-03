@@ -20,8 +20,15 @@ __extend(DungeonCollisionSystem, System, {
     if (isWall(map, tileX, tileY) || isWall(map, tile2X, tileY) || isWall(map, tileX, tile2Y) || isWall(map, tile2X, tile2Y)) {
       var motion = Pixelwars.c(player, Motion.name);
 
+      // Fix position
       position.x -= motion.dx * elapsed;
       position.y -= motion.dy * elapsed;
+
+      // Clear velocity
+      motion.dx = motion.dy = 0;
+
+      // Dispatch event
+      EventManager.emit('collision', player);
     }
   }
 });

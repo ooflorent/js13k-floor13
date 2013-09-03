@@ -4,6 +4,11 @@ function Position(x, y, r) {
   this.r = r || 0;
 }
 
+function Direction(x, y) {
+  this.x = x;
+  this.y = y;
+}
+
 Position.d = function(r) {
   var rabs = Math.abs(r);
   if (r == 180 || rabs == 135) {

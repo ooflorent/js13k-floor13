@@ -34,9 +34,11 @@ module.exports = function(grunt) {
       '<%= dirs.game %>/main.js',
       '<%= dirs.game %>/components.js',
       '<%= dirs.game %>/systems/camera.js',
+      '<%= dirs.game %>/systems/direction-follow.js',
       '<%= dirs.game %>/systems/dungeon-collision.js',
+      '<%= dirs.game %>/systems/mouse-control.js',
       '<%= dirs.game %>/systems/movement.js',
-      '<%= dirs.game %>/systems/keyboard-player-control.js',
+      '<%= dirs.game %>/systems/path-follow.js',
       '<%= dirs.game %>/systems/sprite-renderer.js',
       '<%= dirs.game %>/screens/game.js',
     ],
@@ -54,6 +56,7 @@ module.exports = function(grunt) {
     },
     jshint: {
       options: {
+        '-W030': true,
         '-W082': true,
         '-W084': true,
         '-W086': true,

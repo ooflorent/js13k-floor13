@@ -77,26 +77,24 @@ function System(components) {
   this.e = [];
 
   if (components) {
-    var that = this;
-    var pos;
-
     this._ca = function(entity) {
-      if (EntityManager.match(entity, components) && that.e.indexOf(entity) < 0) {
-        that.e.push(entity);
-        that.add(entity);
+      if (EntityManager.match(entity, components) && !this.has(entity)) {
+        this.e.push(entity);
+        this.add(entity);
       }
     };
 
-    this._cr = function(entity) {
-      if (EntityManager.match(entity, components) && (pos = that.e.indexOf(entity)) >= 0) {
-        that.e.splice(pos, 1);
-        that.remove(entity);
+    this._cr = function(entity, component) {
+      var pos;
+      if (components.indexOf(component) >= 0 && (pos = this.e.indexOf(entity)) >= 0) {
+        this.e.splice(pos, 1);
+        this.remove(entity);
       }
     };
 
     // Listen entities changes
-    EventManager.add('_ca', this._ca);
-    EventManager.add('_cr', this._cr);
+    EventManager.on('_ca', this._ca, this);
+    EventManager.on('_cr', this._cr, this);
   }
 }
 
@@ -105,8 +103,15 @@ __define(System, {
    * Called by the SystemManager during the destruction.
    */
   clear: function() {
-    EventManager.remove('_ca', this._ca);
-    EventManager.remove('_cr', this._cr);
+    EventManager.off('_ca', this._ca);
+    EventManager.off('_cr', this._cr);
+  },
+  /**
+   * @param {int} entity
+   * @return {Boolean}
+   */
+  has: function(entity) {
+    return this.e.indexOf(entity) >= 0;
   },
   /**
    * Called when a new entity is added to the system.
