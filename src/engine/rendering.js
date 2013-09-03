@@ -2,84 +2,6 @@ function createCanvas() {
   return document.createElement('canvas');
 }
 
-var TextureManager = (function() {
-  var image;
-  var textures = {};
-  var animations = {};
-
-  return {
-    init: function(spritesheet, onLoad) {
-      image = new Image();
-      image.src = spritesheet;
-      image.onload = function() {
-        onLoad();
-      };
-    },
-    slice: function(name, x, y, width, height, repeatX, repeatY) {
-      repeatX = repeatX || 1;
-      repeatY = repeatY || 1;
-
-      var frames = textures[name] = [];
-      for (var iy = 0; iy < repeatY; iy++) {
-        for (var ix = 0; ix < repeatX; ix++) {
-          frames.push(new Texture(image, {
-            x: x + ix * width,
-            y: y + iy * height,
-            w: width,
-            h: height
-          }));
-        }
-      }
-    },
-    anim: function(name, frames, duration) {
-      if (duration) {
-        duration = 1 / duration * 1000 | 0;
-      } else {
-        duration = 0xFFFFFFFF;
-      }
-
-      animations[name] = {
-        n: name,
-        f: frames,
-        d: duration
-      };
-    },
-    g: function(name) {
-      return textures[name];
-    },
-    a: function(name) {
-      return animations[name];
-    }
-  };
-})();
-
-function Texture(source, frame) {
-  this.source = source;
-  this.frame = frame;
-}
-
-function RenderTexture(width, height) {
-  this.frame = {
-    x: 0,
-    y: 0,
-    w: width,
-    h: height
-  };
-  this.r = new Renderer(width, height);
-  this.source = this.r.canvas;
-}
-
-__define(RenderTexture, {
-  render: function(object, position) {
-    if (position) {
-      object._x = position.x;
-      object._y = position.y;
-    }
-
-    this.r.renderObject(object);
-  }
-});
-
 function Renderer(width, height) {
   var canvas = this.canvas = createCanvas();
   var ctx = this.ctx = canvas.getContext('2d');
@@ -296,3 +218,26 @@ __extend(Stage, DisplayObjectContainer, {
     }
   }
 });
+
+function RenderTexture(width, height) {
+  this.frame = {
+    x: 0,
+    y: 0,
+    w: width,
+    h: height
+  };
+  this.r = new Renderer(width, height);
+  this.source = this.r.canvas;
+}
+
+__define(RenderTexture, {
+  render: function(object, position) {
+    if (position) {
+      object._x = position.x;
+      object._y = position.y;
+    }
+
+    this.r.renderObject(object);
+  }
+});
+

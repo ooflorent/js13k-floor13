@@ -25,6 +25,7 @@ module.exports = function(grunt) {
       '<%= dirs.engine %>/entities.js',
       '<%= dirs.engine %>/systems.js',
       '<%= dirs.engine %>/input.js',
+      '<%= dirs.engine %>/textures.js',
       '<%= dirs.engine %>/rendering.js',
     ],
     game: [
@@ -38,6 +39,7 @@ module.exports = function(grunt) {
       '<%= dirs.game %>/systems/keyboard-control.js',
       '<%= dirs.game %>/systems/movement.js',
       '<%= dirs.game %>/systems/path-follow.js',
+      '<%= dirs.game %>/systems/sprite-direction.js',
       '<%= dirs.game %>/systems/sprite-renderer.js',
       '<%= dirs.game %>/screens/game.js',
     ],
