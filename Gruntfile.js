@@ -34,6 +34,7 @@ module.exports = function(grunt) {
       '<%= dirs.game %>/tilemap.js',
       '<%= dirs.game %>/main.js',
       '<%= dirs.game %>/components.js',
+      '<%= dirs.game %>/creator.js',
       '<%= dirs.game %>/systems/camera.js',
       '<%= dirs.game %>/systems/dungeon-collision.js',
       '<%= dirs.game %>/systems/keyboard-control.js',
