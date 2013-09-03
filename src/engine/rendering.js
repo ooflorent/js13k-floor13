@@ -89,7 +89,7 @@ function Renderer(width, height) {
 }
 
 __define(Renderer, {
-  render: function(stage, elapsed) {
+  render: function(stage) {
     var ctx = this.ctx;
     var canvas = this.canvas;
 
@@ -97,13 +97,13 @@ __define(Renderer, {
     ctx.fillRect(0, 0, this.w, this.h);
 
     stage._transform();
-    this.renderObject(stage, elapsed * 1000 | 0);
+    this.renderObject(stage);
   },
-  renderObject: function(object, elapsed) {
+  renderObject: function(object) {
     if (object instanceof DisplayObjectContainer) {
       var children = object._c;
       for (var i = 0, n = children.length; i < n; i++) {
-        this.renderObject(children[i], elapsed);
+        this.renderObject(children[i]);
       }
 
       return;
@@ -118,14 +118,11 @@ __define(Renderer, {
       } else {
         var frame = object.texture.frame;
         ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
-        ctx.drawImage(object.texture.source, frame.x, frame.y, frame.w, frame.h, object.sx < 0 ? object.sx * frame.w : 0, object.sy < 0 ? object.sy * frame.h : 0, frame.w, frame.h);
+        ctx.drawImage(object.texture.source, frame.x, frame.y, frame.w, frame.h, -object.c.x * frame.w | 0, -object.c.y * frame.h | 0, frame.w, frame.h);
       }
     } else if (object instanceof Graphics) {
+      ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
       object._batch(ctx, object._color);
-    }
-
-    if (object instanceof AnimatedSprite) {
-      object.advance(elapsed);
     }
   }
 });
@@ -173,8 +170,8 @@ var Buffer = (function() {
     clear: function() {
       canvas.removeEventListener('click', clickHandler);
     },
-    render: function(elapsed) {
-      renderer.render(this.stage, elapsed);
+    render: function() {
+      renderer.render(this.stage);
 
       // Draw game
       ctx.drawImage(renderer.canvas, 0, 0, renderer.w, renderer.h, 0, 0, width, height);
@@ -212,15 +209,16 @@ function Graphics(batch, color) {
 
 __extend(Graphics, DisplayObject);
 
-function Sprite(texture) {
+function Sprite(texture, c) {
   DisplayObject.call(this);
   this.texture = texture;
+  this.c = c || {x: 0, y: 0};
 }
 
 __extend(Sprite, DisplayObject);
 
-function AnimatedSprite(textures, animations, defaultAnimation) {
-  Sprite.call(this);
+function AnimatedSprite(textures, animations, defaultAnimation, c) {
+  Sprite.call(this, 0, c);
   this.t = textures;
   this.a = animations;
   this.play(defaultAnimation);
@@ -228,14 +226,14 @@ function AnimatedSprite(textures, animations, defaultAnimation) {
 
 __extend(AnimatedSprite, Sprite, {
   play: function(anim) {
-    if (this.c != anim) {
-      this.texture = this.t[this.a[this.c = anim].f[this.f = this.d = 0]];
+    if (this.an != anim) {
+      this.texture = this.t[this.a[this.an = anim].f[this.f = this.d = 0]];
     }
   },
   advance: function(elapsed) {
-    if (this.c) {
-      var frames = this.a[this.c].f;
-      var duration = this.a[this.c].d;
+    if (this.an) {
+      var frames = this.a[this.an].f;
+      var duration = this.a[this.an].d;
 
       // Go to the next frame
       this.d += elapsed;

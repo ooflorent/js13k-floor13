@@ -19,7 +19,7 @@ __extend(SpriteRendererSystem, IteratingSystem, {
     });
 
     // Render the frame
-    Buffer.render(elapsed);
+    Buffer.render();
   },
   onUpdate: function(entity, elapsed) {
     var position = Pixelwars.c(entity, Position.name);
@@ -28,5 +28,10 @@ __extend(SpriteRendererSystem, IteratingSystem, {
     // Update asset position
     gfx.x = position.x | 0;
     gfx.y = position.y | 0;
+
+    // Update animation
+    if (gfx instanceof AnimatedSprite) {
+      gfx.advance(elapsed * 1000 | 0);
+    }
   }
 });

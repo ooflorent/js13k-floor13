@@ -6,9 +6,9 @@ var EntityCreator = {
   },
   player: function(pos) {
     var player = Pixelwars.e('p');
-    EntityManager.add(player, new Position(pos.x * 16 + 3, pos.y * 16 + 3));
+    EntityManager.add(player, new Position(pos.x * 16 + 7, pos.y * 16 + 10));
     EntityManager.add(player, new Motion());
-    EntityManager.add(player, new Bounds(1, 5, 7, 5));
+    EntityManager.add(player, new Bounds(-3, -5, 7, 5));
     EntityManager.add(player, new Display(new AnimatedSprite(TextureManager.g('p'), {
       _n: TextureManager.a('_n'), // Idle north
       _s: TextureManager.a('_s'), // Idle south
@@ -16,16 +16,18 @@ var EntityCreator = {
       n: TextureManager.a('n'),   // Walk north
       s: TextureManager.a('s'),   // Walk south
       h: TextureManager.a('h')    // Walk east of west
-    }, '_s')));
+    }, '_s', {x: 0.5, y: 1})));
     return player;
   },
   dungeon: function() {
     var dungeon = Pixelwars.e('d');
     var map = generateDungeon(20, 16, 4, 7);
-    console.log(dumpDungeon(map));
     EntityManager.add(dungeon, map);
     EntityManager.add(dungeon, new Position());
     EntityManager.add(dungeon, new Display(new Sprite(new Tilemap(map))));
+    if (__PW_DEBUG) {
+      console.log(dumpDungeon(map));
+    }
     return dungeon;
   }
 };
@@ -42,8 +44,7 @@ var GameScreen = {
     Buffer.init(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas, stage);
 
     // Initialize game systems
-    SystemManager.register(new MouseControlSystem());
-    SystemManager.register(new DirectionFollowSystem());
+    SystemManager.register(new KeyboardControlSystem());
     SystemManager.register(new PathFollowSystem());
     SystemManager.register(new MovementSystem());
     SystemManager.register(new DungeonCollisionSystem());
@@ -51,9 +52,10 @@ var GameScreen = {
 
     if (__PW_DEBUG) {
       var debugLayer = cameraLayer.add(new DisplayObjectContainer());
-      SystemManager.register(new BoundsRendererSystem(debugLayer));
+      //SystemManager.register(new BoundsRendererSystem(debugLayer));
     }
 
+    SystemManager.register(new SpriteDirectionSystem());
     SystemManager.register(new SpriteRendererSystem(gameLayer));
 
     // Generate world

@@ -7,8 +7,13 @@ __extend(MovementSystem, IteratingSystem, {
     var position = Pixelwars.c(entity, Position.name);
     var motion = Pixelwars.c(entity, Motion.name);
 
+    // Update position
     position.x += elapsed * motion.dx;
     position.y += elapsed * motion.dy;
-    position.r = motion.dr;
+
+    // Update direction
+    if (motion.dx || motion.dy) {
+      position.r = 180 * Math.atan2(motion.dx, motion.dy) / Math.PI;
+    }
   }
 });

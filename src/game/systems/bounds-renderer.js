@@ -6,11 +6,10 @@ function BoundsRendererSystem(layer) {
 __extend(BoundsRendererSystem, IteratingSystem, {
   add: function(entity) {
     var bounds = Pixelwars.c(entity, Bounds.name);
-
     bounds.gfx = new Graphics(function(ctx, color) {
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(0,255,0,.5)';
-      ctx.strokeRect(bounds.x + 0.5, bounds.y + 0.5, bounds.w - 1, bounds.h - 1);
+      ctx.strokeRect(0.5, 0.5, bounds.w - 1, bounds.h - 1);
       ctx.closePath();
     });
 
@@ -23,7 +22,7 @@ __extend(BoundsRendererSystem, IteratingSystem, {
     var position = Pixelwars.c(entity, Position.name);
     var bounds = Pixelwars.c(entity, Bounds.name);
 
-    bounds.gfx.x = position.x | 0;
-    bounds.gfx.y = position.y | 0;
+    bounds.gfx.x = bounds.x + position.x | 0;
+    bounds.gfx.y = bounds.y + position.y | 0;
   }
 });

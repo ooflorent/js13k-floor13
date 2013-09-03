@@ -1,29 +1,12 @@
-function Position(x, y, r) {
+function Position(x, y) {
   this.x = x || 0;
   this.y = y || 0;
-  this.r = r || 0;
+  this.r = 0;
 }
 
-function Direction(x, y) {
-  this.x = x;
-  this.y = y;
-}
-
-Position.d = function(r) {
-  var rabs = Math.abs(r);
-  if (r == 180 || rabs == 135) {
-    return 'n';
-  } else if (!r || rabs == 45) {
-    return 's';
-  }
-
-  return 'h';
-};
-
-function Motion(dx, dy, dr) {
+function Motion(dx, dy) {
   this.dx = dx || 0;
   this.dy = dy || 0;
-  this.dr = dr || 0;
 }
 
 function Camera(layer) {
