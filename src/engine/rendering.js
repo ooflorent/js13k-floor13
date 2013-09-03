@@ -103,10 +103,6 @@ __define(Renderer, {
     this.renderObject(stage, elapsed * 1000 | 0);
   },
   renderObject: function(object, elapsed) {
-    if (!object._a) {
-      return;
-    }
-
     if (object instanceof DisplayObjectContainer) {
       var children = object._c;
       for (var i = 0, n = children.length; i < n; i++) {
@@ -195,10 +191,9 @@ var Buffer = (function() {
 
 function DisplayObject() {
   this.x = this.y = 0;
-  this.alpha = this.sx = this.sy = 1;
+  this.sx = this.sy = 1;
 
   this._x = this._y = 0;
-  this._a = 1;
   this._p = null;
 }
 
@@ -209,9 +204,6 @@ __define(DisplayObject, {
     // Calculate effective position
     this._x = parent._x + this.x;
     this._y = parent._y + this.y;
-
-    // Calculate effective alpha
-    this._a = this.alpha * parent._a;
   }
 });
 
