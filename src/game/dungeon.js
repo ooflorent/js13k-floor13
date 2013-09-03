@@ -1,11 +1,13 @@
 var TILE_BLANK = 0;
 var TILE_FLOOR = 1;
 
-function Dungeon(width, height, map, doors, prev, next) {
+function Dungeon(width, height, map, doors, chests, mobs, prev, next) {
   this.w = width;
   this.h = height;
   this.m = map;
   this.d = doors;
+  this.c = chests;
+  this.e = mobs;
   this.prev = prev;
   this.next = next;
 }
@@ -50,9 +52,11 @@ var generateDungeon = (function() {
   }
 
   function generateDungeon(width, height, minSize, maxSize) {
-    var x, y, w, h;
+    var x, y, w, h, r, i;
     var rooms = [], room;
     var doors = [];
+    var chests = [];
+    var mobs = [];
 
     // Create an empty map
     var map = [];
@@ -71,7 +75,7 @@ var generateDungeon = (function() {
     // Draw it
     dig(map, room.x + 1, room.y + 1, room.x + w - 2, room.y + h - 2);
 
-    for (var it = width * height * 2; it-- >= 0;) {
+    for (i = width * height * 2; i-- >= 0;) {
       // Generate a new room
       room = new Rectangle(0, 0, getRandomInt(minSize, maxSize), getRandomInt(minSize, maxSize));
 
@@ -103,7 +107,7 @@ var generateDungeon = (function() {
 
       // Ensure that we have enough space for the room
       var free = room.x >= 0 && room.y >= 0 && (room.x + room.w) < width && (room.y + room.h) < height;
-      for (var r = rooms.length; r-- && free;) {
+      for (r = rooms.length; r-- && free;) {
         if (room.overlap(rooms[r])) {
           free = false;
         }
@@ -118,7 +122,7 @@ var generateDungeon = (function() {
         doors.push(branchingPos);
         rooms.push(room);
       } else {
-        it--;
+        i--;
       }
     }
 
@@ -128,6 +132,20 @@ var generateDungeon = (function() {
     do {
       exit = getRandomElement(rooms);
     } while (entrance === exit);
+
+    // Add mobs
+    var prob = [0, 1, 1, 1, 1, 2, 2, 2, 3, 3, 4];
+    for (r = rooms.length; r--;) {
+      room = rooms[r];
+      if (room !== entrance) {
+        for (i = getRandomElement(prob); i--;) {
+          mobs.push({
+            x: room.x + getRandomInt(1, room.w - 2),
+            y: room.y + getRandomInt(1, room.h - 2),
+          });
+        }
+      }
+    }
 
     entrance = {
       x: entrance.x + getRandomInt(1, entrance.w - 2),
@@ -139,7 +157,7 @@ var generateDungeon = (function() {
       y: exit.y + getRandomInt(1, exit.h - 2)
     };
 
-    return new Dungeon(width, height, map, doors, entrance, exit);
+    return new Dungeon(width, height, map, doors, chests, mobs, entrance, exit);
   }
 
   function dig(map, x1, y1, x2, y2) {

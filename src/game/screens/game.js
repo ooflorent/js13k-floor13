@@ -37,6 +37,11 @@ var GameScreen = {
     // Create player
     var player = EntityCreator.player(map.prev);
 
+    // Create enemies
+    for (var i = map.e.length; i--;) {
+      EntityCreator.skeleton(map.e[i]);
+    }
+
     // Run the game
     SystemManager.start();
   },
