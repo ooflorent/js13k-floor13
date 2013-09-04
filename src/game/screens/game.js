@@ -26,6 +26,7 @@ var GameScreen = {
 
     SystemManager.register(new SpriteDirectionSystem());
     SystemManager.register(new SpriteRendererSystem(gameLayer));
+    SystemManager.register(new LifetimeSystem());
 
     // Generate world
     var dungeon = EntityCreator.dungeon();

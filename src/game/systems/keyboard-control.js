@@ -12,6 +12,10 @@ __extend(KeyboardControlSystem, System, {
     var gfx = Pixelwars.c(player, Display.name).gfx;
 
     var x = y = 0;
+    if (getKey(88)) { // X
+      EntityCreator.dash(Pixelwars.c(player, Position.name));
+    }
+
     if (getKey(37)) { // LEFT
       x = -1;
     } else if (getKey(39)) { // RIGHT

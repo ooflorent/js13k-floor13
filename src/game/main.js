@@ -20,12 +20,16 @@ var Pixelwars = {
       TextureManager.slice('p', 16, 0, 9, 10, 8);  // Player
       TextureManager.slice('s', 16, 10, 9, 10, 8); // Skeleton
 
+      // Effects
+      TextureManager.slice('d', 62, 40, 7, 7, 3); // Dash
+
       TextureManager.anim('_n', [5]);
       TextureManager.anim('_h', [0]);
       TextureManager.anim('_s', [2]);
       TextureManager.anim('n', [7, 6], 6);
       TextureManager.anim('h', [1, 0], 8);
       TextureManager.anim('s', [4, 3], 6);
+      TextureManager.anim('d', [0, 1, 2], 12);
 
       // Run game
       GameScreen.enter(canvas);

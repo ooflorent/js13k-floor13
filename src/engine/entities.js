@@ -63,8 +63,8 @@ var EntityManager = (function () {
     kill: function(entity) {
       var components = Object.keys(entitiesToComponents[entity]);
       var component;
-      for (component in components) {
-        this.remove(entity, component);
+      for (var i = components.length; i--;) {
+        this.remove(entity, components[i]);
       }
 
       var tag = entitiesToTags[entity];

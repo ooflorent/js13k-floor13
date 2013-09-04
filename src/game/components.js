@@ -1,6 +1,13 @@
-function Position(x, y) {
+function Dash() {}
+function Player() {}
+function Enemy() {}
+function Door() {}
+
+function Position(x, y, width, height) {
   this.x = x || 0;
   this.y = y || 0;
+  this.w = width || 0;
+  this.h = height || 0;
   this.r = 0;
 }
 
@@ -26,4 +33,8 @@ function Bounds(x, y, width, height) {
 
 function Path() {
   this.p = [];
+}
+
+function Lifetime(t) {
+  this.t = t;
 }

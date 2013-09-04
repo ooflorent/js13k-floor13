@@ -38,6 +38,7 @@ module.exports = function(grunt) {
       '<%= dirs.game %>/systems/camera.js',
       '<%= dirs.game %>/systems/dungeon-collision.js',
       '<%= dirs.game %>/systems/keyboard-control.js',
+      '<%= dirs.game %>/systems/lifetime-control.js',
       '<%= dirs.game %>/systems/movement.js',
       '<%= dirs.game %>/systems/path-follow.js',
       '<%= dirs.game %>/systems/sprite-direction.js',
