@@ -14,8 +14,8 @@ __extend(SpriteRendererSystem, IteratingSystem, {
     IteratingSystem.prototype.update.call(this, elapsed);
 
     // Sort elements
-    this.c.sort(function(objA, objB) {
-      return objA.y > objB.y ? 1 : -1;
+    this.l._c.sort(function(objA, objB) {
+      return objA.y - objB.y;
     });
 
     // Render the frame
