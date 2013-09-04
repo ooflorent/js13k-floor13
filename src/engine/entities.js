@@ -1,158 +1,121 @@
-var EntityManager = (function () {
+/**
+ * Manage entities.
+ */
+function EntityManager() {
+  // Private fields
   var currentId = 0;
-  var entitiesToTags = [];
-  var tagsToEntities = {};
   var entitiesToComponents = [];
   var componentsToEntities = {};
 
+  // Methods variables
+  var entity, components,component, types, type;
+
   /**
-   * Computes the intersection of two arrays.
-   *
-   * @param {array} The array with master values to check
-   * @param {array} An array to compare values against
-   * @return {array}
+   * @param {Function[]} ctors Component constructors
+   * @return {String[]} Component names
    */
-  function intersect(a, b) {
-    var results = [];
-
-    for (var i = 0, n = a.length; i < n; i++) {
-      if (b.indexOf(a[i]) >= 0) {
-        results.push(a[i]);
-      }
-    }
-
-    return results;
+  function componentsToTypes(ctors) {
+    return ctors.map(function(ctor) {
+      return ctor.name;
+    });
   }
 
-  /**
-   * Manage entities.
-   */
-  return {
-    /**
-     * Unregister all entities.
-     */
-    clear: function() {
-      currentId = 0;
-      entitiesToTags = [];
-      tagsToEntities = {};
-      entitiesToComponents = [];
-      componentsToEntities = {};
-    },
+  __mixin(this, {
     /**
      * Create a new entity.
      *
-     * @param {String} tag
-     * @return {int} entity
+     * @param {Object[]} components
+     * @return {Entity} entity
      */
-    create: function(name) {
-      var id = currentId++;
-      var tag = '$' + (name || id);
-
-      entitiesToTags[id] = tag;
-      tagsToEntities[tag] = id;
-
-      entitiesToComponents[id] = {};
-
-      return id;
+    e: function create(comps) {
+      entities[currentId] = entity = new Entity(currentId++);
+      comps && comps.map(entity.add, entity);
+      return entity;
     },
     /**
      * Kill the specified entity.
      *
-     * @param {int} entity
+     * @param {Entity} entity
      */
-    kill: function(entity) {
-      var components = Object.keys(entitiesToComponents[entity]);
-      var component;
-      for (var i = components.length; i--;) {
-        this.remove(entity, components[i]);
-      }
-
-      var tag = entitiesToTags[entity];
-      delete entitiesToTags[entity];
-      delete tagsToEntities[tag];
-    },
-    /**
-     * Add a component to the specified entity.
-     *
-     * @param {int} entity
-     * @param {Object} component
-     * @param {String} component name
-     */
-    add: function(entity, component, name) {
-      if (!name) {
-        name = component.constructor.name;
-      }
-
-      if (!componentsToEntities[name]) {
-        componentsToEntities[name] = [];
-      }
-
-      componentsToEntities[name][entity] = true;
-      entitiesToComponents[entity][name] = component;
-
-      EventManager.emit('_ca', entity, name);
-    },
-    /**
-     * Remove a component from the specified entity.
-     *
-     * @param {int} entity
-     * @param {String} component name
-     */
-    remove: function(entity, name) {
-      EventManager.emit('_cr', entity, name);
-
-      delete entitiesToComponents[entity][name];
-      delete componentsToEntities[name][entity];
-    },
-    /**
-     * Get the entity with the specified tag.
-     *
-     * @param {String} entity tag
-     * @return {int} int
-     */
-    tag: function(tag) {
-      return tagsToEntities['$' + tag];
-    },
-    /**
-     * Get a component from the specified entity.
-     *
-     * @param {int} entity
-     * @param {String} component name
-     * @return {Object} component
-     */
-    get: function(entity, name) {
-      return entitiesToComponents[entity][name];
-    },
-    /**
-     * Check if an entity matches the given components.
-     *
-     * @param {int} entity
-     * @param {String} component name
-     * @return {Boolean}
-     */
-    match: function(entity, components) {
-      var i = components.length;
-      while (i--) {
-        if (!entitiesToComponents[entity][components[i]]) {
-          return false;
-        }
-      }
-
-      return true;
+    k: function kill(entity) {
+      entity.clear();
+      delete entitiesToComponents[entity.i];
     },
     /**
      * Get entities with specified components.
      *
-     * @param {String[]} components
+     * @param {Function[]} ctors Component constructors
      * @return {int[]} entities
      */
-    filter: function(components) {
-      var entities = Object.keys(componentsToEntities[components[0]] || {});
-      for (var i = 1; i < components.length; i++) {
+    f: function filter(ctors) {
+      entities = Object.keys(entitiesToComponents);
+      for (types = componentsToTypes(ctors), i = types.length; i--;) {
         entities = intersect(entities, Object.keys(componentsToEntities[components[i]] || {}));
       }
-
       return entities;
+    },
+    /**
+     * Unregister all entities.
+     * Warning: Entities are not killed.
+     */
+    c: function clear() {
+      entities = [];
+      currentId = 0;
     }
-  };
-})();
+  });
+
+  function Entity(id) {
+    this.i = id;
+    __mixin(this, {
+      /**
+       * Add a component to the entity.
+       *
+       * @param {Object} component
+       */
+      a: function add(component) {
+        entitiesToComponents[id][type = component.constructor.name] = component;
+        componentsToEntities[type] || (componentsToEntities[type] = []);
+        componentsToEntities[type][id] = 1;
+        EventManager.emit('ca', this, component);
+      },
+      /**
+       * Remove a component from the entity.
+       *
+       * @param {Function} ctor Component constructor
+       */
+      r: function remove(ctor) {
+        component = entitiesToComponents[id][type = ctor.name];
+        delete entitiesToComponents[entity][type];
+        delete componentsToEntities[type][entity];
+        EventManager.emit('cr', this, component);
+      },
+      /**
+       * Get a component from the entity.
+       *
+       * @param {Function} ctor Component constructor
+       * @return {Object} component
+       */
+      g: function get(ctor) {
+        return entitiesToComponents[id][ctor.name];
+      },
+      /**
+       * Check if the entity matches the given components.
+       *
+       * @param {Function[]} ctors Component constructors
+       * @return {Boolean}
+       */
+      m: function match(ctors) {
+        types = componentsToTypes(ctors);
+        return intersect(Object.keys(entitiesToComponents[id]), types).length == types.length;
+      },
+      /**
+       * Remove all the components of the entity.
+       */
+      c: function clear() {
+        for (type in entitiesToComponents[id]) {
+          this.remove(type);
+        }
+      }
+    });
+  }
+}

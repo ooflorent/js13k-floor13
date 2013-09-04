@@ -63,6 +63,7 @@ module.exports = function(grunt) {
         '-W082': true,
         '-W084': true,
         '-W086': true,
+        '-W088': true,
         '-W018': true,
         '-W120': true,
       },

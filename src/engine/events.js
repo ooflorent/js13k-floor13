@@ -28,7 +28,7 @@ var EventManager = (function () {
       list = handlers[type] || [];
       i = list.length;
 
-      while (~--i < 0) {
+      while (i--) {
         func == list[i].f && list.splice(i, 1);
       }
     },
@@ -40,7 +40,7 @@ var EventManager = (function () {
       list = handlers[args.shift()] || [];
       i = list.length;
 
-      while (~--i < 0) {
+      while (i--) {
         list[i].f.apply(list[i].c, args);
       }
     }

@@ -5,6 +5,25 @@ function $(id) {
   return document.getElementById(id);
 }
 
+// Array
+// -----
+
+/**
+ * Computes the intersection of two arrays.
+ *
+ * @param {array} a An array to compare values against
+ * @param {array} b The array with master values to check
+ * @return {array}
+ */
+function intersect(a, b) {
+  var results = [], i = b.length;
+  while (i--) {
+    a.indexOf(b[i]) >= 0 && results.push(b[i]);
+  }
+
+  return results;
+}
+
 // Math
 // ----
 
