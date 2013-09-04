@@ -1,5 +1,7 @@
 var GameScreen = {
   enter: function(canvas) {
+    var i;
+
     // Create game layers
     var stage = new Stage();
     var cameraLayer = stage.add(new DisplayObjectContainer());
@@ -14,11 +16,12 @@ var GameScreen = {
     SystemManager.register(new PathFollowSystem());
     SystemManager.register(new MovementSystem());
     SystemManager.register(new DungeonCollisionSystem());
+    SystemManager.register(new EntityCollisionSystem());
     SystemManager.register(new CameraSystem(cameraLayer));
 
     if (__PW_DEBUG) {
       var debugLayer = cameraLayer.add(new DisplayObjectContainer());
-      //SystemManager.register(new BoundsRendererSystem(debugLayer));
+      SystemManager.register(new BoundsRendererSystem(debugLayer));
     }
 
     SystemManager.register(new SpriteDirectionSystem());
@@ -37,10 +40,18 @@ var GameScreen = {
     // Create player
     var player = EntityCreator.player(map.prev);
 
+    // Create doors
+    for (i = map.d.length; i--;) {
+      EntityCreator.door(map.d[i]);
+    }
+
     // Create enemies
-    for (var i = map.e.length; i--;) {
+    for (i = map.e.length; i--;) {
       EntityCreator.skeleton(map.e[i]);
     }
+
+    EntityCreator.entrance(map.prev);
+    EntityCreator.exit(map.next);
 
     // Run the game
     SystemManager.start();

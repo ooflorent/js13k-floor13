@@ -1,4 +1,11 @@
 var EntityCreator = (function() {
+  function createPortal(texture, x, y) {
+    var entity = Pixelwars.e();
+    Pixelwars.a(entity, new Position(x, y));
+    Pixelwars.a(entity, new Display(new Sprite(TextureManager.g(texture)[0])));
+    return entity;
+  }
+
   function getFourWaysAnimatedSprite(texture) {
     return new AnimatedSprite(TextureManager.g(texture), {
       _n: TextureManager.a('_n'), // Idle north
@@ -15,6 +22,21 @@ var EntityCreator = (function() {
       var game = Pixelwars.e('g');
       Pixelwars.a(game, new Camera(cameraLayer));
       return game;
+    },
+    entrance: function(pos) {
+      return createPortal('sd', pos.x * 16, pos.y * 16);
+    },
+    exit: function(pos) {
+      return createPortal('su', pos.x * 16 + 2, pos.y * 16 - 4);
+    },
+    door: function(pos) {
+      var entity = Pixelwars.e();
+      var x = pos.x * 16 + (pos.d > 1 ? 0 : (pos.d ? 13 : -3));
+      var y = pos.y * 16 + (pos.d > 2 ? -8 : (pos.d > 1 ? 8 : -12));
+      Pixelwars.a(entity, new Position(x, y));
+      Pixelwars.a(entity, pos.d > 1 ? new Bounds(0, 0, 16, 16) : new Bounds(0, 0, 6, 28));
+      Pixelwars.a(entity, new Display(new Sprite(TextureManager.g(pos.d > 1 ? 'dh' : 'dv')[0])));
+      return entity;
     },
     player: function(pos) {
       var entity = Pixelwars.e('p');
