@@ -1,5 +1,5 @@
 function LifetimeSystem() {
-  IteratingSystem.call(this, [Lifetime]);
+  IteratingSystem.call(this, Lifetime);
 }
 
 __extend(LifetimeSystem, IteratingSystem, {

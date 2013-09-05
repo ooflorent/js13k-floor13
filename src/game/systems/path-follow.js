@@ -1,5 +1,5 @@
 function PathFollowSystem() {
-  IteratingSystem.call(this, [Position.name, Motion.name, Path.name]);
+  IteratingSystem.call(this, Position, Motion, Path);
 }
 
 __extend(PathFollowSystem, IteratingSystem, {

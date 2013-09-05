@@ -8,6 +8,9 @@ var __gm = new GroupManager(__evt);
 var __sm = new SystemManager(__evt);
 var __tm = new TagManager(__evt);
 
+// Tick dispatcher
+var __ticker = new Ticker();
+
 // Rendering engine
 var __buffer = new Buffer($('c'), __PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE);
 var __textureManager = new TextureManager();
@@ -45,11 +48,22 @@ __textureManager.d('d', [0, 1, 2], 12); // Dash
 // Game runner
 // -----------
 
+/**
+ * Start the game.
+ */
 function runGame() {
-  var gameScreen;
-
-  __textureManager.l(__PW_ASSETS_DIR + 't.png', function() {
-    console.log('Go go go!');
-
+  // Load the main spritesheet
+  __textureManager.l(__PW_ASSETS_DIR + 't.png', function onLoad() {
+    // Start the ticker
+    __ticker.start(gameLoop);
   });
+}
+
+/**
+ * Process the current tick.
+ * @param  {float} elapsed
+ */
+function gameLoop(elapsed) {
+  __sm.u(elapsed);
+  __buffer.r();
 }

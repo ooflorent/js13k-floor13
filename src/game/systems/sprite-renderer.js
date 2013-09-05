@@ -1,5 +1,5 @@
 function SpriteRendererSystem(layer) {
-  IteratingSystem.call(this, [Position.name, Display.name]);
+  IteratingSystem.call(this, Position, Display);
   this.l = layer;
 }
 
@@ -19,9 +19,6 @@ __extend(SpriteRendererSystem, IteratingSystem, {
     this.l._c.sort(function(objA, objB) {
       return objA.y - objB.y;
     });
-
-    // Render the frame
-    Buffer.render();
   },
   ue: function updateEntity(entity, elapsed) {
     var position = entity.g(Position);

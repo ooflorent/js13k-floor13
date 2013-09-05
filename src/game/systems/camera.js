@@ -5,8 +5,8 @@ function CameraSystem(layer) {
 
 __extend(CameraSystem, System, {
   u: function update(elapsed) {
-    var position = _em.f([Player])[0].g(Position);
-    var map = _em.f([World])[0].g(Display).gfx.texture.frame;
+    var position = __tm.g('p').g(Position);
+    var map = __tm.g('w').g(Display).gfx.texture.frame;
 
     var renderer = Buffer.renderer;
     var camera = this.l;

@@ -1,5 +1,5 @@
 function SpriteDirectionSystem(layer) {
-  IteratingSystem.call(this, [Position, Motion, Display]);
+  IteratingSystem.call(this, Position, Motion, Display);
   this.l = layer;
 }
 

@@ -8,12 +8,14 @@ function Ticker() {
   __mixin(this, {
     /**
      * Start the game loop.
+     *
+     * @param  {Function} callback
      */
-    start: function start(callback, context) {
+    start: function start(callback) {
       if (!requestID) {
         time = +new Date();
         requestID = requestAnimationFrame(update = function() {
-          callback.call(context, -(time - (time = +new Date())) / 1000);
+          callback(-(time - (time = +new Date())) / 1000);
           requestID = requestAnimationFrame(update);
         });
       }
