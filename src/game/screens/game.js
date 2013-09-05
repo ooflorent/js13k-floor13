@@ -1,67 +1,63 @@
-var GameScreen = {
-  enter: function(canvas) {
-    var i;
+function GameScreen() {
+  // Create game layers
+  var stage = new Stage();
+  var cameraLayer = stage.add(new DisplayObjectContainer());
+  var hudLayer    = stage.add(new DisplayObjectContainer());
+  var gameLayer   = cameraLayer.add(new DisplayObjectContainer());
 
-    // Create game layers
-    var stage = new Stage();
-    var cameraLayer = stage.add(new DisplayObjectContainer());
-    var hudLayer    = stage.add(new DisplayObjectContainer());
-    var gameLayer   = cameraLayer.add(new DisplayObjectContainer());
+  // Initialize game systems
+  __sm.a(new KeyboardControlSystem());
+  __sm.a(new PathFollowSystem());
+  __sm.a(new MovementSystem());
+  __sm.a(new DungeonCollisionSystem());
+  __sm.a(new EntityCollisionSystem());
+  __sm.a(new CameraSystem(cameraLayer));
 
-    // Initialize rendering engine
-    Buffer.init(__PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE, canvas, stage);
-
-    // Initialize game systems
-    SystemManager.register(new KeyboardControlSystem());
-    SystemManager.register(new PathFollowSystem());
-    SystemManager.register(new MovementSystem());
-    SystemManager.register(new DungeonCollisionSystem());
-    SystemManager.register(new EntityCollisionSystem());
-    SystemManager.register(new CameraSystem(cameraLayer));
-
-    if (__PW_DEBUG) {
-      var debugLayer = cameraLayer.add(new DisplayObjectContainer());
-      SystemManager.register(new BoundsRendererSystem(debugLayer));
-    }
-
-    SystemManager.register(new SpriteDirectionSystem());
-    SystemManager.register(new SpriteRendererSystem(gameLayer));
-    SystemManager.register(new LifetimeSystem());
-
-    // Generate world
-    var dungeon = EntityCreator.dungeon();
-    var map = Pixelwars.c(dungeon, Dungeon.name);
-
-    // Initialize path finder
-    AStar.init(map.m, isWallTile);
-
-    // Create game
-    var game = EntityCreator.game(cameraLayer);
-
-    // Create player
-    var player = EntityCreator.player(map.prev);
-
-    // Create doors
-    for (i = map.d.length; i--;) {
-      EntityCreator.door(map.d[i]);
-    }
-
-    // Create enemies
-    for (i = map.e.length; i--;) {
-      EntityCreator.skeleton(map.e[i]);
-    }
-
-    EntityCreator.entrance(map.prev);
-    EntityCreator.exit(map.next);
-
-    // Run the game
-    SystemManager.start();
-  },
-  exit: function() {
-    Buffer.clear();
-    SystemManager.stop();
-    SystemManager.clear();
-    EventManager.clear();
-    EntityManager.clear();
+  if (__PW_DEBUG) {
+    var debugLayer = cameraLayer.add(new DisplayObjectContainer());
+    __sm.a(new BoundsRendererSystem(debugLayer));
   }
-};
+
+  __sm.a(new SpriteDirectionSystem());
+  __sm.a(new SpriteRendererSystem(gameLayer));
+  __sm.a(new LifetimeSystem());
+
+  // Generate world
+  var dungeon = EntityCreator.dungeon();
+  var map = Pixelwars.c(dungeon, Dungeon.name);
+
+  // Initialize path finder
+  AStar.init(map.m, isWallTile);
+
+  // Create game
+  var game = EntityCreator.game(cameraLayer);
+
+  // Create player
+  var player = EntityCreator.player(map.prev);
+
+  // Create doors
+  for (i = map.d.length; i--;) {
+    EntityCreator.door(map.d[i]);
+  }
+
+  // Create enemies
+  for (i = map.e.length; i--;) {
+    EntityCreator.skeleton(map.e[i]);
+  }
+
+  EntityCreator.entrance(map.prev);
+  EntityCreator.exit(map.next);
+
+  // Run the game
+  __sm.start();
+
+  __mixin(this, {
+    c: function clear() {
+      Buffer.clear();
+      __sm.stop();
+      __sm.c();
+      __evt.c();
+      __em.c();
+    }
+  });
+}

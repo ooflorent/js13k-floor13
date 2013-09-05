@@ -1,7 +1,7 @@
 /**
- * @param {Function} classA
- * @param {Function} classB
- * @param {any} props
+ * @param  {Function} classA
+ * @param  {Function} classB
+ * @param  {Object} props
  */
 function __extend(classA, classB, props) {
   __mixin(classA, classB);
@@ -19,16 +19,16 @@ function __extend(classA, classB, props) {
 }
 
 /**
- * @param {any} classA
- * @param {any} props
+ * @param  {Object} classA
+ * @param  {Object} props
  */
 function __define(classA, props) {
   __mixin(classA.prototype, props);
 }
 
 /**
- * @param {any} classA
- * @param {any} props
+ * @param  {Object} classA
+ * @param  {Object} props
  */
 function __mixin(objA, objB) {
   for (var prop in objB) {

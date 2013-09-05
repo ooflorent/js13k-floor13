@@ -4,8 +4,8 @@ function DungeonCollisionSystem() {
 
 __extend(DungeonCollisionSystem, System, {
   update: function(elapsed) {
-    var player = Pixelwars.t('p');
-    var dungeon = Pixelwars.t('d');
+    var player = _em.f(Player)[0];
+    var dungeon = _em.f(World)[0];
 
     var position = Pixelwars.c(player, Position.name);
     var bounds = Pixelwars.c(player, Bounds.name);

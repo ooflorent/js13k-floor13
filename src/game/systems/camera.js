@@ -4,9 +4,9 @@ function CameraSystem(layer) {
 }
 
 __extend(CameraSystem, System, {
-  update: function(elapsed) {
-    var position = Pixelwars.c(Pixelwars.t('p'), Position.name);
-    var map = Pixelwars.c(Pixelwars.t('d'), Display.name).gfx.texture.frame;
+  u: function update(elapsed) {
+    var position = _em.f([Player])[0].g(Position);
+    var map = _em.f([World])[0].g(Display).gfx.texture.frame;
 
     var renderer = Buffer.renderer;
     var camera = this.l;

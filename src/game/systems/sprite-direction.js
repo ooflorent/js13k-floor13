@@ -1,13 +1,13 @@
 function SpriteDirectionSystem(layer) {
-  IteratingSystem.call(this, [Position.name, Motion.name, Display.name]);
+  IteratingSystem.call(this, [Position, Motion, Display]);
   this.l = layer;
 }
 
 __extend(SpriteDirectionSystem, IteratingSystem, {
-  onUpdate: function(entity, elapsed) {
-    var position = Pixelwars.c(entity, Position.name);
-    var motion = Pixelwars.c(entity, Motion.name);
-    var gfx = Pixelwars.c(entity, Display.name).gfx;
+  ue: function updateEntity(entity, elapsed) {
+    var position = entity.g(Position);
+    var motion = entity.g(Motion);
+    var gfx = entity.g(Display).gfx;
 
     // Compute direction
     var direction;

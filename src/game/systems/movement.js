@@ -1,11 +1,11 @@
 function MovementSystem() {
-  IteratingSystem.call(this, [Position.name, Motion.name]);
+  IteratingSystem.call(this, [Position, Motion]);
 }
 
 __extend(MovementSystem, IteratingSystem, {
-  onUpdate: function(entity, elapsed) {
-    var position = Pixelwars.c(entity, Position.name);
-    var motion = Pixelwars.c(entity, Motion.name);
+  ue: function updateEntity(entity, elapsed) {
+    var position = entity.g(Position);
+    var motion = entity.g(Motion);
 
     // Update position
     position.x += elapsed * motion.dx;

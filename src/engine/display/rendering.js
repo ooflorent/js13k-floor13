@@ -36,11 +36,11 @@ __define(Renderer, {
     if (object instanceof Sprite) {
       if (object.texture instanceof RenderTexture) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.drawImage(object.texture.source, -object._x, -object._y, this.w, this.h, 0, 0, this.w, this.h);
+        ctx.drawImage(object.texture.s, -object._x, -object._y, this.w, this.h, 0, 0, this.w, this.h);
       } else {
-        var frame = object.texture.frame;
+        var frame = object.texture.f;
         ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
-        ctx.drawImage(object.texture.source, frame.x, frame.y, frame.w, frame.h, -object.c.x * frame.w | 0, -object.c.y * frame.h | 0, frame.w, frame.h);
+        ctx.drawImage(object.texture.s, frame.x, frame.y, frame.w, frame.h, -object.c.x * frame.w | 0, -object.c.y * frame.h | 0, frame.w, frame.h);
       }
     } else if (object instanceof Graphics) {
       ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
@@ -48,62 +48,6 @@ __define(Renderer, {
     }
   }
 });
-
-var Buffer = (function() {
-  var ctx;
-  var renderer;
-  var scale;
-  var width;
-  var height;
-
-  var textureCanvas;
-  var textureCtx;
-  var texture;
-
-  function clickHandler(event) {
-    EventManager.emit('click', {x: event.layerX / scale | 0 , y: event.layerY / scale | 0});
-  }
-
-  return {
-    init: function(w, h, s, canvas, stage) {
-      scale = s;
-      canvas.width = width = w * s;
-      canvas.height = height = h * s;
-
-      ctx = canvas.getContext('2d');
-      ctx.webkitImageSmoothingEnabled = ctx.mozImageSmoothingEnabled = false;
-
-      textureCanvas = createCanvas();
-      textureCanvas.width = textureCanvas.height = scale;
-      textureCtx = textureCanvas.getContext('2d');
-      textureCtx.fillStyle = 'rgba(255,255,255,.05)';
-      textureCtx.fillRect(1, 0, scale - 2, 1);
-      textureCtx.fillRect(0, 1, 1, scale - 2);
-      textureCtx.fillStyle = 'rgba(0,0,0,.1)';
-      textureCtx.fillRect(1, scale - 1, scale - 2, 1);
-      textureCtx.fillRect(scale - 1, 1, 1, scale - 2);
-      texture = ctx.createPattern(textureCanvas, 'repeat');
-
-      this.renderer = renderer = new Renderer(w, h);
-      this.stage = stage;
-
-      canvas.addEventListener('click', clickHandler);
-    },
-    clear: function() {
-      canvas.removeEventListener('click', clickHandler);
-    },
-    render: function() {
-      renderer.render(this.stage);
-
-      // Draw game
-      ctx.drawImage(renderer.canvas, 0, 0, renderer.w, renderer.h, 0, 0, width, height);
-
-      // Draw pixel filter
-      ctx.fillStyle = texture;
-      ctx.fillRect(0, 0, width, height);
-    }
-  };
-})();
 
 function DisplayObject() {
   this.x = this.y = 0;

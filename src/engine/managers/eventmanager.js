@@ -1,10 +1,15 @@
-var EventManager = (function () {
-  var handlers = {}, i, list, args, A = Array;
-  return {
+/**
+ * Manager game events.
+ */
+function EventManager() {
+  // Methods variables
+  var handlers = {}, i, list, args;
+
+  __mixin(this, {
     /**
      * Unregister all event listeners.
      */
-    clear: function() {
+    c: function clear() {
       handlers = {};
     },
     /**
@@ -14,7 +19,7 @@ var EventManager = (function () {
      * @param  {Function} func
      * @param  {Object} ctx
      */
-    on: function(type, func, ctx) {
+    a: function add(type, func, ctx) {
       handlers[type] || (handlers[type] = []);
       handlers[type].push({f: func, c: ctx});
     },
@@ -24,25 +29,24 @@ var EventManager = (function () {
      * @param  {String} type
      * @param  {Function} func
      */
-    off: function(type, func) {
+    r: function remove(type, func) {
       list = handlers[type] || [];
-      i = list.length;
-
-      while (i--) {
+      for (i = list.length; i--;) {
         func == list[i].f && list.splice(i, 1);
       }
     },
     /**
      * Emit an event.
+     *
+     * @param  {String} type
+     * @param  {...} arguments
      */
-    emit: function() {
-      args = A.apply([], arguments);
+    e: function emit() {
+      args = argumentsToArray(arguments);
       list = handlers[args.shift()] || [];
-      i = list.length;
-
-      while (i--) {
+      for (i = list.length; i--;) {
         list[i].f.apply(list[i].c, args);
       }
     }
-  };
-})();
+  });
+}

@@ -1,10 +1,10 @@
 function LifetimeSystem() {
-  IteratingSystem.call(this, [Lifetime.name]);
+  IteratingSystem.call(this, [Lifetime]);
 }
 
 __extend(LifetimeSystem, IteratingSystem, {
-  onUpdate: function(entity, elapsed) {
-    var lifetime = Pixelwars.c(entity, Lifetime.name);
+  ue: function(entity, elapsed) {
+    var lifetime = entity.g(Lifetime);
     if ((lifetime.t -= elapsed) <= 0) {
       EntityManager.kill(entity);
     }

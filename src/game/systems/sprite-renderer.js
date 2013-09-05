@@ -4,13 +4,15 @@ function SpriteRendererSystem(layer) {
 }
 
 __extend(SpriteRendererSystem, IteratingSystem, {
-  add: function(entity) {
-    this.l.add(Pixelwars.c(entity, Display.name).gfx);
+  a: function add(entity) {
+    // Add entity to the display list
+    this.l.add(entity.g(Display).gfx);
   },
-  remove: function(entity) {
-    this.l.remove(Pixelwars.c(entity, Display.name).gfx);
+  r: function remove(entity) {
+    // Remove entity from the display list
+    this.l.remove(entity.g(Display).gfx);
   },
-  update: function(elapsed) {
+  u: function update(elapsed) {
     IteratingSystem.prototype.update.call(this, elapsed);
 
     // Sort elements
@@ -21,9 +23,9 @@ __extend(SpriteRendererSystem, IteratingSystem, {
     // Render the frame
     Buffer.render();
   },
-  onUpdate: function(entity, elapsed) {
-    var position = Pixelwars.c(entity, Position.name);
-    var gfx = Pixelwars.c(entity, Display.name).gfx;
+  ue: function updateEntity(entity, elapsed) {
+    var position = entity.g(Position);
+    var gfx = entity.g(Display).gfx;
 
     // Update asset position
     gfx.x = position.x | 0;

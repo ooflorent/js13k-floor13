@@ -1,6 +1,12 @@
 // DOM
 // ---
 
+/**
+ * Return a DOM element.
+ *
+ * @param  {String} id
+ * @return {DOMElement}
+ */
 function $(id) {
   return document.getElementById(id);
 }
@@ -9,11 +15,21 @@ function $(id) {
 // -----
 
 /**
+ * Convert arguments object to an Array.
+ *
+ * @param  {arguments} args
+ * @return {Array}
+ */
+function argumentsToArray(args) {
+  return Array.apply([], args);
+}
+
+/**
  * Computes the intersection of two arrays.
  *
- * @param {array} a An array to compare values against
- * @param {array} b The array with master values to check
- * @return {array}
+ * @param  {Array} a An array to compare values against
+ * @param  {Array} b The array with master values to check
+ * @return {Array}
  */
 function intersect(a, b) {
   var results = [], i = b.length;
@@ -27,19 +43,40 @@ function intersect(a, b) {
 // Math
 // ----
 
+/**
+ * Clamp a number.
+ *
+ * @param  {int} x
+ * @param  {int} min
+ * @param  {int} max
+ * @return {int}
+ */
 function clamp(x, min, max) {
   return x < min ? min : (x > max ? max : x);
 }
 
+/**
+ * Return a random integer.
+ *
+ * @param  {int} min
+ * @param  {int} max
+ * @return {int}
+ */
 function getRandomInt(min, max) {
   return min + Math.random() * (max - min + 1) | 0;
 }
 
+/**
+ * Return a random element of an array.
+ *
+ * @param  {Array} arr
+ * @return {Object}
+ */
 function getRandomElement(arr) {
   var n = arr.length;
   if (n > 1) {
     return arr[getRandomInt(0, n - 1)];
-  } else if (n > 0) {
+  } else if (n) {
     return arr[0];
   }
 
@@ -49,6 +86,12 @@ function getRandomElement(arr) {
 // Geom
 // ----
 
+/**
+ * @param  {float} x
+ * @param  {float} y
+ * @param  {float} w
+ * @param  {float} h
+ */
 function Rectangle(x, y, w, h) {
   this.x = x;
   this.y = y;
@@ -57,6 +100,12 @@ function Rectangle(x, y, w, h) {
 }
 
 __define(Rectangle, {
+  /**
+   * Check if 2 rectangles overlap each others.
+   *
+   * @param  {Rectangle} other
+   * @return {Boolean}
+   */
   overlap: function(other) {
     return this.x < (other.x + other.w) && other.x < (this.x + this.w) &&
       this.y < (other.y + other.h) && other.y < (this.y + this.h);

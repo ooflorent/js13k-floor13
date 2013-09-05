@@ -1,38 +1,53 @@
-var Pixelwars = {
-  e: EntityManager.create,
-  c: EntityManager.get,
-  t: EntityManager.tag,
-  a: EntityManager.add,
-  r: EntityManager.remove,
+// Globals
+// -------
 
-  run: function(canvas) {
-    TextureManager.init(__PW_ASSETS_DIR + 'tiles.png', function() {
-      // Dungeon
-      TextureManager.slice('r', 0, 0, 16, 16);     // Roof
-      TextureManager.slice('w', 0, 16, 16, 16);    // North wall
-      TextureManager.slice('f', 0, 32, 16, 16);    // Floor
-      TextureManager.slice('sd', 88, 0, 16, 16);   // Down stairs
-      TextureManager.slice('su', 89, 17, 15, 22);  // Up stairs
-      TextureManager.slice('dh', 110, 0, 16, 17);  // Horizontal door
-      TextureManager.slice('dv', 104, 0, 6, 28);   // Vertical door
+// Game managers
+var __evt = new EventManager();
+var __em = new EntityManager(__evt);
+var __sm = new SystemManager(__evt);
 
-      // Mobs
-      TextureManager.slice('p', 16, 0, 9, 10, 8);  // Player
-      TextureManager.slice('s', 16, 10, 9, 10, 8); // Skeleton
+// Rendering engine
+var __buffer = new Buffer($('c'), __PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE);
+var __textureManager = new TextureManager();
 
-      // Effects
-      TextureManager.slice('d', 62, 40, 7, 7, 3); // Dash
 
-      TextureManager.anim('_n', [5]);
-      TextureManager.anim('_h', [0]);
-      TextureManager.anim('_s', [2]);
-      TextureManager.anim('n', [7, 6], 6);
-      TextureManager.anim('h', [1, 0], 8);
-      TextureManager.anim('s', [4, 3], 6);
-      TextureManager.anim('d', [0, 1, 2], 12);
+// Textures and animations
+// -----------------------
 
-      // Run game
-      GameScreen.enter(canvas);
-    });
-  }
-};
+// World tiles
+__textureManager.s('r', 0, 0, 16, 16);     // Roof
+__textureManager.s('w', 0, 16, 16, 16);    // North wall
+__textureManager.s('f', 0, 32, 16, 16);    // Floor
+__textureManager.s('sd', 88, 0, 16, 16);   // Down stairs
+__textureManager.s('su', 89, 17, 15, 22);  // Up stairs
+__textureManager.s('dh', 110, 0, 16, 17);  // Horizontal door
+__textureManager.s('dv', 104, 0, 6, 28);   // Vertical door
+
+// Mobs
+__textureManager.s('p', 16, 0, 9, 10, 8);  // Player
+__textureManager.s('s', 16, 10, 9, 10, 8); // Skeleton
+
+// Effects
+__textureManager.s('d', 62, 40, 7, 7, 3); // Dash
+
+// Animations
+__textureManager.d('_n', [5]);          // Idle north
+__textureManager.d('_h', [0]);          // Idle west or east
+__textureManager.d('_s', [2]);          // Idle south
+__textureManager.d('n', [7, 6], 6);     // Walking north
+__textureManager.d('h', [1, 0], 8);     // Walking west or east
+__textureManager.d('s', [4, 3], 6);     // Walking south
+__textureManager.d('d', [0, 1, 2], 12); // Dash
+
+
+// Game runner
+// -----------
+
+function runGame() {
+  var gameScreen;
+
+  __textureManager.l(__PW_ASSETS_DIR + 't.png', function() {
+    console.log('Go go go!');
+
+  });
+}

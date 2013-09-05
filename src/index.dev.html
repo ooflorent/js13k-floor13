@@ -14,18 +14,20 @@
   <!-- Engine -->
   <script src="engine/objects.js"></script>
   <script src="engine/utils.js"></script>
-  <script src="engine/events.js"></script>
-  <script src="engine/entities.js"></script>
-  <script src="engine/systems.js"></script>
   <script src="engine/input.js"></script>
-  <script src="engine/textures.js"></script>
-  <script src="engine/rendering.js"></script>
+  <script src="engine/managers/eventmanager.js"></script>
+  <script src="engine/managers/entitymanager.js"></script>
+  <script src="engine/managers/systemmanager.js"></script>
+  <script src="engine/display/textures.js"></script>
+  <script src="engine/display/rendering.js"></script>
+  <script src="engine/display/buffer.js"></script>
   <!-- Game -->
+  <script src="game/components.js"></script>
+  <script src="game/main.js"></script>
+  <!--
   <script src="game/astar.js"></script>
   <script src="game/dungeon.js"></script>
   <script src="game/tilemap.js"></script>
-  <script src="game/main.js"></script>
-  <script src="game/components.js"></script>
   <script src="game/creator.js"></script>
   <script src="game/systems/bounds-renderer.js"></script>
   <script src="game/systems/camera.js"></script>
@@ -38,8 +40,48 @@
   <script src="game/systems/sprite-direction.js"></script>
   <script src="game/systems/sprite-renderer.js"></script>
   <script src="game/screens/game.js"></script>
+  -->
   <script>
-    Pixelwars.run($('c'));
+    // Launch the game
+    runGame();
   </script>
+<script>
+
+var __evt = new EventManager();
+var __em = new EntityManager(__evt);
+var __sm = new SystemManager(__evt);
+
+function MovementSystem() {
+  IteratingSystem.call(this, Position, Motion);
+}
+
+__extend(MovementSystem, IteratingSystem, {
+  ue: function(entity, elapsed) {
+    console.log(entity, elapsed)
+  }
+});
+
+__sm.a(new MovementSystem);
+
+var p1 = __em.e([
+  new Position(),
+  new Motion()
+]);
+
+var p2 = __em.e([
+  new Position(),
+  new Motion(),
+  new Display()
+]);
+
+var p3 = __em.e([
+  new Display()
+]);
+
+__sm.u(10)
+p1.r(Position);
+__sm.u(10)
+
+</script>
 </body>
 </html>

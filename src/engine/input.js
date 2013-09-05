@@ -1,36 +1,33 @@
 var Input = (function () {
   var capture = [];
-  var active = {};
+  var active = [];
+
+  // Variable methods
+  var events, i, key;
 
   /**
    * Bind a listener on `document`.
    *
-   * @param {String} event name
-   * @param {Function} listener
+   * @param  {String} event name
+   * @param  {Function} listener
    */
   function addDocumentListener(name, listener) {
-    var events = name.split(' ');
-    for (var i = events.length; i--;) {
+    events = name.split(' ');
+    for (i = events.length; i--;) {
       document.addEventListener(events[i], listener);
     }
   }
 
   // Listen `keypress` and `keydown` events
   addDocumentListener('keypress keydown', function(e) {
-    if (capture.indexOf(e.keyCode) >= 0) {
-      e.preventDefault();
-    }
-
-    active[e.keyCode] = true;
+    (~capture.indexOf(key = e.keyCode)) && e.preventDefault();
+    active[key] = 1;
   });
 
   // Listen `keyup` events
   addDocumentListener('keyup', function(e) {
-    if (capture.indexOf(e.keyCode) >= 0) {
-      e.preventDefault();
-    }
-
-    active[e.keyCode] = false;
+    (~capture.indexOf(key = e.keyCode)) && e.preventDefault();
+    active[key] = 0;
   });
 
   /**
@@ -41,18 +38,18 @@ var Input = (function () {
      * Specify keys to capture.
      * Capturing a key stops the default behavior.
      *
-     * @param {int[]} key codes
+     * @param  {int[]} key codes
      */
-    keys: function(codes) {
+    c: function setCapture(codes) {
       capture = codes;
     },
     /**
      * Get the state of the specified key.
      *
-     * @param {int} key code
+     * @param  {int} key code
      * @return {Boolean}
      */
-    get: function(code) {
+    k: function key(code) {
       return !!active[code];
     }
   };

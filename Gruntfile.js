@@ -21,12 +21,13 @@ module.exports = function(grunt) {
     engine: [
       '<%= dirs.engine %>/objects.js',
       '<%= dirs.engine %>/utils.js',
-      '<%= dirs.engine %>/events.js',
-      '<%= dirs.engine %>/entities.js',
-      '<%= dirs.engine %>/systems.js',
       '<%= dirs.engine %>/input.js',
-      '<%= dirs.engine %>/textures.js',
-      '<%= dirs.engine %>/rendering.js',
+      '<%= dirs.engine %>/managers/eventmanager.js',
+      '<%= dirs.engine %>/managers/entitymanager.js',
+      '<%= dirs.engine %>/managers/systemmanager.js',
+      '<%= dirs.engine %>/display/textures.js',
+      '<%= dirs.engine %>/display/rendering.js',
+      '<%= dirs.engine %>/display/buffer.js',
     ],
     game: [
       '<%= dirs.game %>/astar.js',
@@ -93,7 +94,7 @@ module.exports = function(grunt) {
           // Dropping some of them produce a bigger JavaScript file but
           // smaller ZIP archive. RLY? WTF!
           banner: "!function(window, document, Object, Math) {\n",
-          footer: "\nwindow.G = Pixelwars;\nwindow.$ = $;\n} (window, document, Object, Math)\n",
+          footer: "\nrunGame();\n} (window, document, Object, Math)\n",
         },
         files: {
           'dist/pixelwars.js': [files.engine, files.game],

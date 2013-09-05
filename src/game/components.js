@@ -1,3 +1,4 @@
+function World() {}
 function Dash() {}
 function Player() {}
 function Enemy() {}

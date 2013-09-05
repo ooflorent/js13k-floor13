@@ -1,11 +1,12 @@
 function BoundsRendererSystem(layer) {
-  IteratingSystem.call(this, [Position.name, Bounds.name]);
+  IteratingSystem.call(this, [Position, Bounds]);
   this.l = layer;
 }
 
 __extend(BoundsRendererSystem, IteratingSystem, {
-  add: function(entity) {
-    var bounds = Pixelwars.c(entity, Bounds.name);
+  a: function onEntityAdded(entity) {
+    var bounds = entity.g(Bounds);
+
     bounds.gfx = new Graphics(function(ctx, color) {
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(0,255,0,.5)';
@@ -15,12 +16,12 @@ __extend(BoundsRendererSystem, IteratingSystem, {
 
     this.l.add(bounds.gfx);
   },
-  remove: function(entity) {
-    this.l.remove(Pixelwars.c(entity, Bounds.name).gfx);
+  r: function onEntityRemoved(entity) {
+    this.l.remove(Pixelwars.c(entity, Bounds).gfx);
   },
-  onUpdate: function(entity) {
-    var position = Pixelwars.c(entity, Position.name);
-    var bounds = Pixelwars.c(entity, Bounds.name);
+  ue: function updateEntity(entity) {
+    var position = entity.g(Position);
+    var bounds = entity.g(Bounds);
 
     bounds.gfx.x = bounds.x + position.x | 0;
     bounds.gfx.y = bounds.y + position.y | 0;
