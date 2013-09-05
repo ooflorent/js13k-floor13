@@ -17,7 +17,9 @@
   <script src="engine/input.js"></script>
   <script src="engine/managers/eventmanager.js"></script>
   <script src="engine/managers/entitymanager.js"></script>
+  <script src="engine/managers/groupmanager.js"></script>
   <script src="engine/managers/systemmanager.js"></script>
+  <script src="engine/managers/tagmanager.js"></script>
   <script src="engine/display/textures.js"></script>
   <script src="engine/display/rendering.js"></script>
   <script src="engine/display/buffer.js"></script>
@@ -45,43 +47,5 @@
     // Launch the game
     runGame();
   </script>
-<script>
-
-var __evt = new EventManager();
-var __em = new EntityManager(__evt);
-var __sm = new SystemManager(__evt);
-
-function MovementSystem() {
-  IteratingSystem.call(this, Position, Motion);
-}
-
-__extend(MovementSystem, IteratingSystem, {
-  ue: function(entity, elapsed) {
-    console.log(entity, elapsed)
-  }
-});
-
-__sm.a(new MovementSystem);
-
-var p1 = __em.e([
-  new Position(),
-  new Motion()
-]);
-
-var p2 = __em.e([
-  new Position(),
-  new Motion(),
-  new Display()
-]);
-
-var p3 = __em.e([
-  new Display()
-]);
-
-__sm.u(10)
-p1.r(Position);
-__sm.u(10)
-
-</script>
 </body>
 </html>

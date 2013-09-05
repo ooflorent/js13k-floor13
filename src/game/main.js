@@ -4,7 +4,9 @@
 // Game managers
 var __evt = new EventManager();
 var __em = new EntityManager(__evt);
+var __gm = new GroupManager(__evt);
 var __sm = new SystemManager(__evt);
+var __tm = new TagManager(__evt);
 
 // Rendering engine
 var __buffer = new Buffer($('c'), __PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE);

@@ -45,9 +45,10 @@ function EntityManager(eventManager) {
      * @param  {Entity} entity
      */
     k: function kill(entity) {
-      entity.clear();
+      entity.c();
       delete entities[entity.i];
       delete entitiesToComponents[entity.i];
+      eventManager.e('$k', entity);
     },
     /**
      * Get entities with specified components.

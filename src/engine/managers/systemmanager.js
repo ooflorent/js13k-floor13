@@ -15,35 +15,23 @@ function SystemManager(eventManager) {
   // Methods variables
   var system, i;
 
-  /**
-   * @private
-   * @param  {Entity} entity
-   */
-  function onComponentAdded(entity) {
+  eventManager.a('$a', function onComponentAdded(entity) {
     for (i = systemsCount; i--;) {
       if ((system = systems[i]) && !system.h(entity) && entity.m.apply(null, system.t)) {
         system.e[entity.i] = entity;
         system.a(entity);
       }
     }
-  }
+  });
 
-  /**
-   * @private
-   * @param  {Entity} entity
-   */
-  function onComponentRemoved(entity, type, component) {
+  eventManager.a('$r', function onComponentRemoved(entity, type, component) {
     for (i = systemsCount; i--;) {
       if ((system = systems[i]) && system.h(entity) && system.t.indexOf(component.constructor) >= 0) {
         delete system.e[entity.i];
         system.r(entity);
       }
     }
-  }
-
-  // Listen EntityManager events
-  eventManager.a('$a', onComponentAdded);
-  eventManager.a('$r', onComponentRemoved);
+  });
 
   __mixin(this, {
     /**
@@ -68,10 +56,6 @@ function SystemManager(eventManager) {
      * Remove all systems.
      */
     c: function clear() {
-      // Remove EntityManager listeners
-      eventManager.r('$a', onComponentAdded, this);
-      eventManager.r('$a', onComponentRemoved, this);
-
       // Clear all systems
       systems.length = systemsCount = 0;
     }
