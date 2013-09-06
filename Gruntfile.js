@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
@@ -94,7 +95,7 @@ module.exports = function(grunt) {
           level: 9,
         },
         files: [
-          {expand: true, cwd: 'dist/', src: ['p.js', 'index.html']},
+          {expand: true, cwd: 'dist/', src: ['p.js', 's.css', 'index.html']},
           {expand: true, flatten: true, src: ['assets/*.png']},
         ],
       },
@@ -106,7 +107,7 @@ module.exports = function(grunt) {
           // Dropping some of them produce a bigger JavaScript file but
           // smaller ZIP archive. RLY? WTF!
           banner: "!function(window, document, Object, Math) {\n",
-          footer: "\nrunGame();\n} (window, document, Object, Math)\n",
+          footer: "\nmain();\n} (window, document, Object, Math)\n",
         },
         files: {
           'dist/pixelwars.js': [files.engine, files.game],
@@ -155,10 +156,20 @@ module.exports = function(grunt) {
         },
       },
     },
+    cssmin: {
+      dist: {
+        options: {
+          report: 'min',
+        },
+        files: {
+          'dist/s.css': ['assets/*.css'],
+        },
+      },
+    },
   });
 
   grunt.registerTask('dev', ['env:dev', 'jshint', 'constants']);
-  grunt.registerTask('package', ['env:dist', 'concat', 'uglify', 'preprocess:dist', 'htmlmin', 'compress']);
+  grunt.registerTask('package', ['env:dist', 'concat', 'uglify', 'preprocess:dist', 'htmlmin', 'cssmin', 'compress']);
 
   grunt.registerTask('default', ['clean', 'dev', 'package']);
 

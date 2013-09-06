@@ -12,7 +12,7 @@ var __tm = new TagManager(__evt);
 var __ticker = new Ticker();
 
 // Rendering engine
-var __buffer = new Buffer($('c'), __PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE);
+var __buffer = new Buffer($('g'), __PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE);
 var __textureManager = new TextureManager();
 
 
@@ -65,14 +65,22 @@ __textureManager.d('d', [0, 1, 2], 12); // Dash
 /**
  * Start the game.
  */
-function runGame() {
+function main() {
   // Load the main spritesheet
   __textureManager.l(__PW_ASSETS_DIR + 't.png', function onLoad() {
-    // Intialize the game
-    //initializeGame();
+    __ticker.start(function titleLoop() {
+      if (Input.a()) {
+        // Initialize the game
+        initializeGame();
 
-    // Start the ticker
-    //__ticker.start(gameLoop);
+        // Start the game loop
+        __ticker.stop();
+        __ticker.start(gameLoop);
+
+        // Display game screen
+        $('p').className = 'g';
+      }
+    });
   });
 }
 
@@ -84,7 +92,6 @@ function gameLoop(elapsed) {
   __sm.u(elapsed);
   __buffer.r();
 }
-
 
 // Game initialization
 // -------------------

@@ -2,15 +2,31 @@
 <html>
 <head>
   <title>Pixel Wars</title>
-  <meta charset="utf8"/>
-  <style>
-    #c { border: 1px solid; }
-  </style>
+  <meta charset="utf8" />
+<!-- @if NODE_ENV='dev' -->
+  <link rel="stylesheet" href="../assets/styles.css" />
+<!-- @endif -->
+<!-- @if NODE_ENV='dist' !>
+  <link rel="stylesheet" href="s.css" />
+<!-- @endif -->
 </head>
 <body>
-  <canvas id="c"></canvas>
-  <div id="t">
-
+  <div id="p" class="t">
+    <!-- Game screen -->
+    <canvas id="g"></canvas>
+    <!-- Title screen -->
+    <div id="t">
+      <div id="tx">
+        <kbd>X</kbd>
+      </div>
+      <p id="ta">ATTACK</p>
+      <div id="tk">
+        <kbd>↑</kbd>
+        <kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd>
+      </div>
+      <p id="tm">MOVE</p>
+      <p id="tp">PRESS ANY KEY TO CONTINUE</p>
+    </div>
   </div>
 <!-- @if NODE_ENV='dev' -->
   <!-- Constants -->
@@ -46,7 +62,7 @@
   <script src="game/systems/spritedirectionsystem.js"></script>
   <script>
     // Launch the game
-    runGame();
+    main();
   </script>
 <!-- @endif -->
 <!-- @if NODE_ENV='dist' !>
