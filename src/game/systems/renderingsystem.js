@@ -1,5 +1,5 @@
 function RenderingSystem(layer) {
-  IteratingSystem.call(this, Bounds, Display);
+  IteratingSystem.call(this, Position, Display);
   this.l = layer;
 }
 
@@ -21,12 +21,12 @@ __extend(RenderingSystem, IteratingSystem, {
     });
   },
   ue: function updateEntity(entity, elapsed) {
-    var bounds = entity.g(Bounds);
+    var position = entity.g(Position);
     var gfx = entity.g(Display).gfx;
 
     // Update asset position
-    gfx.x = bounds.x | 0;
-    gfx.y = bounds.y | 0;
+    gfx.x = position.x | 0;
+    gfx.y = position.y | 0;
 
     // Update animation
     if (gfx instanceof AnimatedSprite) {

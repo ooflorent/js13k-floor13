@@ -17,7 +17,8 @@ var EntityCreator = (function() {
   return {
     entrance: function(pos) {
       __gm.a(GROUP_PORTALS, entity = __em.e(
-        new Bounds(pos.x * 16 + 8, pos.y * 16 + 8, 16, 16),
+        new Position(pos.x * 16 + 8, pos.y * 16 + 8),
+        new Bounds(16, 16),
         new Display(new Sprite(__textureManager.g('sd')[0], middleCenter))
       ));
 
@@ -25,7 +26,8 @@ var EntityCreator = (function() {
     },
     exit: function(pos) {
       __gm.a(GROUP_PORTALS, entity = __em.e(
-        new Bounds(pos.x * 16 + 9, pos.y * 16 + 7, 15, 22),
+        new Position(pos.x * 16 + 9, pos.y * 16 + 7),
+        new Bounds(15, 22),
         new Display(new Sprite(__textureManager.g('su')[0], middleCenter))
       ));
 
@@ -39,14 +41,16 @@ var EntityCreator = (function() {
       y = pos.y * 16;
       if (pos.d > 1) {
         entity = __em.e(
-          new Bounds(x + 8, y + (pos.d > 2 ? 0 : 16), 16, 17),
+          new Position(x + 8, y + (pos.d > 2 ? 0 : 16)),
+          new Bounds(16, 17),
           new Display(new Sprite(__textureManager.g('dh')[0], middleCenter))
-        )
+        );
       } else {
         entity = __em.e(
-          new Bounds(x + (pos.d ? 16 : 0), y + 2, 6, 28),
+          new Position(x + (pos.d ? 16 : 0), y + 2),
+          new Bounds(6, 28),
           new Display(new Sprite(__textureManager.g('dv')[0], middleCenter))
-        )
+        );
       }
 
       __gm.a(GROUP_DOORS, entity);
@@ -70,7 +74,8 @@ var EntityCreator = (function() {
       }
 
       __gm.a(GROUP_DASHES, entity = __em.e(
-        new Bounds(x, y, 7, 7),
+        new Position(x, y),
+        new Bounds(7, 7),
         new Display(gfx),
         new Lifetime(0.1)
       ));
@@ -79,7 +84,8 @@ var EntityCreator = (function() {
     },
     player: function(pos) {
       __tm.r(TAG_PLAYER, entity = __em.e(
-        new Bounds(pos.x * 16 + 7, pos.y * 16 + 10, 7, 5),
+        new Position(pos.x * 16 + 7, pos.y * 16 + 10),
+        new Bounds(7, 5),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('p')),
         new Cooldown()
@@ -89,7 +95,8 @@ var EntityCreator = (function() {
     },
     skeleton: function(pos) {
       __gm.a(GROUP_ENEMIES, entity = __em.e(
-        new Bounds(pos.x * 16 + 7, pos.y * 16 + 10, 7, 5),
+        new Position(pos.x * 16 + 7, pos.y * 16 + 10),
+        new Bounds(7, 5),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('s'))
       ));
@@ -103,7 +110,7 @@ var EntityCreator = (function() {
       }
 
       __tm.r(TAG_WORLD, entity = __em.e(
-        new Bounds(),
+        new Position(),
         new Display(new Sprite(new Tilemap(dungeon))),
         dungeon
       ));

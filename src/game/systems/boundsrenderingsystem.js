@@ -1,5 +1,5 @@
 function BoundsRenderingSystem(layer) {
-  IteratingSystem.call(this, Bounds);
+  IteratingSystem.call(this, Position, Bounds);
   this.l = layer;
 }
 
@@ -17,9 +17,10 @@ __extend(BoundsRenderingSystem, IteratingSystem, {
     this.l.remove(entity.g(Bounds).gfx);
   },
   ue: function updateEntity(entity) {
+    var position = entity.g(Position);
     var bounds = entity.g(Bounds);
 
-    bounds.gfx.x = (bounds.x | 0) - (bounds.w / 2 | 0);
-    bounds.gfx.y = (bounds.y | 0) - (bounds.h / 2 | 0);
+    bounds.gfx.x = (position.x | 0) - (bounds.w / 2 | 0);
+    bounds.gfx.y = (position.y | 0) - (bounds.h / 2 | 0);
   }
 });

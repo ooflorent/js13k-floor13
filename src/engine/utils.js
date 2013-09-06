@@ -109,8 +109,8 @@ __define(Rectangle, {
    * @return {Boolean}
    */
   c: function contains(x, y) {
-    return x >= this.x && x < this.x + this.w &&
-      y >= this.y && y < this.y + this.y
+    return x >= this.x && x < (this.x + this.w) &&
+      y >= this.y && y < (this.y + this.y);
   },
   /**
    * Returns whether or not another rectangle overlaps this one.

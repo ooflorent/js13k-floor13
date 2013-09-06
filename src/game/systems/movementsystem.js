@@ -1,19 +1,19 @@
 function MovementSystem() {
-  IteratingSystem.call(this, Bounds, Motion);
+  IteratingSystem.call(this, Position, Motion);
 }
 
 __extend(MovementSystem, IteratingSystem, {
   ue: function updateEntity(entity, elapsed) {
-    var bounds = entity.g(Bounds);
+    var position = entity.g(Position);
     var motion = entity.g(Motion);
 
     // Update position
-    bounds.x += motion.dx * elapsed;
-    bounds.y += motion.dy * elapsed;
+    position.x += motion.dx * elapsed;
+    position.y += motion.dy * elapsed;
 
     // Update direction
     if (motion.dx || motion.dy) {
-      bounds.r = 180 * Math.atan2(motion.dx, motion.dy) / Math.PI;
+      position.r = 180 * Math.atan2(motion.dx, motion.dy) / Math.PI;
     }
   }
 });

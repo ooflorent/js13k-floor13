@@ -1,17 +1,23 @@
-function Bounds(x, y, width, height) {
-  Rectangle.call(this, x, y, width, height);
+function Position(x, y) {
+  this.x = x || 0;
+  this.y = y || 0;
   this.r = 0;
 }
 
-__extend(Bounds, Rectangle);
+function Bounds(width, height) {
+  Rectangle.call(this, 0, 0, width, height);
+}
+
+__extend(Bounds, Rectangle, {
+  t: function translate(position) {
+    this.x = (position.x | 0) - (this.w / 2 | 0);
+    this.y = (position.y | 0) - (this.h / 2 | 0);
+  }
+});
 
 function Motion(dx, dy) {
   this.dx = dx || 0;
   this.dy = dy || 0;
-}
-
-function Camera(layer) {
-  this.l = layer;
 }
 
 function Display(gfx) {
