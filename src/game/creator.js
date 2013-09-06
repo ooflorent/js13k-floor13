@@ -1,14 +1,7 @@
 var EntityCreator = (function() {
+  var bottomCenter = {x: 0.5, y: 0.8};
+  var middleCenter = {x: 0.5, y: 0.5};
   var entity;
-
-  function createPortal(texture, x, y) {
-    __gm.a(GROUP_PORTALS, entity = __em.e(
-      new Position(x, y),
-      new Display(new Sprite(__textureManager.g(texture)[0]))
-    ));
-
-    return entity;
-  }
 
   function getFourWaysAnimatedSprite(texture) {
     return new AnimatedSprite(__textureManager.g(texture), {
@@ -18,30 +11,49 @@ var EntityCreator = (function() {
       n: __textureManager.a('n'),   // Walk north
       s: __textureManager.a('s'),   // Walk south
       h: __textureManager.a('h')    // Walk east of west
-    }, '_s', {x: 0.5, y: 1});
+    }, '_s', bottomCenter);
   }
 
   return {
     entrance: function(pos) {
-      return createPortal('sd', pos.x * 16, pos.y * 16);
+      __gm.a(GROUP_PORTALS, entity = __em.e(
+        new Bounds(pos.x * 16 + 8, pos.y * 16 + 8, 16, 16),
+        new Display(new Sprite(__textureManager.g('sd')[0], middleCenter))
+      ));
+
+      return entity;
     },
     exit: function(pos) {
-      return createPortal('su', pos.x * 16 + 2, pos.y * 16 - 4);
+      __gm.a(GROUP_PORTALS, entity = __em.e(
+        new Bounds(pos.x * 16 + 9, pos.y * 16 + 7, 15, 22),
+        new Display(new Sprite(__textureManager.g('su')[0], middleCenter))
+      ));
+
+      return entity;
     },
     door: function(pos) {
       var x = pos.x * 16 + (pos.d > 1 ? 0 : (pos.d ? 13 : -3));
       var y = pos.y * 16 + (pos.d > 2 ? -8 : (pos.d > 1 ? 8 : -12));
 
-      __gm.a(GROUP_DOORS, entity = __em.e(
-        new Position(x, y),
-        new Display(new Sprite(__textureManager.g(pos.d > 1 ? 'dh' : 'dv')[0])),
-        pos.d > 1 ? new Bounds(0, 0, 16, 16) : new Bounds(0, 0, 6, 28)
-      ));
+      x = pos.x * 16;
+      y = pos.y * 16;
+      if (pos.d > 1) {
+        entity = __em.e(
+          new Bounds(x + 8, y + (pos.d > 2 ? 0 : 16), 16, 17),
+          new Display(new Sprite(__textureManager.g('dh')[0], middleCenter))
+        )
+      } else {
+        entity = __em.e(
+          new Bounds(x + (pos.d ? 16 : 0), y + 2, 6, 28),
+          new Display(new Sprite(__textureManager.g('dv')[0], middleCenter))
+        )
+      }
 
+      __gm.a(GROUP_DOORS, entity);
       return entity;
     },
     dash: function(pos) {
-      var gfx = new AnimatedSprite(__textureManager.g('d'), {d: __textureManager.a('d')}, 'd');
+      var gfx = new AnimatedSprite(__textureManager.g('d'), {d: __textureManager.a('d')}, 'd', middleCenter);
       var x = pos.x - 2;
       var y = pos.y - 7;
 
@@ -58,7 +70,7 @@ var EntityCreator = (function() {
       }
 
       __gm.a(GROUP_DASHES, entity = __em.e(
-        new Position(x, y),
+        new Bounds(x, y, 7, 7),
         new Display(gfx),
         new Lifetime(0.1)
       ));
@@ -67,9 +79,8 @@ var EntityCreator = (function() {
     },
     player: function(pos) {
       __tm.r(TAG_PLAYER, entity = __em.e(
-        new Position(pos.x * 16 + 7, pos.y * 16 + 10),
+        new Bounds(pos.x * 16 + 7, pos.y * 16 + 10, 7, 5),
         new Motion(),
-        new Bounds(-3, -5, 7, 5),
         new Display(getFourWaysAnimatedSprite('p')),
         new Cooldown()
       ));
@@ -78,9 +89,8 @@ var EntityCreator = (function() {
     },
     skeleton: function(pos) {
       __gm.a(GROUP_ENEMIES, entity = __em.e(
-        new Position(pos.x * 16 + 7, pos.y * 16 + 10),
+        new Bounds(pos.x * 16 + 7, pos.y * 16 + 10, 7, 5),
         new Motion(),
-        new Bounds(-3, -5, 7, 5),
         new Display(getFourWaysAnimatedSprite('s'))
       ));
 
@@ -93,7 +103,7 @@ var EntityCreator = (function() {
       }
 
       __tm.r(TAG_WORLD, entity = __em.e(
-        new Position(),
+        new Bounds(),
         new Display(new Sprite(new Tilemap(dungeon))),
         dungeon
       ));

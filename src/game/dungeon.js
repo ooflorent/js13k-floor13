@@ -108,7 +108,7 @@ var generateDungeon = (function() {
       // Ensure that we have enough space for the room
       var free = room.x >= 0 && room.y >= 0 && (room.x + room.w) < width && (room.y + room.h) < height;
       for (r = rooms.length; r-- && free;) {
-        if (room.overlap(rooms[r])) {
+        if (room.o(rooms[r])) {
           free = false;
         }
       }

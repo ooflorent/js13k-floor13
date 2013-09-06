@@ -87,6 +87,8 @@ function getRandomElement(arr) {
 // ----
 
 /**
+ * Creates a rectangle, specifying its properties
+ *
  * @param  {float} x
  * @param  {float} y
  * @param  {float} w
@@ -101,12 +103,22 @@ function Rectangle(x, y, w, h) {
 
 __define(Rectangle, {
   /**
-   * Check if 2 rectangles overlap each others.
+   * Returns whether the specified point is inside this rectangle.
    *
    * @param  {Rectangle} other
    * @return {Boolean}
    */
-  overlap: function(other) {
+  c: function contains(x, y) {
+    return x >= this.x && x < this.x + this.w &&
+      y >= this.y && y < this.y + this.y
+  },
+  /**
+   * Returns whether or not another rectangle overlaps this one.
+   *
+   * @param  {Rectangle} other
+   * @return {Boolean}
+   */
+  o: function overlap(other) {
     return this.x < (other.x + other.w) && other.x < (this.x + this.w) &&
       this.y < (other.y + other.h) && other.y < (this.y + this.h);
   }
