@@ -5,7 +5,8 @@ function BoundsRenderingSystem(layer) {
 
 __extend(BoundsRenderingSystem, IteratingSystem, {
   a: function onEntityAdded(entity) {
-    this.l.add(entity.g(Bounds).gfx = new Graphics(function(ctx, color) {
+    var bounds = entity.g(Bounds);
+    this.l.add(bounds.gfx = new Graphics(function(ctx, color) {
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(0,255,0,.4)';
       ctx.strokeRect(0.5, 0.5, bounds.w - 1, bounds.h - 1);

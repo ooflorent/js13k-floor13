@@ -74,7 +74,7 @@ function Tilemap(dungeon) {
           texture = 'f';
       }
 
-      this.render(new Sprite(TextureManager.g(texture)[0]), pos);
+      this.render(new Sprite(__textureManager.g(texture)[0]), pos);
 
       for (var e = edges.length; e--;) {
         this.render(new Graphics(edges[e], '#2f2b2a'), pos);

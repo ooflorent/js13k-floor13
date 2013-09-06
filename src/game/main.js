@@ -12,6 +12,7 @@ var __tm = new TagManager(__evt);
 var __ticker = new Ticker();
 
 // Rendering engine
+var __stage = new Stage();
 var __buffer = new Buffer($('g'), __PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE);
 var __textureManager = new TextureManager();
 
@@ -90,17 +91,17 @@ function main() {
  */
 function gameLoop(elapsed) {
   __sm.u(elapsed);
-  __buffer.r();
+  __buffer.r(__stage);
 }
+
 
 // Game initialization
 // -------------------
 
 function initializeGame() {
   // Create game layers
-  var stage = new Stage();
-  var cameraLayer = stage.add(new DisplayObjectContainer());
-  var hudLayer    = stage.add(new DisplayObjectContainer());
+  var cameraLayer = __stage.add(new DisplayObjectContainer());
+  var hudLayer    = __stage.add(new DisplayObjectContainer());
   var gameLayer   = cameraLayer.add(new DisplayObjectContainer());
   var debugLayer  = __PW_DEBUG ? cameraLayer.add(new DisplayObjectContainer()) : null;
 
@@ -114,4 +115,27 @@ function initializeGame() {
   __sm.a(new SpriteDirectionSystem());
   __sm.a(new RenderingSystem(gameLayer));
   __sm.a(new ExpirationSystem());
+
+  // Generate world
+  var world = EntityCreator.world();
+  var dungeon = world.g(Dungeon);
+
+  // Initialize path finder
+  AStar.init(dungeon.m, isWallTile);
+
+  // Create player
+  var player = EntityCreator.player(dungeon.prev);
+
+  // Create doors
+  for (i = dungeon.d.length; i--;) {
+    EntityCreator.door(dungeon.d[i]);
+  }
+
+  // Create enemies
+  for (i = dungeon.e.length; i--;) {
+    EntityCreator.skeleton(dungeon.e[i]);
+  }
+
+  EntityCreator.entrance(dungeon.prev);
+  EntityCreator.exit(dungeon.next);
 }

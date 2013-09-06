@@ -171,7 +171,7 @@ function RenderTexture(width, height) {
     h: height
   };
   this.r = new Renderer(width, height);
-  this.source = this.r.canvas;
+  this.s = this.r.canvas;
 }
 
 __define(RenderTexture, {

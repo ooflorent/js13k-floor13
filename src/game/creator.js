@@ -70,7 +70,8 @@ var EntityCreator = (function() {
         new Position(pos.x * 16 + 7, pos.y * 16 + 10),
         new Motion(),
         new Bounds(-3, -5, 7, 5),
-        new Display(getFourWaysAnimatedSprite('p'))
+        new Display(getFourWaysAnimatedSprite('p')),
+        new Cooldown()
       ));
 
       return entity;
@@ -85,16 +86,16 @@ var EntityCreator = (function() {
 
       return entity;
     },
-    dungeon: function() {
-      var map = generateDungeon(20, 16, 4, 7);
+    world: function() {
+      var dungeon = generateDungeon(20, 16, 4, 7);
       if (__PW_DEBUG) {
-        console.log(dumpDungeon(map));
+        console.log(dumpDungeon(dungeon));
       }
 
       __tm.r(TAG_WORLD, entity = __em.e(
         new Position(),
-        new Display(new Sprite(new Tilemap(map))),
-        map
+        new Display(new Sprite(new Tilemap(dungeon))),
+        dungeon
       ));
 
       return entity;

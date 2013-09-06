@@ -13,7 +13,7 @@ __extend(RenderingSystem, IteratingSystem, {
     this.l.remove(entity.g(Display).gfx);
   },
   u: function update(elapsed) {
-    IteratingSystem.prototype.update.call(this, elapsed);
+    IteratingSystem.prototype.u.call(this, elapsed);
 
     // Sort elements
     this.l._c.sort(function(objA, objB) {

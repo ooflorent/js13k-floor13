@@ -3,7 +3,7 @@
  */
 function TextureManager() {
   // Private variables
-  var image;
+  var image = new Image();
   var textures = {};
   var animations = {};
 
@@ -18,7 +18,6 @@ function TextureManager() {
      * @param  {Function} callback
      */
     l: function load(spritesheet, callback) {
-      image = new Image();
       image.src = spritesheet;
       image.onload = function() {
         callback();

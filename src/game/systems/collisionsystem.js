@@ -31,9 +31,6 @@ __extend(CollisionSystem, System, {
 
       // Clear velocity
       motion.dx = motion.dy = 0;
-
-      // Dispatch collision event
-      __em.e('collision', player);
     }
 
 

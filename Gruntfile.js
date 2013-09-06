@@ -24,6 +24,7 @@ module.exports = function(grunt) {
     engine: [
       '<%= dirs.engine %>/objects.js',
       '<%= dirs.engine %>/utils.js',
+      '<%= dirs.engine %>/cooldown.js',
       '<%= dirs.engine %>/input.js',
       '<%= dirs.engine %>/ticker.js',
       '<%= dirs.engine %>/managers/eventmanager.js',
