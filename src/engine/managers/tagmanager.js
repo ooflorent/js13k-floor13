@@ -22,10 +22,10 @@ function TagManager(eventManager) {
     /**
      * Tag an entity.
      *
-     * @param  {Entity} entity
      * @param  {String} tag
+     * @param  {Entity} entity
      */
-    r: function register(entity, tag) {
+    r: function register(tag, entity) {
       entityByTag[tag] = entity;
       tagByEntity[entity.i] = tag;
     },

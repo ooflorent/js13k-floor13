@@ -7,6 +7,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-env');
+  grunt.loadNpmTasks('grunt-preprocess');
 
   grunt.loadTasks('tasks');
 
@@ -39,15 +41,14 @@ module.exports = function(grunt) {
       '<%= dirs.game %>/main.js',
       '<%= dirs.game %>/components.js',
       '<%= dirs.game %>/creator.js',
-      '<%= dirs.game %>/systems/camera.js',
-      '<%= dirs.game %>/systems/dungeon-collision.js',
-      '<%= dirs.game %>/systems/keyboard-control.js',
-      '<%= dirs.game %>/systems/lifetime-control.js',
-      '<%= dirs.game %>/systems/movement.js',
-      '<%= dirs.game %>/systems/path-follow.js',
-      '<%= dirs.game %>/systems/sprite-direction.js',
-      '<%= dirs.game %>/systems/sprite-renderer.js',
-      '<%= dirs.game %>/screens/game.js',
+      '<%= dirs.game %>/systems/camerasystem.js',
+      '<%= dirs.game %>/systems/collisionsystem.js',
+      '<%= dirs.game %>/systems/expirationsystem.js',
+      '<%= dirs.game %>/systems/keyboardcontrolsystem.js',
+      '<%= dirs.game %>/systems/movementsystem.js',
+      '<%= dirs.game %>/systems/pathfollowsystem.js',
+      '<%= dirs.game %>/systems/renderingsystem.js',
+      '<%= dirs.game %>/systems/spritedirectionsystem.js',
     ],
   };
 
@@ -57,6 +58,14 @@ module.exports = function(grunt) {
       build: 'dist',
       engine: 'src/engine',
       game: 'src/game',
+    },
+    env: {
+      dev: {
+        NODE_ENV: 'dev',
+      },
+      dist: {
+        NODE_ENV: 'dist',
+      },
     },
     clean: {
       build: ['dist/'],
@@ -127,21 +136,29 @@ module.exports = function(grunt) {
         },
       },
     },
+    preprocess: {
+      dist: {
+        src: 'src/index.html',
+        dest: 'dist/index.html',
+      },
+    },
     htmlmin: {
       dist: {
         options: {
           collapseWhitespace: true,
+          removeAttributeQuotes: true,
           removeComments: true,
+          removeOptionalTags: true,
         },
         files: {
-          'dist/index.html': 'src/index.html',
+          'dist/index.html': 'dist/index.html',
         },
       },
     },
   });
 
-  grunt.registerTask('dev', ['jshint', 'constants']);
-  grunt.registerTask('package', ['concat', 'uglify', 'htmlmin', 'compress']);
+  grunt.registerTask('dev', ['env:dev', 'jshint', 'constants']);
+  grunt.registerTask('package', ['env:dist', 'concat', 'uglify', 'preprocess:dist', 'htmlmin', 'compress']);
 
   grunt.registerTask('default', ['clean', 'dev', 'package']);
 

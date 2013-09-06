@@ -16,6 +16,20 @@ var __buffer = new Buffer($('c'), __PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_S
 var __textureManager = new TextureManager();
 
 
+// Identifiers
+// -----------
+
+// Tags
+var TAG_PLAYER = 1;
+var TAG_WORLD = 2;
+
+// Groups
+var GROUP_PORTALS = 1;
+var GROUP_DOORS = 2;
+var GROUP_ENEMIES = 3;
+var GROUP_DASHES = 4;
+
+
 // Textures and animations
 // -----------------------
 
@@ -54,8 +68,11 @@ __textureManager.d('d', [0, 1, 2], 12); // Dash
 function runGame() {
   // Load the main spritesheet
   __textureManager.l(__PW_ASSETS_DIR + 't.png', function onLoad() {
+    // Intialize the game
+    //initializeGame();
+
     // Start the ticker
-    __ticker.start(gameLoop);
+    //__ticker.start(gameLoop);
   });
 }
 
@@ -66,4 +83,28 @@ function runGame() {
 function gameLoop(elapsed) {
   __sm.u(elapsed);
   __buffer.r();
+}
+
+
+// Game initialization
+// -------------------
+
+function initializeGame() {
+  // Create game layers
+  var stage = new Stage();
+  var cameraLayer = stage.add(new DisplayObjectContainer());
+  var hudLayer    = stage.add(new DisplayObjectContainer());
+  var gameLayer   = cameraLayer.add(new DisplayObjectContainer());
+  var debugLayer  = __PW_DEBUG ? cameraLayer.add(new DisplayObjectContainer()) : null;
+
+  // Create game systems
+  __sm.a(new KeyboardControlSystem());
+  __sm.a(new PathFollowSystem());
+  __sm.a(new MovementSystem());
+  __sm.a(new CollisionSystem());
+  __sm.a(new CameraSystem(cameraLayer));
+  __PW_DEBUG && __sm.a(new BoundsRenderingSystem(debugLayer));
+  __sm.a(new SpriteDirectionSystem());
+  __sm.a(new RenderingSystem(gameLayer));
+  __sm.a(new ExpirationSystem());
 }

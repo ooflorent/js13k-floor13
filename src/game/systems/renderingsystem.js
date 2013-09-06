@@ -1,14 +1,14 @@
-function SpriteRendererSystem(layer) {
+function RenderingSystem(layer) {
   IteratingSystem.call(this, Position, Display);
   this.l = layer;
 }
 
-__extend(SpriteRendererSystem, IteratingSystem, {
-  a: function add(entity) {
+__extend(RenderingSystem, IteratingSystem, {
+  a: function onEntityAdded(entity) {
     // Add entity to the display list
     this.l.add(entity.g(Display).gfx);
   },
-  r: function remove(entity) {
+  r: function onEntityRemoved(entity) {
     // Remove entity from the display list
     this.l.remove(entity.g(Display).gfx);
   },

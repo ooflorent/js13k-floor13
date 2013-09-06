@@ -44,6 +44,14 @@ var Input = (function () {
       capture = codes;
     },
     /**
+     * Check if any key is down.
+     *
+     * @return {Boolean}
+     */
+    a: function any() {
+      return !!~active.indexOf(1);
+    },
+    /**
      * Get the state of the specified key.
      *
      * @param  {int} key code

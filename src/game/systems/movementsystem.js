@@ -1,5 +1,5 @@
 function MovementSystem() {
-  IteratingSystem.call(this, [Position, Motion]);
+  IteratingSystem.call(this, Position, Motion);
 }
 
 __extend(MovementSystem, IteratingSystem, {

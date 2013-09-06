@@ -20,10 +20,10 @@ function GroupManager(eventManager) {
     /**
      * Add an entity to the specified group.
      *
-     * @param  {Entity} entity
      * @param  {String} group
+     * @param  {Entity} entity
      */
-    a: function add(entity, group) {
+    a: function add(group, entity) {
       entitiesByGroup[group] || (entitiesByGroup[group] = []);
       entitiesByGroup[group].push(entity);
     },

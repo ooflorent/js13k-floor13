@@ -3,10 +3,10 @@ function PathFollowSystem() {
 }
 
 __extend(PathFollowSystem, IteratingSystem, {
-  onUpdate: function(entity, elapsed) {
-    var position = Pixelwars.c(entity, Position.name);
-    var motion = Pixelwars.c(entity, Motion.name);
-    var path = Pixelwars.c(entity, Path.name).p;
+  ue: function updateEntity(entity, elapsed) {
+    var position = entity.g(Position);
+    var motion = entity.g(Motion);
+    var path = entity.g(Path).p;
 
     var gridPosition = toGrid(position.x, position.y);
 
@@ -15,6 +15,7 @@ __extend(PathFollowSystem, IteratingSystem, {
       path.shift();
     }
 
+    // Move to the next point
     if (path.length) {
       var pt = path[0];
       var a = Math.atan2((pt.y + 0.5) * 16 - position.y, (pt.x + 0.5) * 16 - position.x);

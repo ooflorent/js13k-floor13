@@ -1,19 +1,18 @@
 function KeyboardControlSystem() {
   System.call(this);
-  Input.keys([37, 38, 39, 40]);
+  Input.c([37, 38, 39, 40]);
 }
 
 __extend(KeyboardControlSystem, System, {
-  update: function(elapsed) {
-    var getKey = Input.get;
+  u: function update(elapsed) {
+    var getKey = Input.k;
 
-    var player = Pixelwars.t('p');
-    var motion = Pixelwars.c(player, Motion.name);
-    var gfx = Pixelwars.c(player, Display.name).gfx;
+    var player = __tm.g(TAG_PLAYER);
+    var motion = player.g(Motion);
 
     var x = y = 0;
     if (getKey(88)) { // X
-      EntityCreator.dash(Pixelwars.c(player, Position.name));
+      EntityCreator.dash(player.g(Position));
     }
 
     if (getKey(37)) { // LEFT

@@ -1,23 +1,19 @@
-function BoundsRendererSystem(layer) {
-  IteratingSystem.call(this, [Position, Bounds]);
+function BoundsRenderingSystem(layer) {
+  IteratingSystem.call(this, Position, Bounds);
   this.l = layer;
 }
 
-__extend(BoundsRendererSystem, IteratingSystem, {
+__extend(BoundsRenderingSystem, IteratingSystem, {
   a: function onEntityAdded(entity) {
-    var bounds = entity.g(Bounds);
-
-    bounds.gfx = new Graphics(function(ctx, color) {
+    this.l.add(entity.g(Bounds).gfx = new Graphics(function(ctx, color) {
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(0,255,0,.5)';
+      ctx.strokeStyle = 'rgba(0,255,0,.4)';
       ctx.strokeRect(0.5, 0.5, bounds.w - 1, bounds.h - 1);
       ctx.closePath();
-    });
-
-    this.l.add(bounds.gfx);
+    }));
   },
   r: function onEntityRemoved(entity) {
-    this.l.remove(Pixelwars.c(entity, Bounds).gfx);
+    this.l.remove(entity.g(Bounds).gfx);
   },
   ue: function updateEntity(entity) {
     var position = entity.g(Position);

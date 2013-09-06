@@ -19,24 +19,25 @@ function componentsToTypes(ctors) {
 function EntityManager(eventManager) {
   // Private fields
   var currentId = 0;
-  var entities = [];
+  var entitiesList = [];
   var entitiesToComponents = [];
   var componentsToEntities = {};
 
   // Methods variables
-  var result, entitiesComp, entity, component, types, type;
+  var result, entities, entity, components, component, types, type;
 
   __mixin(this, {
     /**
      * Create a new entity.
      *
-     * @param  {Object[]} components
+     * @param  {...} components
      * @return {Entity} entity
      */
-    e: function create(comps) {
-      entities[currentId] = entity = new Entity(currentId);
+    e: function create() {
+      components = argumentsToArray(arguments);
+      entitiesList[currentId] = entity = new Entity(currentId);
       entitiesToComponents[currentId++] = [];
-      comps && comps.map(entity.a, entity);
+      components && components.map(entity.a, entity);
       return entity;
     },
     /**
@@ -46,7 +47,7 @@ function EntityManager(eventManager) {
      */
     k: function kill(entity) {
       entity.c();
-      delete entities[entity.i];
+      delete entitiesList[entity.i];
       delete entitiesToComponents[entity.i];
       eventManager.e('$k', entity);
     },
@@ -60,15 +61,15 @@ function EntityManager(eventManager) {
       types = componentsToTypes(argumentsToArray(arguments));
 
       // Retrieve matching entity IDs
-      entitiesComp = Object.keys(entitiesToComponents);
+      entities = Object.keys(entitiesToComponents);
       for (i = types.length; i--;) {
-        entitiesComp = intersect(entitiesComp, Object.keys(componentsToEntities[types[i]] || []));
+        entities = intersect(entities, Object.keys(componentsToEntities[types[i]] || []));
       }
 
       // Retrieve entities
       results = [];
-      for (i = entitiesComp.length; i--;) {
-        results[i] = entities[entitiesComp[i]];
+      for (i = entities.length; i--;) {
+        results[i] = entitiesList[entities[i]];
       }
 
       return results;
@@ -78,7 +79,7 @@ function EntityManager(eventManager) {
      * Warning: Entities are not killed (no event will be fired).
      */
     c: function clear() {
-      entities = [];
+      entitiesList = [];
       currentId = 0;
     }
   });
