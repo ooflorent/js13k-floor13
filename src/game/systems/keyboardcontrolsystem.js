@@ -14,7 +14,7 @@ __extend(KeyboardControlSystem, System, {
 
     if (!cooldown.g('atk')) {
       if (getKey(88)) { // X
-        var dash = EntityCreator.dash(player.g(Bounds));
+        var dash = EntityCreator.dash(player.g(Position));
         cooldown.s('atk', dash.g(Lifetime).t * 3);
       } else {
         if (getKey(37)) { // LEFT

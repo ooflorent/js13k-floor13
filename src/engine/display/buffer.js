@@ -22,10 +22,10 @@ function Buffer(canvas, width, height, scale) {
   textureCanvas = createCanvas();
   textureCanvas.width = textureCanvas.height = scale;
   textureCtx = textureCanvas.getContext('2d');
-  textureCtx.fillStyle = 'rgba(255,255,255,.05)';
+  textureCtx.fillStyle = 'rgba(255,255,255,.02)';
   textureCtx.fillRect(1, 0, scale - 2, 1);
   textureCtx.fillRect(0, 1, 1, scale - 2);
-  textureCtx.fillStyle = 'rgba(0,0,0,.1)';
+  textureCtx.fillStyle = 'rgba(0,0,0,.05)';
   textureCtx.fillRect(1, scale - 1, scale - 2, 1);
   textureCtx.fillRect(scale - 1, 1, 1, scale - 2);
   texture = ctx.createPattern(textureCanvas, 'repeat');

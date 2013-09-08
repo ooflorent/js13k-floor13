@@ -18,10 +18,10 @@ function Tilemap(dungeon) {
     return isWall(dungeon, x, y) && isWall(dungeon, x, y + 1);
   }
 
-  function createEdge(x1, y1, x2, y2, c) {
+  function createEdge(x1, y1, x2, y2) {
     return function(ctx, color) {
       ctx.beginPath();
-      ctx.strokeStyle = c || color;
+      ctx.strokeStyle = color;
       ctx.moveTo(x1 + 0.5, y1 - 0.5);
       ctx.lineTo(x2 + 0.5, y2 - 0.5);
       ctx.stroke();
@@ -29,7 +29,6 @@ function Tilemap(dungeon) {
     };
   }
 
-  var shadow = 'rgba(0,0,0,.15)';
   var texture;
   for (var y = dungeon.h; y--;) {
     for (var x = dungeon.w; x--;) {
@@ -40,7 +39,7 @@ function Tilemap(dungeon) {
         texture = 'w';
 
         if (!isWall(dungeon, x, y + 1)) {
-          edges.push(createEdge(0, 17, 16, 17, shadow));
+          edges.push(createEdge(0, 17, 16, 17));
         }
 
         if (!isWall(dungeon, x - 1, y)) {
@@ -49,7 +48,7 @@ function Tilemap(dungeon) {
 
         if (!isWall(dungeon, x + 1, y)) {
           edges.push(createEdge(15, 0, 15, 16));
-          edges.push(createEdge(16, 0, 16, 17, shadow));
+          edges.push(createEdge(16, 0, 16, 17));
         }
       } else if (isRoof(dungeon, x, y)) {
         texture = 'r';
@@ -59,16 +58,21 @@ function Tilemap(dungeon) {
         }
 
         if (!isRoof(dungeon, x, y + 1)) {
-          edges.push(createEdge(0, 16, 16, 16));
+          edges.push(createEdge(0, 18, 16, 18));
         }
 
-        if (!isRoof(dungeon, x - 1, y)) {
+        if (!isWall(dungeon, x - 1, y)) {
           edges.push(createEdge(0, 0, 0, 16));
+        } else if (!isRoof(dungeon, x - 1, y)) {
+          edges.push(createEdge(0, 2, 0, 16));
         }
 
-        if (!isRoof(dungeon, x + 1, y)) {
+        if (!isWall(dungeon, x + 1, y)) {
           edges.push(createEdge(15, 0, 15, 16));
-          edges.push(createEdge(16, 0, 16, 16, shadow));
+          edges.push(createEdge(16, 0, 16, 16));
+        } else if (!isRoof(dungeon, x + 1, y)) {
+          edges.push(createEdge(15, 2, 15, 16));
+          edges.push(createEdge(16, 2, 16, 16));
         }
       } else {
           texture = 'f';
@@ -77,7 +81,7 @@ function Tilemap(dungeon) {
       this.render(new Sprite(__textureManager.g(texture)[0]), pos);
 
       for (var e = edges.length; e--;) {
-        this.render(new Graphics(edges[e], '#2f2b2a'), pos);
+        this.render(new Graphics(edges[e], 'rgba(0,0,0,.2)'), pos);
       }
     }
   }

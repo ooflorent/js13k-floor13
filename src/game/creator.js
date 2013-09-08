@@ -34,11 +34,8 @@ var EntityCreator = (function() {
       return entity;
     },
     door: function(pos) {
-      var x = pos.x * 16 + (pos.d > 1 ? 0 : (pos.d ? 13 : -3));
-      var y = pos.y * 16 + (pos.d > 2 ? -8 : (pos.d > 1 ? 8 : -12));
-
-      x = pos.x * 16;
-      y = pos.y * 16;
+      var x = pos.x * 16;
+      var y = pos.y * 16;
       if (pos.d > 1) {
         entity = __em.e(
           new Position(x + 8, y + (pos.d > 2 ? 0 : 16)),
@@ -47,8 +44,8 @@ var EntityCreator = (function() {
         );
       } else {
         entity = __em.e(
-          new Position(x + (pos.d ? 16 : 0), y + 2),
-          new Bounds(6, 28),
+          new Position(x + (pos.d ? 16 : 0), y + 3),
+          new Bounds(3, 25),
           new Display(new Sprite(__textureManager.g('dv')[0], middleCenter))
         );
       }
