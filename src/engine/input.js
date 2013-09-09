@@ -1,8 +1,10 @@
 var Input = (function () {
+  // Private variable
   var capture = [];
   var active = [];
+  var time = 1;
 
-  // Variable methods
+  // Methods variables
   var events, i, key;
 
   /**
@@ -14,14 +16,14 @@ var Input = (function () {
   function addDocumentListener(name, listener) {
     events = name.split(' ');
     for (i = events.length; i--;) {
-      document.addEventListener(events[i], listener);
+      document.body.addEventListener(events[i], listener);
     }
   }
 
-  // Listen `keypress` and `keydown` events
-  addDocumentListener('keypress keydown', function(e) {
+  // Listen `keydown` events
+  addDocumentListener('keydown', function(e) {
     (~capture.indexOf(key = e.keyCode)) && e.preventDefault();
-    active[key] = 1;
+    !active[key] && (active[key] = time);
   });
 
   // Listen `keyup` events
@@ -49,7 +51,13 @@ var Input = (function () {
      * @return {Boolean}
      */
     a: function any() {
-      return !!~active.indexOf(1);
+      for (i = active.length; i--;) {
+        if (active[i]) {
+          return true;
+        }
+      }
+
+      return false;
     },
     /**
      * Get the state of the specified key.
@@ -57,8 +65,21 @@ var Input = (function () {
      * @param  {int} key code
      * @return {Boolean}
      */
-    k: function key(code) {
+    p: function isPressed(code) {
       return !!active[code];
+    },
+    /**
+     * @param  {int} code
+     * @return {Boolean}
+     */
+    j: function justPressed(code) {
+      return active[code] == time;
+    },
+    /**
+     * Update keys state.
+     */
+    u: function update() {
+      time++;
     }
   };
 })();
