@@ -5,38 +5,51 @@ function KeyboardControlSystem() {
 
 __extend(KeyboardControlSystem, System, {
   u: function update(elapsed) {
-    var getKey = Input.k;
     var x = y = 0;
 
     var player = __tm.g(TAG_PLAYER);
+    var position = player.g(Position);
     var motion = player.g(Motion);
+    var state = player.g(State);
     var cooldown = player.g(Cooldown);
 
+    // Reset movement
+    motion.dx = motion.dy = 0;
+    state.s = STATE_IDLE;
+
     if (!cooldown.g('atk')) {
-      if (getKey(88)) { // X
-        var dash = EntityCreator.dash(player.g(Position));
-        cooldown.s('atk', dash.g(Lifetime).t * 3);
+      if (Input.j(88)) { // X
+        EntityCreator.bullet(position);
+        cooldown.s('atk', 0.2);
+      } else if (Input.j(67)) { // V
+        var dash = EntityCreator.dash(position);
+        cooldown.s('atk', 0.5);
       } else {
-        if (getKey(37)) { // LEFT
+        if (Input.p(37)) { // LEFT
           x = -1;
-        } else if (getKey(39)) { // RIGHT
+        } else if (Input.p(39)) { // RIGHT
           x = 1;
         }
 
-        if (getKey(38)) { // UP
+        if (Input.p(38)) { // UP
           y = -1;
-        } else if (getKey(40)) { // DOWN
+        } else if (Input.p(40)) { // DOWN
           y = 1;
         }
+
+        // Compute movement speed
+        var length = Math.sqrt(x * x + y * y);
+        if (length) {
+          motion.dx = x / length * 60;
+          motion.dy = y / length * 60;
+          state.s = STATE_WALK;
+        }
       }
+    } else {
+      state.s = STATE_ATTACK;
     }
 
-    var length = Math.sqrt(x * x + y * y);
-    if (length) {
-      motion.dx = x / length * 60;
-      motion.dy = y / length * 60;
-    } else {
-      motion.dx = motion.dy = 0;
-    }
+    // Update keyboard controller
+    Input.u();
   }
 });

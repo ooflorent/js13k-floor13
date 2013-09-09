@@ -33,6 +33,9 @@ __define(Renderer, {
 
     var ctx = this.ctx;
 
+    ctx.save();
+    ctx.globalAlpha = object.o;
+
     if (object instanceof Sprite) {
       if (object.texture instanceof RenderTexture) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -46,14 +49,18 @@ __define(Renderer, {
       ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
       object._batch(ctx, object._color);
     }
+
+    ctx.restore();
   }
 });
 
 function DisplayObject() {
   this.x = this.y = 0;
+  this.o = 1;
   this.sx = this.sy = 1;
 
   this._x = this._y = 0;
+  this._o = 1;
   this._p = null;
 }
 
@@ -64,6 +71,9 @@ __define(DisplayObject, {
     // Calculate effective position
     this._x = parent._x + this.x;
     this._y = parent._y + this.y;
+
+    // Calculate effective alpha
+    this._o = parent._o + this.o;
   }
 });
 

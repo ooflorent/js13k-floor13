@@ -1,38 +1,25 @@
 var EntityCreator = (function() {
-  var bottomCenter = {x: 0.5, y: 0.8};
+  var bottomCenter = {x: 0.5, y: 0.7};
   var middleCenter = {x: 0.5, y: 0.5};
+  var gibsBlood = ['#c42c00', '#951c00'];
+  var gibsSparkles = ['#f5f7b6', '#fcfef0', '#fdd661'];
   var entity;
 
   function getFourWaysAnimatedSprite(texture) {
     return new AnimatedSprite(__textureManager.g(texture), {
-      _n: __textureManager.a('_n'), // Idle north
-      _s: __textureManager.a('_s'), // Idle south
-      _h: __textureManager.a('_h'), // Idle east or west
-      n: __textureManager.a('n'),   // Walk north
-      s: __textureManager.a('s'),   // Walk south
-      h: __textureManager.a('h')    // Walk east of west
+      _n: __textureManager.a('_n'),
+      _s: __textureManager.a('_s'),
+      _h: __textureManager.a('_h'),
+      wn: __textureManager.a('wn'),
+      ws: __textureManager.a('ws'),
+      wh: __textureManager.a('wh'),
+      an: __textureManager.a('an'),
+      as: __textureManager.a('as'),
+      ah: __textureManager.a('ah')
     }, '_s', bottomCenter);
   }
 
   return {
-    entrance: function(pos) {
-      __gm.a(GROUP_PORTALS, entity = __em.e(
-        new Position(pos.x * 16 + 8, pos.y * 16 + 8),
-        new Bounds(16, 16),
-        new Display(new Sprite(__textureManager.g('sd')[0], middleCenter))
-      ));
-
-      return entity;
-    },
-    exit: function(pos) {
-      __gm.a(GROUP_PORTALS, entity = __em.e(
-        new Position(pos.x * 16 + 9, pos.y * 16 + 7),
-        new Bounds(15, 22),
-        new Display(new Sprite(__textureManager.g('su')[0], middleCenter))
-      ));
-
-      return entity;
-    },
     door: function(pos) {
       var x = pos.x * 16;
       var y = pos.y * 16;
@@ -49,6 +36,8 @@ var EntityCreator = (function() {
           new Display(new Sprite(__textureManager.g('dv')[0], middleCenter))
         );
       }
+
+      entity.a(new Health(2, gibsSparkles));
 
       __gm.a(GROUP_DOORS, entity);
       return entity;
@@ -79,26 +68,58 @@ var EntityCreator = (function() {
 
       return entity;
     },
-    player: function(pos) {
+    hero: function(pos) {
       __tm.r(TAG_PLAYER, entity = __em.e(
-        new Position(pos.x * 16 + 7, pos.y * 16 + 10),
-        new Bounds(7, 5),
+        new Position(pos.x * 16 + 7, pos.y * 16 + 26),
+        new Bounds(6, 10),
         new Motion(),
-        new Display(getFourWaysAnimatedSprite('p')),
-        new Cooldown()
+        new Display(getFourWaysAnimatedSprite('h')),
+        new Cooldown(),
+        new State(STATE_IDLE)
       ));
 
       return entity;
     },
-    skeleton: function(pos) {
+    bodyguard: function(pos) {
       __gm.a(GROUP_ENEMIES, entity = __em.e(
         new Position(pos.x * 16 + 7, pos.y * 16 + 10),
-        new Bounds(7, 5),
+        new Bounds(6, 10),
         new Motion(),
-        new Display(getFourWaysAnimatedSprite('s'))
+        new Display(getFourWaysAnimatedSprite('b')),
+        new State(STATE_IDLE),
+        new Health(5, gibsBlood)
       ));
 
       return entity;
+    },
+    bullet: function(pos) {
+      var r = pos.r / 180 * Math.PI;
+      var v = !pos.r || pos.r == 180;
+      var s;
+
+      __gm.a(GROUP_BULLETS, entity = __em.e(
+        new Position(pos.x + (v ? 0 : (pos.r > 0 ? 5 : -5)), pos.y + (!pos.r ? 6 : -6), pos.r),
+        new Bounds(3, 3),
+        new Motion(120 * Math.sin(r) | 0, 120 * Math.cos(r) | 0),
+        new Display(s = new Sprite(__textureManager.g(v ? 'bv' : 'bh')[0], v ? {x: 0, y: 1} : {x: 1, y: 0}))
+      ));
+
+      s.sx = pos.r < 0 ? -1 : 1;
+      s.sy = pos.r == 180 ? -1 : 1;
+
+      return entity;
+    },
+    gib: function(pos, color, power) {
+      var size = !getRandomInt(0, 3) ? 2 : 1;
+      return __em.e(
+        new Lifetime(power * 0.5),
+        new Position(pos.x, pos.y),
+        new Motion(power * getRandomInt(-70, 70), power * getRandomInt(-70, 70), 0.95),
+        new Display(new Graphics(function(ctx) {
+          ctx.fillStyle = color;
+          ctx.fillRect(0, 0, size, size);
+        }), true)
+      );
     },
     world: function() {
       var dungeon = generateDungeon(20, 16, 4, 7);

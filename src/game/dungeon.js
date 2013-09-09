@@ -126,7 +126,7 @@ var generateDungeon = (function() {
       }
     }
 
-    // Define entrance and exit
+    // Define entrance and exit rooms
     var entrance = getRandomElement(rooms);
     var exit;
     do {
@@ -147,15 +147,17 @@ var generateDungeon = (function() {
       }
     }
 
-    entrance = {
-      x: entrance.x + getRandomInt(1, entrance.w - 2),
-      y: entrance.y + getRandomInt(1, entrance.h - 2)
-    };
+    // Place entrance elevator
+    do {
+      x = entrance.x + getRandomInt(1, entrance.w - 2);
+    } while (!isWallTile(map[entrance.y][x]));
+    entrance = {x: x, y: entrance.y};
 
-    exit = {
-      x: exit.x + getRandomInt(1, exit.w - 2),
-      y: exit.y + getRandomInt(1, exit.h - 2)
-    };
+    // Place exit elevator
+    do {
+      x = exit.x + getRandomInt(1, exit.w - 2);
+    } while (!isWallTile(map[exit.y][x]));
+    exit = {x: x, y: exit.y};
 
     return new Dungeon(width, height, map, doors, chests, mobs, entrance, exit);
   }

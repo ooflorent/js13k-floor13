@@ -13,16 +13,18 @@ __extend(RenderingSystem, IteratingSystem, {
     this.l.remove(entity.g(Display).gfx);
   },
   u: function update(elapsed) {
-    IteratingSystem.prototype.u.call(this, elapsed);
-
     // Sort elements
     this.l._c.sort(function(objA, objB) {
       return objA.y - objB.y;
     });
+
+    // Update entity graphics
+    IteratingSystem.prototype.u.call(this, elapsed);
   },
   ue: function updateEntity(entity, elapsed) {
     var position = entity.g(Position);
-    var gfx = entity.g(Display).gfx;
+    var display = entity.g(Display);
+    var gfx = display.gfx;
 
     // Update asset position
     gfx.x = position.x | 0;
@@ -31,6 +33,12 @@ __extend(RenderingSystem, IteratingSystem, {
     // Update animation
     if (gfx instanceof AnimatedSprite) {
       gfx.advance(elapsed * 1000 | 0);
+    }
+
+    // Fade
+    if (display.f) {
+      var lifetime = entity.g(Lifetime);
+      gfx.o = lifetime.t / lifetime.m;
     }
   }
 });

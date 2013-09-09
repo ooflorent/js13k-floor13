@@ -3,7 +3,7 @@
  */
 function EventManager() {
   // Methods variables
-  var handlers = {}, i, list, args;
+  var handlers = {};
 
   __mixin(this, {
     /**
@@ -30,8 +30,8 @@ function EventManager() {
      * @param  {Function} func
      */
     r: function remove(type, func) {
-      list = handlers[type] || [];
-      for (i = list.length; i--;) {
+      var list = handlers[type] || [];
+      for (var i = list.length; i--;) {
         func == list[i].f && list.splice(i, 1);
       }
     },
@@ -42,9 +42,9 @@ function EventManager() {
      * @param  {...} arguments
      */
     e: function emit() {
-      args = argumentsToArray(arguments);
-      list = handlers[args.shift()] || [];
-      for (i = list.length; i--;) {
+      var args = argumentsToArray(arguments);
+      var list = handlers[args.shift()] || [];
+      for (var i = list.length; i--;) {
         list[i].f.apply(list[i].c, args);
       }
     }

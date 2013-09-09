@@ -6,12 +6,21 @@ function BoundsRenderingSystem(layer) {
 __extend(BoundsRenderingSystem, IteratingSystem, {
   a: function onEntityAdded(entity) {
     var bounds = entity.g(Bounds);
-    this.l.add(bounds.gfx = new Graphics(function(ctx, color) {
-      ctx.beginPath();
-      ctx.strokeStyle = 'rgba(0,255,0,.4)';
-      ctx.strokeRect(0.5, 0.5, bounds.w - 1, bounds.h - 1);
-      ctx.closePath();
-    }));
+    if (bounds.w == 1 || bounds.h == 1) {
+      this.l.add(bounds.gfx = new Graphics(function(ctx, color) {
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(0,255,0,.4)';
+        ctx.fillRect(0, 0, bounds.w, bounds.h);
+        ctx.closePath();
+      }));
+    } else {
+      this.l.add(bounds.gfx = new Graphics(function(ctx, color) {
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(0,255,0,.4)';
+        ctx.strokeRect(0.5, 0.5, bounds.w - 1, bounds.h - 1);
+        ctx.closePath();
+      }));
+    }
   },
   r: function onEntityRemoved(entity) {
     this.l.remove(entity.g(Bounds).gfx);

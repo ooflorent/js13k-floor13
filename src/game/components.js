@@ -1,7 +1,7 @@
-function Position(x, y) {
+function Position(x, y, r) {
   this.x = x || 0;
   this.y = y || 0;
-  this.r = 0;
+  this.r = r || 0;
 }
 
 function Bounds(width, height) {
@@ -15,13 +15,15 @@ __extend(Bounds, Rectangle, {
   }
 });
 
-function Motion(dx, dy) {
+function Motion(dx, dy, friction) {
   this.dx = dx || 0;
   this.dy = dy || 0;
+  this.f = friction || 1;
 }
 
-function Display(gfx) {
+function Display(gfx, fade) {
   this.gfx = gfx;
+  this.f = fade;
 }
 
 function Path() {
@@ -29,5 +31,14 @@ function Path() {
 }
 
 function Lifetime(t) {
-  this.t = t;
+  this.m = this.t = t;
+}
+
+function State(s) {
+  this.s = s;
+}
+
+function Health(h, c) {
+  this.h = h || 1;
+  this.c = c;
 }
