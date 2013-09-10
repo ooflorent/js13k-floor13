@@ -22,6 +22,10 @@ __define(Renderer, {
     this.renderObject(stage);
   },
   renderObject: function(object) {
+    if (!object.v) {
+      return;
+    }
+
     if (object instanceof DisplayObjectContainer) {
       var children = object._c;
       for (var i = 0, n = children.length; i < n; i++) {
@@ -57,6 +61,7 @@ __define(Renderer, {
 function DisplayObject() {
   this.x = this.y = 0;
   this.o = 1;
+  this.v = 1;
   this.sx = this.sy = 1;
 
   this._x = this._y = 0;
