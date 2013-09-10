@@ -125,7 +125,7 @@ var EntityCreator = (function() {
       );
     },
     world: function() {
-      var dungeon = generateDungeon(20, 16, 4, 7);
+      var dungeon = generateDungeon(__PW_WORLD_WIDTH, __PW_WORLD_HEIGHT, 4, 7);
       if (__PW_DEBUG) {
         console.log(dumpDungeon(dungeon));
       }
