@@ -3,11 +3,26 @@ function BulletSystem() {
 }
 
 __extend(BulletSystem, IteratingSystem, {
+  u: function update(elapsed) {
+    var map = __tm.g(TAG_WORLD).g(Dungeon);
+    var bullets = __gm.g(GROUP_BULLETS);
+    var bullet;
+    for (i = bullets.length; i--;) {
+      bullet = bullets[i];
+      position = bullet.g(Position);
+
+      if (isWall(map, position.x / 16 | 0, position.y / 16 | 0)) {
+        __em.k(bullet);
+      }
+    }
+
+    IteratingSystem.prototype.u.call(this, elapsed);
+  },
   ue: function updateEntity(entity, elapsed) {
     var bounds = entity.g(Bounds);
     var i;
 
-    // Doors collisions
+    // Bullet collisions
     var bullets = __gm.g(GROUP_BULLETS);
     var bullet;
     for (i = bullets.length; i--;) {
