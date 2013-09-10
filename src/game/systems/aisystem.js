@@ -9,13 +9,32 @@ __extend(AISystem, IteratingSystem, {
     var position = entity.g(Position).g();
     var playerPosition = __tm.g(TAG_PLAYER).g(Position).g();
 
+    var seePlayer = AStar.r(position, playerPosition);
+
+    // Check if the enemy brain is active
     if (brain.a) {
-      if (!cooldown.g('think')) {
-        cooldown.s('think', 0.2);
-        brain.p = AStar.s(position, playerPosition);
+      if (!cooldown.g('react')) {
+        if (seePlayer) {
+          // Stop chasing the player
+          brain.p = [];
+
+          // Shoot him
+        } else {
+          // Chase the player
+          brain.p = AStar.s(position, playerPosition);
+        }
+
+        // Delay next decision
+        cooldown.s('react', 0.2);
       }
     } else {
-      AStar.r(position, playerPosition) && (brain.a = true);
+      if (seePlayer) {
+        // Active the entity brain
+        brain.a = true;
+
+        // Add reaction cooldown
+        cooldown.s('react', 0.2);
+      }
     }
   }
 });

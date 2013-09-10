@@ -80,11 +80,9 @@ __extend(FogSystem, System, {
             var l_slope = (dx - 0.5) / (dy + 0.5);
             var r_slope = (dx + 0.5) / (dy - 0.5);
 
-            if (start < r_slope) {
-              continue;
-            } else if( end > l_slope) {
+            if( end > l_slope) {
               break;
-            } else {
+            } else if (r_slope < start) {
               if (dx*dx + dy*dy < radius2) {
                 fog[y][x].s.o = ((x - position.x) * (x - position.x) + (y - position.y) * (y - position.y)) / radius2;
               }
