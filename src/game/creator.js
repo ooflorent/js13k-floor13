@@ -37,6 +37,7 @@ var EntityCreator = (function() {
         );
       }
 
+      entity.a(new Door());
       entity.a(new Health(2, gibsSparkles));
 
       __gm.a(GROUP_DOORS, entity);
@@ -86,8 +87,10 @@ var EntityCreator = (function() {
         new Bounds(6, 10),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('b')),
-        new State(STATE_IDLE),
-        new Health(5, gibsBlood)
+        new Health(5, gibsBlood),
+        new Brain(),
+        new Cooldown(),
+        new State(STATE_IDLE)
       ));
 
       return entity;

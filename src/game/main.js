@@ -120,11 +120,13 @@ function initializeGame() {
 
   // Create game systems
   __sm.a(new KeyboardControlSystem());
+  __sm.a(new AISystem());
   __sm.a(new PathFollowSystem());
   __sm.a(new MovementSystem());
   __sm.a(new CollisionSystem());
   __sm.a(new BulletSystem());
   __sm.a(new DamageSystem());
+  __sm.a(new DoorSystem());
   __sm.a(new CameraSystem(cameraLayer));
   __PW_DEBUG && __sm.a(new BoundsRenderingSystem(debugLayer));
   __sm.a(new SpriteDirectionSystem());

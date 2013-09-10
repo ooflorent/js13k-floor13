@@ -2,6 +2,13 @@ function Position(x, y, r) {
   this.x = x || 0;
   this.y = y || 0;
   this.r = r || 0;
+
+  this.g = function toGrid() {
+    return {
+      x: this.x / 16 | 0,
+      y: this.y / 16 | 0
+    };
+  };
 }
 
 function Bounds(width, height) {
@@ -26,10 +33,6 @@ function Display(gfx, fade) {
   this.f = fade;
 }
 
-function Path() {
-  this.p = [];
-}
-
 function Lifetime(t) {
   this.m = this.t = t;
 }
@@ -41,4 +44,13 @@ function State(s) {
 function Health(h, c) {
   this.h = h || 1;
   this.c = c;
+}
+
+function Brain() {
+  this.p = [];
+  this.a = 0;
+}
+
+function Door(k) {
+  this.k = k;
 }

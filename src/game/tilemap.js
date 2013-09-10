@@ -1,12 +1,3 @@
-function toGrid(x, y) {
-  return {
-    x: x / 16 | 0,
-    y: y / 16 | 0,
-    dx: x % 16,
-    dy: y % 16
-  };
-}
-
 function Tilemap(dungeon) {
   RenderTexture.call(this, dungeon.w * 16, dungeon.h * 16);
 

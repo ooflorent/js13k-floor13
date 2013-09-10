@@ -31,9 +31,20 @@ function GroupManager(eventManager) {
      * Retrieve all entities of the specified group.
      *
      * @param  {String} group
+     * @return {Entity[]}
      */
     g: function get(group) {
       return (entitiesByGroup[group] || []).slice();
+    },
+    /**
+     * Check if an entity belongs to the specified group.
+     *
+     * @param  {String} group
+     * @param  {Entity} entity
+     * @return {Boolean}
+     */
+    i: function inGroup(group, entity) {
+      return !!~(entitiesByGroup[group] || []).indexOf(entity);
     },
     /**
      * Unregister all groups.

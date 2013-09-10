@@ -101,7 +101,27 @@ var AStar = {
       }
     }
   },
-  search: function(start, end) {
+  w: function setWall(x, y, flag) {
+    this.g[y][x].w = flag;
+  },
+  r: function ray(start, end) {
+    var deltaX = end.x - start.x;
+    var deltaY = end.y - start.y;
+    var steps = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY));
+    var stepX = deltaX / steps;
+    var stepY = deltaY / steps;
+    var currX = start.x - stepX;
+    var currY = start.y - stepY;
+
+    while (steps--) {
+      if (this.g[(currY += stepY) | 0][(currX += stepX) | 0].w) {
+        return false;
+      }
+    }
+
+    return true;
+  },
+  s: function search(start, end) {
     var grid = this.g;
     var heap = new BinaryHeap(function(node) {
       return node.h;
