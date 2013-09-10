@@ -14,10 +14,9 @@ __extend(SpriteDirectionSystem, IteratingSystem, {
 
     // Compute animation direction
     var direction;
-    var ar = Math.abs(position.r);
-    if (ar == 135 || position.r == 180) {
+    if (position.r == 180) {
       direction = 'n';
-    } else if (ar == 45 || !position.r) {
+    } else if (!position.r) {
       direction = 's';
     } else {
       direction = 'h';

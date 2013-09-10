@@ -1,5 +1,5 @@
 function PathFollowSystem() {
-  IteratingSystem.call(this, Position, Motion, Brain);
+  IteratingSystem.call(this, Position, Motion, State, Cooldown, Brain);
 }
 
 __extend(PathFollowSystem, IteratingSystem, {
@@ -7,6 +7,8 @@ __extend(PathFollowSystem, IteratingSystem, {
     var position = entity.g(Position);
     var gridPosition = position.g();
     var motion = entity.g(Motion);
+    var state = entity.g(State);
+    var cooldown = entity.g(Cooldown);
     var path = entity.g(Brain).p;
 
     // Remove old way points
@@ -20,7 +22,9 @@ __extend(PathFollowSystem, IteratingSystem, {
       var a = Math.atan2((pt.y + 0.5) * 16 - position.y, (pt.x + 0.5) * 16 - position.x);
       motion.dx = Math.cos(a) * 50;
       motion.dy = Math.sin(a) * 50;
+      state.s = STATE_WALK;
     } else {
+      state.s = cooldown.g('atk') ? STATE_ATTACK : STATE_IDLE;
       motion.dx = motion.dy = 0;
     }
   }
