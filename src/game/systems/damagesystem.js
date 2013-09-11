@@ -18,6 +18,10 @@ function DamageSystem() {
           EntityCreator.gib(position, getRandomElement(health.c), 1.5);
         }
 
+        // Paint blood splash
+        // FIXME: This is very ugly!
+        health.b && __tm.g(TAG_WORLD).g(Display).gfx.texture.b(position);
+
         __em.k(entity);
       }
     }

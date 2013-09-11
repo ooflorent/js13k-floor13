@@ -1,7 +1,28 @@
 function Tilemap(dungeon) {
   RenderTexture.call(this, dungeon.w * 16, dungeon.h * 16);
 
-  var that = this, texture, sprite, x, y;
+  // Methods variables
+  var that = this, texture, sprite, x, y, a, r, i;
+  var gibsBlood = ['#930', '#820', '#710'];
+
+  /**
+   * Paint blood splash
+   *
+   * @param  {Position} pos
+   */
+  that.b = function paintBlood(pos) {
+    for (i = getRandomInt(50, 80); i--;) {
+      sprite = bloodSpray(!getRandomInt(0, 3) ? 2 : 1, getRandomElement(gibsBlood));
+      sprite.o = getRandomInt(6, 8) / 10;
+
+      a = Math.PI * getRandomInt(-180, 180) / 180;
+      r = getRandomInt(0, 8);
+      that.render(sprite, {
+        x: pos.x + Math.cos(a) * r,
+        y: pos.y + Math.sin(a) * r,
+      });
+    }
+  };
 
   function isFrontWall(dungeon, x, y) {
     return isWall(dungeon, x, y) && !isWall(dungeon, x, y + 1);
@@ -87,8 +108,8 @@ function Tilemap(dungeon) {
 
       that.render(new Sprite(__textureManager.g(texture)[0]), pos);
 
-      for (var e = edges.length; e--;) {
-        that.render(new Graphics(edges[e], 'rgba(0,0,0,.2)'), pos);
+      for (i = edges.length; i--;) {
+        that.render(new Graphics(edges[i], 'rgba(0,0,0,.2)'), pos);
       }
     }
   }
@@ -96,6 +117,8 @@ function Tilemap(dungeon) {
   // Render exits
   drawElevator(dungeon.prev);
   drawElevator(dungeon.next, 1);
+
+  this.b({x: dungeon.prev.x * 16, y: dungeon.prev.y * 16});
 }
 
 __extend(Tilemap, RenderTexture);

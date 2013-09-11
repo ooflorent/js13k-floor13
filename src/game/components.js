@@ -41,8 +41,9 @@ function State(s) {
   this.s = s;
 }
 
-function Health(h, c) {
-  this.h = h || 1;
+function Health(h, b, c) {
+  this.h = h;
+  this.b = b;
   this.c = c;
 }
 

@@ -1,7 +1,17 @@
+function bloodSpray(size, color) {
+  var offset = getRandomElement([0, 0.5]);
+  return new Graphics(function(ctx) {
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.fillRect(offset, offset, size, size);
+    ctx.closePath();
+  });
+}
+
 var EntityCreator = (function() {
   var middleCenter = {x: 0.5, y: 0.5};
-  var gibsBlood = ['#c42c00', '#951c00'];
-  var gibsSparkles = ['#f5f7b6', '#fcfef0', '#fdd661'];
+  var gibsBlood = ['#c30', '#920', '#b20', '#820'];
+  var gibsSparkles = ['#eeb', '#ffe', '#fd6'];
   var entity;
 
   function getFourWaysAnimatedSprite(texture) {
@@ -37,7 +47,7 @@ var EntityCreator = (function() {
       }
 
       entity.a(new Door());
-      entity.a(new Health(2, gibsSparkles));
+      entity.a(new Health(2, false, gibsSparkles));
 
       __gm.a(GROUP_DOORS, entity);
       return entity;
@@ -74,6 +84,7 @@ var EntityCreator = (function() {
         new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('h')),
+        new Health(100000, true, gibsBlood),
         new Cooldown(),
         new State(STATE_IDLE)
       ));
@@ -86,7 +97,7 @@ var EntityCreator = (function() {
         new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('b')),
-        new Health(5, gibsBlood),
+        new Health(5, true, gibsBlood),
         new Brain(),
         new Cooldown(),
         new State(STATE_IDLE)
@@ -95,14 +106,15 @@ var EntityCreator = (function() {
       return entity;
     },
     bullet: function(pos) {
+      var v = pos.r == 180 || !pos.r;
       var r = pos.r / 180 * Math.PI;
-      var v = !pos.r || pos.r == 180;
+      var r2 = (pos.r + getRandomInt(-3, 3)) / 180 * Math.PI;
       var s;
 
       __gm.a(GROUP_BULLETS, entity = __em.e(
         new Position(pos.x + (v ? 0 : (pos.r > 0 ? 5 : -5)), pos.y + (v ? (!pos.r ? 10 : -10) : 0), pos.r),
         new Bounds(3, 3),
-        new Motion(120 * Math.sin(r) | 0, 120 * Math.cos(r) | 0),
+        new Motion(120 * Math.sin(r2) | 0, 120 * Math.cos(r2) | 0),
         new Display(s = new Sprite(__textureManager.g(v ? 'bv' : 'bh')[0], v ? {x: 0, y: 1} : {x: 1, y: 0}))
       ));
 
@@ -117,10 +129,7 @@ var EntityCreator = (function() {
         new Lifetime(power * 0.5),
         new Position(pos.x, pos.y),
         new Motion(power * getRandomInt(-70, 70), power * getRandomInt(-70, 70), 0.95),
-        new Display(new Graphics(function(ctx) {
-          ctx.fillStyle = color;
-          ctx.fillRect(0, 0, size, size);
-        }), true)
+        new Display(bloodSpray(size, color), true)
       );
     },
     world: function() {
