@@ -1,6 +1,8 @@
-function SpriteDirectionSystem(layer) {
+/**
+ * Manage sprites direction.
+ */
+function SpriteDirectionSystem() {
   IteratingSystem.call(this, Position, State, Display);
-  this.l = layer;
 }
 
 __extend(SpriteDirectionSystem, IteratingSystem, {

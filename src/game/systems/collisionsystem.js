@@ -1,3 +1,6 @@
+/**
+ * Handle world collisions
+ */
 function CollisionSystem() {
   System.call(this);
 }

@@ -1,3 +1,8 @@
+/**
+ * Render game entities.
+ *
+ * @param {DisplayObjectContainer} layer
+ */
 function RenderingSystem(layer) {
   IteratingSystem.call(this, Position, Display);
   this.l = layer;

@@ -1,3 +1,8 @@
+/**
+ * Display collision bounds.
+ *
+ * @param {DisplayObjectContainer} layer
+ */
 function BoundsRenderingSystem(layer) {
   IteratingSystem.call(this, Position, Bounds);
   this.l = layer;

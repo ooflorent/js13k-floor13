@@ -1,3 +1,6 @@
+/**
+ * Manage enemies paths.
+ */
 function PathFollowSystem() {
   IteratingSystem.call(this, Position, Motion, State, Cooldown, Brain);
 }

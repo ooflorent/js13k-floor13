@@ -1,3 +1,8 @@
+/**
+ * Manage camera position.
+ *
+ * @param {DisplayObjectContainer} layer
+ */
 function CameraSystem(layer) {
   System.call(this);
   this.l = layer;

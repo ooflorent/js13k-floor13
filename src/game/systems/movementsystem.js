@@ -1,3 +1,6 @@
+/**
+ * Manage movement.
+ */
 function MovementSystem() {
   IteratingSystem.call(this, Position, Motion);
 }

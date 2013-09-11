@@ -1,3 +1,6 @@
+/**
+ * Manage doors.
+ */
 function DoorSystem() {
   System.call(this, Position, Door);
 }

@@ -1,3 +1,6 @@
+/**
+ * Manage cooldowns.
+ */
 function ExpirationSystem() {
   System.call(this);
 }

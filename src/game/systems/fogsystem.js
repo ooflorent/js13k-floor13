@@ -1,3 +1,9 @@
+/**
+ * Manage fog of war.
+ *
+ * @param {DisplayObjectContainer} camera
+ * @param {DisplayObjectContainer} layer
+ */
 function FogSystem(camera, layer) {
   System.call(this);
   this.c = camera;

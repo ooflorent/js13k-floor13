@@ -1,3 +1,6 @@
+/**
+ * Manage AI.
+ */
 function AISystem() {
   IteratingSystem.call(this, Position, Brain, Cooldown);
 }

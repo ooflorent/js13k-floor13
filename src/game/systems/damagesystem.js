@@ -1,3 +1,6 @@
+/**
+ * Manage damages.
+ */
 function DamageSystem() {
   System.call(this, Health);
 

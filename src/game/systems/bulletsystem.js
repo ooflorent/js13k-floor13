@@ -1,3 +1,6 @@
+/**
+ * Manage bullets collisions.
+ */
 function BulletSystem() {
   IteratingSystem.call(this, Bounds);
 }

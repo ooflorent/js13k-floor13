@@ -84,6 +84,7 @@ var EntityCreator = (function() {
         new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('h')),
+        new Weapon(0.3, 1),
         new Health(100000, true, gibsBlood),
         new Cooldown(),
         new State(STATE_IDLE)

@@ -1,3 +1,6 @@
+/**
+ * Control player.
+ */
 function KeyboardControlSystem() {
   System.call(this);
   Input.c([37, 38, 39, 40]);
