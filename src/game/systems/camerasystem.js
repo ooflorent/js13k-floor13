@@ -9,7 +9,7 @@ function CameraSystem(layer) {
 }
 
 __extend(CameraSystem, System, {
-  u: function update(elapsed) {
+  u: function update() {
     var position = __tm.g(TAG_PLAYER).g(Position);
     var camera = this.l;
 

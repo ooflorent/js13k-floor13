@@ -126,18 +126,18 @@ function Weapon(type, fireRate, dmg, size, reloadTime, fullAuto, spread) {
   this.rt = reloadTime;
   this.fa = fullAuto;
   this.sp = spread || 1;
-
-  var remainingBullets = size;
+  this.bs = size;
+  this.b = size;
 
   __mixin(this, {
     r: function reload() {
-      remainingBullets = size;
+      this.b = this.bs;
     },
     c: function canShoot() {
-      return !!remainingBullets;
+      return this.b > 0;
     },
     s: function shoot() {
-      remainingBullets && remainingBullets--;
+      this.b--;
     },
   });
 }

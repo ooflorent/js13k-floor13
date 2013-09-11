@@ -6,7 +6,7 @@ function SpriteDirectionSystem() {
 }
 
 __extend(SpriteDirectionSystem, IteratingSystem, {
-  ue: function updateEntity(entity, elapsed) {
+  ue: function updateEntity(entity) {
     var position = entity.g(Position);
     var state = entity.g(State);
     var gfx = entity.g(Display).gfx;

@@ -6,7 +6,7 @@ function BulletSystem() {
 }
 
 __extend(BulletSystem, IteratingSystem, {
-  u: function update(elapsed) {
+  u: function update() {
     var map = __tm.g(TAG_WORLD).g(Dungeon);
     var bullets = __gm.g(GROUP_BULLETS);
     var bullet;
@@ -19,9 +19,9 @@ __extend(BulletSystem, IteratingSystem, {
       }
     }
 
-    IteratingSystem.prototype.u.call(this, elapsed);
+    IteratingSystem.prototype.u.call(this);
   },
-  ue: function updateEntity(entity, elapsed) {
+  ue: function updateEntity(entity) {
     var bounds = entity.g(Bounds);
     var i;
 

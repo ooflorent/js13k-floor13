@@ -6,7 +6,7 @@ function PathFollowSystem() {
 }
 
 __extend(PathFollowSystem, IteratingSystem, {
-  ue: function updateEntity(entity, elapsed) {
+  ue: function updateEntity(entity) {
     var position = entity.g(Position);
     var gridPosition = position.g();
     var motion = entity.g(Motion);

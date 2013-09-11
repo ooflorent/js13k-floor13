@@ -7,7 +7,7 @@ function KeyboardControlSystem() {
 }
 
 __extend(KeyboardControlSystem, System, {
-  u: function update(elapsed) {
+  u: function update() {
     var x = y = 0;
 
     var player = __tm.g(TAG_PLAYER);

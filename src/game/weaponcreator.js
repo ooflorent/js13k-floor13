@@ -12,9 +12,8 @@ var WeaponCreator = (function() {
       var reloadTime = getRandomInt(8, 12) / 10.0;
       var fullAuto = false;
       var spread = 1;
-
       // Generate weapon
-      type = type || getRandomInt(0, 9);
+      type = type < 0 ? getRandomInt(0, 9) : type;
       if (type < 3) {
         // We have a pistol
         type = WEAPON_PISTOL;

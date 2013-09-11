@@ -6,7 +6,7 @@ function AISystem() {
 }
 
 __extend(AISystem, IteratingSystem, {
-  ue: function update(entity, elapsed) {
+  ue: function update(entity) {
     var brain = entity.g(Brain);
     var cooldown = entity.g(Cooldown);
     var position = entity.g(Position);

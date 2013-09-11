@@ -59,7 +59,6 @@ var EntityCreator = (function() {
         new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('h')),
-        new Weapon(0.25, 1, 8, 1, false, 1),
         new Health(100000, true, gibsBlood),
         new Cooldown(),
         new State(STATE_IDLE)
@@ -69,7 +68,7 @@ var EntityCreator = (function() {
     },
     bodyguard: function(pos) {
       __gm.a(GROUP_ENEMIES, entity = __em.e(
-        WeaponCreator.g(),
+        WeaponCreator.g(-1),
         new Position(pos.x * 16 + 7, pos.y * 16 + 10),
         new Bounds(6, 13),
         new Motion(),
