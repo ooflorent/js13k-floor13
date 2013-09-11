@@ -111,12 +111,33 @@ function Brain() {
 /**
  * Entity weapon.
  *
- * @param {float} r Fire rate
- * @param {int} d Damage
+ * @param {float} fireRate Fire rate
+ * @param {int} dmg Damage
+ * @param {int} size Barrel size
+ * @param {float} reloadTime Reload time
+ * @param {Boolean} fullAuto Does the weapon allow full auto?
+ * @param {int} spread Number of spread bullets
  */
-function Weapon(r, d) {
-  this.r = r;
-  this.d = d;
+function Weapon(fireRate, dmg, size, reloadTime, fullAuto, spread) {
+  this.d = dmg;
+  this.fr = fireRate;
+  this.rt = reloadTime;
+  this.fa = fullAuto;
+  this.sp = spread || 1;
+
+  var remainingBullets = size;
+
+  __mixin(this, {
+    r: function reload() {
+      remainingBullets = size;
+    },
+    c: function canShoot() {
+      return !!remainingBullets;
+    },
+    s: function shoot() {
+      remainingBullets && remainingBullets--;
+    },
+  });
 }
 
 /**

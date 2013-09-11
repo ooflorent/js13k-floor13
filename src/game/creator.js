@@ -58,7 +58,7 @@ var EntityCreator = (function() {
         new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('h')),
-        new Weapon(0.3, 1),
+        new Weapon(0.25, 1, 8, 1, false, 1),
         new Health(100000, true, gibsBlood),
         new Cooldown(),
         new State(STATE_IDLE)
@@ -72,6 +72,7 @@ var EntityCreator = (function() {
         new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('b')),
+        new Weapon(0.6, 1, 5, 1.5),
         new Health(5, true, gibsBlood),
         new Brain(),
         new Cooldown(),
@@ -80,23 +81,25 @@ var EntityCreator = (function() {
 
       return entity;
     },
-    bullet: function(pos) {
+    bullet: function(pos, weapon) {
+      var i = weapon.sp;
       var v = pos.r == 180 || !pos.r;
       var r = pos.r / 180 * Math.PI;
-      var r2 = (pos.r + getRandomInt(-3, 3)) / 180 * Math.PI;
-      var s;
+      while (i--) {
+        var r2 = (pos.r + getRandomInt(-3, 3) + i * 8 - 4 * (weapon.sp - 1)) / 180 * Math.PI;
+        var s;
 
-      __gm.a(GROUP_BULLETS, entity = __em.e(
-        new Position(pos.x + (v ? 0 : (pos.r > 0 ? 5 : -5)), pos.y + (v ? (!pos.r ? 10 : -10) : 0), pos.r),
-        new Bounds(3, 3),
-        new Motion(120 * Math.sin(r2) | 0, 120 * Math.cos(r2) | 0),
-        new Display(s = new Sprite(__textureManager.g(v ? 'bv' : 'bh')[0], v ? {x: 0, y: 1} : {x: 1, y: 0}))
-      ));
+        __gm.a(GROUP_BULLETS, __em.e(
+          weapon,
+          new Position(pos.x + (v ? 0 : (pos.r > 0 ? 5 : -5)), pos.y + (v ? (!pos.r ? 10 : -10) : 0), pos.r),
+          new Bounds(3, 3),
+          new Motion(120 * Math.sin(r2) | 0, 120 * Math.cos(r2) | 0),
+          new Display(s = new Sprite(__textureManager.g(v ? 'bv' : 'bh')[0], v ? {x: 0, y: 1} : {x: 1, y: 0}))
+        ));
 
-      s.sx = pos.r < 0 ? -1 : 1;
-      s.sy = pos.r == 180 ? -1 : 1;
-
-      return entity;
+        s.sx = pos.r < 0 ? -1 : 1;
+        s.sy = pos.r == 180 ? -1 : 1;
+      }
     },
     gib: function(pos, color, power) {
       var size = !getRandomInt(0, 3) ? 2 : 1;

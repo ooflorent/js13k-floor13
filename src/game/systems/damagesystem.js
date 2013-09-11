@@ -4,9 +4,12 @@
 function DamageSystem() {
   System.call(this, Health);
 
-  __evt.a(EVENT_HIT, function(entity, position, damage) {
+  __evt.a(EVENT_HIT, function(entity, bullet) {
     if (this.h(entity)) {
+      var position = bullet.g(Position);
       var health = entity.g(Health);
+      var weapon = bullet.g(Weapon);
+      var damage = weapon.d;
       var i;
 
       // Generate gibs

@@ -30,8 +30,8 @@ __extend(BulletSystem, IteratingSystem, {
     var bullet;
     for (i = bullets.length; i--;) {
       bullet = bullets[i];
-      if (bullet != entity && bullet.g(Bounds).o(bounds)) {
-        __evt.e(EVENT_HIT, entity, bullet.g(Position), 1);
+      if (!~bullets.indexOf(entity) && bullet.g(Bounds).o(bounds)) {
+        __evt.e(EVENT_HIT, entity, bullet);
         __em.k(bullet);
       }
     }

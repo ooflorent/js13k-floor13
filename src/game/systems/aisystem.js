@@ -2,7 +2,7 @@
  * Manage AI.
  */
 function AISystem() {
-  IteratingSystem.call(this, Position, Brain, Cooldown);
+  IteratingSystem.call(this, Position, Brain, Weapon, Cooldown);
 }
 
 __extend(AISystem, IteratingSystem, {
@@ -10,6 +10,7 @@ __extend(AISystem, IteratingSystem, {
     var brain = entity.g(Brain);
     var cooldown = entity.g(Cooldown);
     var position = entity.g(Position);
+    var weapon = entity.g(Weapon);
     var playerPosition = __tm.g(TAG_PLAYER).g(Position);
 
     var gridPosition = position.g();
@@ -28,11 +29,17 @@ __extend(AISystem, IteratingSystem, {
           ra = Math.abs(r);
           position.r = ra > 135 ? 180 : (ra < 45 ? 0 : (r < 0 ? -90 : 90));
 
-          // Shoot him
-          EntityCreator.bullet(position);
-
-          // Delay next shoot
-          cooldown.s('atk', 0.3);
+          // Shoot if the weapon has enough bullets
+          if (weapon.c()) {
+            // Fire!
+            weapon.s();
+            EntityCreator.bullet(position, weapon);
+            cooldown.s('atk', weapon.fr);
+          } else {
+            // Reload
+            weapon.r();
+            cooldown.s('atk', weapon.rt);
+          }
       } else {
         if (!cooldown.g('react')) {
           // Chase the player
