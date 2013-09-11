@@ -111,6 +111,7 @@ function Brain() {
 /**
  * Entity weapon.
  *
+ * @param {int} type Type
  * @param {float} fireRate Fire rate
  * @param {int} dmg Damage
  * @param {int} size Barrel size
@@ -118,7 +119,8 @@ function Brain() {
  * @param {Boolean} fullAuto Does the weapon allow full auto?
  * @param {int} spread Number of spread bullets
  */
-function Weapon(fireRate, dmg, size, reloadTime, fullAuto, spread) {
+function Weapon(type, fireRate, dmg, size, reloadTime, fullAuto, spread) {
+  this.t = type;
   this.d = dmg;
   this.fr = fireRate;
   this.rt = reloadTime;

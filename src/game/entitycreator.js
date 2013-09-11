@@ -54,6 +54,7 @@ var EntityCreator = (function() {
     },
     hero: function(pos) {
       __tm.r(TAG_PLAYER, entity = __em.e(
+        WeaponCreator.g(WEAPON_PISTOL),
         new Position(pos.x * 16 + 7, pos.y * 16 + 26),
         new Bounds(6, 13),
         new Motion(),
@@ -68,11 +69,11 @@ var EntityCreator = (function() {
     },
     bodyguard: function(pos) {
       __gm.a(GROUP_ENEMIES, entity = __em.e(
+        WeaponCreator.g(),
         new Position(pos.x * 16 + 7, pos.y * 16 + 10),
         new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('b')),
-        new Weapon(0.6, 1, 5, 1.5),
         new Health(5, true, gibsBlood),
         new Brain(),
         new Cooldown(),
