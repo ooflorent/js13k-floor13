@@ -1,5 +1,4 @@
 var EntityCreator = (function() {
-  var bottomCenter = {x: 0.5, y: 0.7};
   var middleCenter = {x: 0.5, y: 0.5};
   var gibsBlood = ['#c42c00', '#951c00'];
   var gibsSparkles = ['#f5f7b6', '#fcfef0', '#fdd661'];
@@ -16,7 +15,7 @@ var EntityCreator = (function() {
       an: __textureManager.a('an'),
       as: __textureManager.a('as'),
       ah: __textureManager.a('ah')
-    }, '_s', bottomCenter);
+    }, '_s', middleCenter);
   }
 
   return {
@@ -26,7 +25,7 @@ var EntityCreator = (function() {
       if (pos.d > 1) {
         entity = __em.e(
           new Position(x + 8, y + (pos.d > 2 ? 0 : 16)),
-          new Bounds(16, 17),
+          new Bounds(16, 14),
           new Display(new Sprite(__textureManager.g('dh')[0], middleCenter))
         );
       } else {
@@ -72,7 +71,7 @@ var EntityCreator = (function() {
     hero: function(pos) {
       __tm.r(TAG_PLAYER, entity = __em.e(
         new Position(pos.x * 16 + 7, pos.y * 16 + 26),
-        new Bounds(6, 10),
+        new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('h')),
         new Cooldown(),
@@ -84,7 +83,7 @@ var EntityCreator = (function() {
     bodyguard: function(pos) {
       __gm.a(GROUP_ENEMIES, entity = __em.e(
         new Position(pos.x * 16 + 7, pos.y * 16 + 10),
-        new Bounds(6, 10),
+        new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('b')),
         new Health(5, gibsBlood),
@@ -101,7 +100,7 @@ var EntityCreator = (function() {
       var s;
 
       __gm.a(GROUP_BULLETS, entity = __em.e(
-        new Position(pos.x + (v ? 0 : (pos.r > 0 ? 5 : -5)), pos.y + (!pos.r ? 6 : -6), pos.r),
+        new Position(pos.x + (v ? 0 : (pos.r > 0 ? 5 : -5)), pos.y + (v ? (!pos.r ? 10 : -10) : 0), pos.r),
         new Bounds(3, 3),
         new Motion(120 * Math.sin(r) | 0, 120 * Math.cos(r) | 0),
         new Display(s = new Sprite(__textureManager.g(v ? 'bv' : 'bh')[0], v ? {x: 0, y: 1} : {x: 1, y: 0}))

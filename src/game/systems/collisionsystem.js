@@ -24,7 +24,7 @@ __extend(CollisionSystem, System, {
 
     // World collisions
     var tileX = bounds.x / 16 | 0;
-    var tileY = bounds.y / 16 | 0;
+    var tileY = (bounds.y + 8) / 16 | 0;
     var tile2X = (bounds.x + bounds.w - 1) / 16 | 0;
     var tile2Y = (bounds.y + bounds.h - 1) / 16 | 0;
     if (isWall(map, tileX, tileY) || isWall(map, tile2X, tileY) || isWall(map, tileX, tile2Y) || isWall(map, tile2X, tile2Y)) {

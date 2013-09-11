@@ -11,7 +11,7 @@ __extend(BulletSystem, IteratingSystem, {
       bullet = bullets[i];
       position = bullet.g(Position);
 
-      if (isWall(map, position.x / 16 | 0, position.y / 16 | 0)) {
+      if (isWall(map, position.x / 16 | 0, (position.y + 6) / 16 | 0)) {
         __em.k(bullet);
       }
     }
