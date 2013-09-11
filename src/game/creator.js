@@ -52,32 +52,6 @@ var EntityCreator = (function() {
       __gm.a(GROUP_DOORS, entity);
       return entity;
     },
-    dash: function(pos) {
-      var gfx = new AnimatedSprite(__textureManager.g('d'), {d: __textureManager.a('d')}, 'd', middleCenter);
-      var x = pos.x - 2;
-      var y = pos.y - 7;
-
-      if (pos.r < 0) {
-        gfx.sx = -1;
-        x -= 1;
-      } else if (pos.r > 90) {
-        gfx.sy = -1;
-        y += 2;
-      } else if (pos.r) {
-        x += 5;
-      } else {
-        y += 4;
-      }
-
-      __gm.a(GROUP_DASHES, entity = __em.e(
-        new Position(x, y),
-        new Bounds(7, 7),
-        new Display(gfx),
-        new Lifetime(0.1)
-      ));
-
-      return entity;
-    },
     hero: function(pos) {
       __tm.r(TAG_PLAYER, entity = __em.e(
         new Position(pos.x * 16 + 7, pos.y * 16 + 26),

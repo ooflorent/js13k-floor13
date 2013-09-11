@@ -24,9 +24,6 @@ __extend(KeyboardControlSystem, System, {
       if (Input.j(88)) { // X
         EntityCreator.bullet(position);
         cooldown.s('atk', 0.2);
-      } else if (Input.j(67)) { // V
-        var dash = EntityCreator.dash(position);
-        cooldown.s('atk', 0.5);
       } else {
         if (Input.p(37)) { // LEFT
           x = -1;

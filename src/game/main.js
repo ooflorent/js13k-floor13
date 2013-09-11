@@ -49,7 +49,7 @@ __textureManager.s('f', 0, 32, 16, 16);   // Floor
 __textureManager.s('dh', 16, 30, 16, 18); // Horizontal door
 __textureManager.s('dv', 112, 0, 5, 25);  // Vertical door
 __textureManager.s('e', 32, 31, 16, 16);  // Elevator
-__textureManager.s('a', 48, 30, 7, 10);   // Arrow
+__textureManager.s('a', 48, 30, 7, 10);   // Light arrow
 
 // Mobs
 __textureManager.s('h', 16, 0, 8, 15, 12);  // Hero
@@ -58,7 +58,6 @@ __textureManager.s('b', 16, 15, 8, 15, 12); // Bodyguard
 // Effects
 __textureManager.s('bh', 44, 47, 4, 1);   // Bullet
 __textureManager.s('bv', 48, 44, 1, 4);   // Bullet
-__textureManager.s('d', 62, 40, 7, 7, 3); // Dash
 
 // Animations
 __textureManager.d('_s', [0]);             // Idle south
@@ -70,7 +69,6 @@ __textureManager.d('wh', [7, 2, 8, 2], 9); // Walking west or east
 __textureManager.d('as', [9]);             // Attacking south
 __textureManager.d('an', [10]);            // Attacking north
 __textureManager.d('ah', [11]);            // Attacking west or east
-__textureManager.d('d', [0, 1, 2], 12);    // Dash
 
 
 // Game runner
