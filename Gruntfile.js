@@ -4,6 +4,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-compress');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -95,19 +96,6 @@ module.exports = function(grunt) {
       files: ['<%= jshint.files %>'],
       tasks: ['dev'],
     },
-    compress: {
-      dist: {
-        options: {
-          archive: 'dist/pixelwars.zip',
-          mode: 'zip',
-          level: 9,
-        },
-        files: [
-          {expand: true, cwd: 'dist/', src: ['p.js', 's.css', 'index.html']},
-          {expand: true, flatten: true, src: ['assets/*.png']},
-        ],
-      },
-    },
     concat: {
       dist: {
         options: {
@@ -174,10 +162,29 @@ module.exports = function(grunt) {
         },
       },
     },
+    copy: {
+      dist: {
+        files: [
+          {expand: true, flatten: true, src: 'assets/*.png', dest: 'dist/'},
+        ],
+      },
+    },
+    compress: {
+      dist: {
+        options: {
+          archive: 'dist/pixelwars.zip',
+          mode: 'zip',
+          level: 9,
+        },
+        files: [
+          {expand: true, cwd: 'dist/', src: ['p.js', 's.css', 't.png', 'index.html']},
+        ],
+      },
+    },
   });
 
   grunt.registerTask('dev', ['env:dev', 'jshint', 'constants']);
-  grunt.registerTask('package', ['env:dist', 'concat', 'uglify', 'preprocess:dist', 'htmlmin', 'cssmin', 'compress']);
+  grunt.registerTask('package', ['env:dist', 'concat', 'uglify', 'preprocess:dist', 'htmlmin', 'cssmin', 'copy', 'compress']);
 
   grunt.registerTask('default', ['clean', 'dev', 'package']);
 
