@@ -13,8 +13,8 @@ p {
 
 #p, #p > * {
   background: #181d26;
-  width: 960px;
-  height: 720px;
+  width: 720px;
+  height: 540px;
 }
 
 #p {

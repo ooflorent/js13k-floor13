@@ -1,7 +1,7 @@
 {
   "DEBUG": false,
   "ASSETS_DIR": "",
-  "GAME_SCALE": 4,
+  "GAME_SCALE": 3,
   "GAME_WIDTH": 240,
   "GAME_HEIGHT": 180,
   "WORLD_WIDTH": 20,

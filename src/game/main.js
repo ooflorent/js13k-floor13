@@ -169,7 +169,7 @@ function initializeGame() {
   __PW_DEBUG && __sm.a(new BoundsRenderingSystem(debugLayer));
   __sm.a(new SpriteDirectionSystem());
   __sm.a(new RenderingSystem(gameLayer));
-  !__PW_DEBUG && __sm.a(new FogSystem(cameraLayer, fogLayer));
+  __PW_DEBUG && __sm.a(new FogSystem(cameraLayer, fogLayer));
   __sm.a(new HUDSystem(hudLayer));
   __sm.a(new ExpirationSystem());
 

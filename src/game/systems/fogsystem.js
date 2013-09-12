@@ -28,7 +28,7 @@ function FogSystem(camera, layer) {
   for (var y = __PW_WORLD_HEIGHT; y--;) {
     this.f[y] = [];
     for (var x = __PW_WORLD_WIDTH; x--;) {
-      var tile = layer.a(new Sprite(fogTexture));
+      var tile = layer.a(new Sprite([fogTexture]));
       this.f[y][x] = {
         s: tile,
         b: new Rectangle(tile.x = x * 16, tile.y = y * 16, 16, 16)
