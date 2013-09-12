@@ -89,11 +89,11 @@ __textureManager.s('/', 113, 29, 6, 7); // Slash
 // HUD
 __textureManager.s('hh', 55, 36, 10, 9);  // Heart
 __textureManager.s('hb', 65, 36, 10, 10); // Bullets
-__textureManager.s('bb', 76, 36, 1, 12);  // Box background
-__textureManager.s('bc', 76, 36, 5, 12);  // Box border
-__textureManager.s('hl', 82, 36, 4, 18);  // Big box left border
-__textureManager.s('hb', 86, 36, 1, 18);  // Big box background
-__textureManager.s('hr', 87, 36, 4, 18);  // Big box right border
+__textureManager.s('tb', 76, 36, 1, 12);  // Text box background
+__textureManager.s('tr', 76, 36, 5, 12);  // Text box right border
+__textureManager.s('bl', 82, 36, 4, 18);  // Big box left border
+__textureManager.s('bb', 86, 36, 1, 18);  // Big box background
+__textureManager.s('br', 87, 36, 4, 18);  // Big box right border
 
 
 // Animations
@@ -170,7 +170,7 @@ function initializeGame() {
   __sm.a(new SpriteDirectionSystem());
   __sm.a(new RenderingSystem(gameLayer));
   !__PW_DEBUG && __sm.a(new FogSystem(cameraLayer, fogLayer));
-  __sm.a(new HUDSystem(gameLayer));
+  __sm.a(new HUDSystem(hudLayer));
   __sm.a(new ExpirationSystem());
 
   // Generate world
