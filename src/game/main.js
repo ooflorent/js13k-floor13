@@ -67,33 +67,33 @@ __textureManager.s('w' + WEAPON_SMG, 0, 48, 8, 15, 12);     // SMG
 __textureManager.s('w' + WEAPON_RIFLE, 15, 48, 8, 18, 10);  // Rifle
 __textureManager.s('w' + WEAPON_PISTOL, 33, 48, 8, 13, 11); // Pistol
 __textureManager.s('w' + WEAPON_SNIPER, 46, 48, 8, 18, 10); // Sniper
-__textureManager.s('w' + WEAPON_SHOTGUN, 66, 48, 8, 18, 8); // Shotgun
+__textureManager.s('w' + WEAPON_SHOTGUN, 66, 49, 8, 18, 8); // Shotgun
 
 // Effects
 __textureManager.s('bh', 44, 47, 4, 1); // Horizontal bullet
 __textureManager.s('bv', 48, 44, 1, 4); // Vertical bullet
 
 // Digits
-__textureManager.s('9', 55, 29, 6, 7);  // 9
-__textureManager.s('8', 61, 29, 6, 7);  // 8
-__textureManager.s('7', 67, 29, 6, 7);  // 7
-__textureManager.s('6', 73, 29, 6, 7);  // 6
-__textureManager.s('5', 79, 29, 6, 7);  // 5
-__textureManager.s('4', 85, 29, 6, 7);  // 4
-__textureManager.s('3', 91, 29, 6, 7);  // 3
-__textureManager.s('2', 97, 29, 6, 7);  // 2
-__textureManager.s('1', 103, 29, 4, 7); // 1
-__textureManager.s('0', 107, 29, 6, 7); // 0
-__textureManager.s('/', 113, 29, 6, 7); // Slash
+__textureManager.s('9', 55, 30, 6, 7);  // 9
+__textureManager.s('8', 61, 30, 6, 7);  // 8
+__textureManager.s('7', 67, 30, 6, 7);  // 7
+__textureManager.s('6', 73, 30, 6, 7);  // 6
+__textureManager.s('5', 79, 30, 6, 7);  // 5
+__textureManager.s('4', 85, 30, 6, 7);  // 4
+__textureManager.s('3', 91, 30, 6, 7);  // 3
+__textureManager.s('2', 97, 30, 6, 7);  // 2
+__textureManager.s('1', 103, 30, 4, 7); // 1
+__textureManager.s('0', 107, 30, 6, 7); // 0
+__textureManager.s('/', 113, 30, 6, 7); // Slash
 
 // HUD
-__textureManager.s('hh', 55, 36, 10, 9);  // Heart
-__textureManager.s('hb', 65, 36, 10, 10); // Bullets
-__textureManager.s('tb', 76, 36, 1, 12);  // Text box background
-__textureManager.s('tr', 76, 36, 5, 12);  // Text box right border
-__textureManager.s('bl', 82, 36, 4, 18);  // Big box left border
-__textureManager.s('bb', 86, 36, 1, 18);  // Big box background
-__textureManager.s('br', 87, 36, 4, 18);  // Big box right border
+__textureManager.s('hh', 55, 37, 10, 9);  // Heart
+__textureManager.s('hb', 65, 37, 10, 10); // Bullets
+__textureManager.s('tb', 76, 37, 1, 12);  // Text box background
+__textureManager.s('tr', 76, 37, 5, 12);  // Text box right border
+__textureManager.s('bl', 82, 37, 4, 18);  // Big box left border
+__textureManager.s('bb', 86, 37, 1, 18);  // Big box background
+__textureManager.s('br', 87, 37, 4, 18);  // Big box right border
 
 
 // Animations
