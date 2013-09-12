@@ -12,7 +12,7 @@ function SystemManager(eventManager) {
   var system, i;
 
   eventManager.a(EVENT_COMPONENT_ADDED, function onComponentAdded(entity) {
-    for (i = systemsCount; i--;) {
+    for (var i = systemsCount; i--;) {
       if ((system = systems[i]) && !system.h(entity) && entity.m.apply(null, system.t)) {
         system.e[entity.i] = entity;
         system.a(entity);
@@ -21,7 +21,7 @@ function SystemManager(eventManager) {
   });
 
   eventManager.a(EVENT_COMPONENT_REMOVED, function onComponentRemoved(entity, type, component) {
-    for (i = systemsCount; i--;) {
+    for (var i = systemsCount; i--;) {
       if ((system = systems[i]) && system.h(entity) && system.t.indexOf(component.constructor) >= 0) {
         delete system.e[entity.i];
         system.r(entity);
