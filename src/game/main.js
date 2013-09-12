@@ -29,6 +29,7 @@ var GROUP_PORTALS = 1;
 var GROUP_DOORS = 2;
 var GROUP_ENEMIES = 3;
 var GROUP_BULLETS = 4;
+var GROUP_LOOTS = 5;
 
 // Events
 var EVENT_HIT = 'h';
@@ -72,6 +73,8 @@ __textureManager.s('w' + WEAPON_SHOTGUN, 64, 49, 18, 8); // Shotgun
 // Effects
 __textureManager.s('bh', 44, 47, 4, 1); // Horizontal bullet
 __textureManager.s('bv', 48, 44, 1, 4); // Vertical bullet
+__textureManager.s('l', 49, 40, 5, 5);  // Weapon loot
+__textureManager.s('m', 91, 37, 5, 6);  // Medipack
 
 // Digits
 __textureManager.s('9', 55, 30, 6, 7);  // 9

@@ -110,6 +110,15 @@ var EntityCreator = (function() {
         new Display(bloodSpray(size, color), true)
       );
     },
+    weapon: function(pos, weapon) {
+      __gm.a(GROUP_LOOTS, entity = __em.e(
+        weapon, position, // Reuse components
+        new Display(new Sprite(__textureManager.g('l'), middleCenter)),
+        new Bounds(3, 3)
+      ));
+
+      return entity;
+    },
     world: function() {
       var dungeon = generateDungeon(__PW_WORLD_WIDTH, __PW_WORLD_HEIGHT, 4, 7);
       if (__PW_DEBUG) {

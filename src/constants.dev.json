@@ -1,4 +1,5 @@
 {
   "DEBUG": true,
-  "ASSETS_DIR": "../assets/"
+  "ASSETS_DIR": "../assets/",
+  "DROP_RATE": 100
 }

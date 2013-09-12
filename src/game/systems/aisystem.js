@@ -6,6 +6,12 @@ function AISystem() {
 }
 
 __extend(AISystem, IteratingSystem, {
+  r: function onEntityRemoved(entity) {
+    // Drop the current weapon
+    if (getRandomInt(0, 99) < __PW_DROP_RATE) {
+      EntityCreator.weapon(entity.g(Position), entity.g(Weapon));
+    }
+  },
   ue: function update(entity) {
     var brain = entity.g(Brain);
     var cooldown = entity.g(Cooldown);

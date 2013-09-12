@@ -40,6 +40,19 @@ __extend(KeyboardControlSystem, System, {
         }
       }
 
+      if (Input.j(86)) { // V
+        var loots = __gm.g(GROUP_LOOTS), loot;
+        for (var i = loots.length; i--;) {
+          loot = loots[i];
+          if (loot.g(Bounds).o(player.g(Bounds))) {
+            player.r(Weapon);
+            player.a(loot.g(Weapon));
+            loot.r(Weapon);
+            loot.a(weapon);
+          }
+        }
+      }
+
       if (Input.p(37)) { // LEFT
         x = -1;
       } else if (Input.p(39)) { // RIGHT
