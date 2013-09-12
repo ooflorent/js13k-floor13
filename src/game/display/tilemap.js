@@ -52,7 +52,7 @@ function Tilemap(dungeon) {
     // Draw light arrow
     x += isFrontWall(dungeon, pos.x - 1, pos.y) ? -8 : (isFrontWall(dungeon, pos.x + 1, pos.y) ? 18 : (isWall(dungeon, pos.x - 1, pos.y) ? -8 : 18));
     sprite = new Sprite(__textureManager.g('a'), {x: 0, y: 0.5});
-    sprite.sy = up ? -1 : 1;
+    sprite.sy = up ? 1 : -1;
     renderTexture.r(sprite, {x: x, y: y + 9});
   }
 

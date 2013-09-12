@@ -63,11 +63,11 @@ __textureManager.s('h', 16, 0, 8, 15, 12);  // Hero
 __textureManager.s('b', 16, 15, 8, 15, 12); // Bodyguard
 
 // Weapons
-__textureManager.s('w' + WEAPON_SMG, 0, 48, 8, 15, 12);     // SMG
-__textureManager.s('w' + WEAPON_RIFLE, 15, 48, 8, 18, 10);  // Rifle
-__textureManager.s('w' + WEAPON_PISTOL, 33, 48, 8, 13, 11); // Pistol
-__textureManager.s('w' + WEAPON_SNIPER, 46, 48, 8, 18, 10); // Sniper
-__textureManager.s('w' + WEAPON_SHOTGUN, 66, 49, 8, 18, 8); // Shotgun
+__textureManager.s('w' + WEAPON_SMG, 0, 48, 15, 12);     // SMG
+__textureManager.s('w' + WEAPON_RIFLE, 15, 48, 18, 10);  // Rifle
+__textureManager.s('w' + WEAPON_PISTOL, 33, 48, 13, 11); // Pistol
+__textureManager.s('w' + WEAPON_SNIPER, 46, 48, 18, 10); // Sniper
+__textureManager.s('w' + WEAPON_SHOTGUN, 64, 49, 18, 8); // Shotgun
 
 // Effects
 __textureManager.s('bh', 44, 47, 4, 1); // Horizontal bullet
@@ -84,7 +84,7 @@ __textureManager.s('3', 91, 30, 6, 7);  // 3
 __textureManager.s('2', 97, 30, 6, 7);  // 2
 __textureManager.s('1', 103, 30, 4, 7); // 1
 __textureManager.s('0', 107, 30, 6, 7); // 0
-__textureManager.s('/', 113, 30, 6, 7); // Slash
+__textureManager.s('/', 113, 30, 5, 7); // Slash
 
 // HUD
 __textureManager.s('hh', 55, 37, 10, 9);  // Heart

@@ -40,11 +40,12 @@ module.exports = function(grunt) {
     game: [
       '<%= dirs.game %>/astar.js',
       '<%= dirs.game %>/dungeon.js',
-      '<%= dirs.game %>/tilemap.js',
       '<%= dirs.game %>/main.js',
       '<%= dirs.game %>/components.js',
       '<%= dirs.game %>/entitycreator.js',
       '<%= dirs.game %>/weaponcreator.js',
+      '<%= dirs.game %>/display/bitmaptext.js',
+      '<%= dirs.game %>/display/tilemap.js',
       '<%= dirs.game %>/systems/aisystem.js',
       '<%= dirs.game %>/systems/bulletsystem.js',
       '<%= dirs.game %>/systems/camerasystem.js',

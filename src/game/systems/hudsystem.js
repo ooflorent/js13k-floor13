@@ -44,36 +44,50 @@ function HUDSystem(layer) {
   var healthBox = layer.a(createBigBox(6));
   var bulletBox = layer.a(createBigBox(6));
 
-  var healthTextBox = healthBox.a(createTextBox(8));
-  var bulletTextBox = bulletBox.a(createTextBox(8));
-
   weaponBox.x = 1;
   healthBox.x = 27;
-  bulletBox.x = 57;
+  bulletBox.x = 59;
   weaponBox.y = healthBox.y = bulletBox.y = 1;
+
+  var healthTextBox = healthBox.a(createTextBox(9));
+  var bulletTextBox = bulletBox.a(createTextBox(32));
 
   healthTextBox.x = bulletTextBox.x = 14;
   healthTextBox.y = bulletTextBox.y = 3;
 
   var heart = healthBox.a(new Sprite(__textureManager.g('hh')));
   var bullet = bulletBox.a(new Sprite(__textureManager.g('hb')));
+
   heart.x = bullet.x = 2;
   heart.y = 5;
   bullet.y = 4;
 
+  var healthText = healthBox.a(new BitmapText());
+  var bulletText = bulletBox.a(new BitmapText());
+
+  healthText.x = bulletText.x = 15;
+  healthText.y = 6;
+  bulletText.y = 6;
+
+  var weaponIcon = weaponBox.a(new Sprite(__textureManager.g('w0')));
+
+  weaponIcon.x = 11;
+  weaponIcon.y = 9;
+  weaponIcon.c.x = weaponIcon.c.y = 0.5;
+
   __mixin(this, System.prototype);
   __mixin(this, {
     u: function update() {
-      /*console.log('ok')
       var player = __tm.g(TAG_PLAYER);
       var health = player.g(Health);
       var weapon = player.g(Weapon);
 
-      // Redraw weapon HUD
-      if (currentWeapon != weapon) {
-        currentWeapon = weapon;
-      }*/
+      // Update weapon
+      weaponIcon.tx = __textureManager.g('w' + weapon.t)[0];
+      bulletText.t(weapon.b + ' / ' + weapon.bs);
+
+      // Update health
+      healthText.t(health.h);
     }
   });
 }
-
