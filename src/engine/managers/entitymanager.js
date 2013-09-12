@@ -1,3 +1,7 @@
+var EVENT_ENTITY_KILLED = '$k';
+var EVENT_COMPONENT_ADDED = '$a';
+var EVENT_COMPONENT_REMOVED = '$r';
+
 /**
  * Convert an array of constructors into an array of component types.
  *
@@ -49,7 +53,7 @@ function EntityManager(eventManager) {
       entity.c();
       delete entitiesList[entity.i];
       delete entitiesToComponents[entity.i];
-      eventManager.e('$k', entity);
+      eventManager.e(EVENT_ENTITY_KILLED, entity);
     },
     /**
      * Get entities with specified components.
@@ -103,7 +107,7 @@ function EntityManager(eventManager) {
      */
     function _remove(entity, type) {
       if (component = entitiesToComponents[id][type]) {
-        eventManager.e('$r', entity, type, component);
+        eventManager.e(EVENT_COMPONENT_REMOVED, entity, type, component);
         delete entitiesToComponents[id][type];
         delete componentsToEntities[type][id];
       }
@@ -119,7 +123,7 @@ function EntityManager(eventManager) {
         entitiesToComponents[id][type = component.constructor.name] = component;
         componentsToEntities[type] || (componentsToEntities[type] = []);
         componentsToEntities[type][id] = 1;
-        eventManager.e('$a', this, type, component);
+        eventManager.e(EVENT_COMPONENT_ADDED, this, type, component);
       },
       /**
        * Remove a component from the entity.

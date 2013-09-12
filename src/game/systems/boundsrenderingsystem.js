@@ -12,14 +12,14 @@ __extend(BoundsRenderingSystem, IteratingSystem, {
   a: function onEntityAdded(entity) {
     var bounds = entity.g(Bounds);
     if (bounds.w == 1 || bounds.h == 1) {
-      this.l.add(bounds.gfx = new Graphics(function(ctx, color) {
+      this.l.a(bounds.gfx = new Graphics(function(ctx, color) {
         ctx.beginPath();
         ctx.fillStyle = 'rgba(0,255,0,.4)';
         ctx.fillRect(0, 0, bounds.w, bounds.h);
         ctx.closePath();
       }));
     } else {
-      this.l.add(bounds.gfx = new Graphics(function(ctx, color) {
+      this.l.a(bounds.gfx = new Graphics(function(ctx, color) {
         ctx.beginPath();
         ctx.strokeStyle = 'rgba(0,255,0,.4)';
         ctx.strokeRect(0.5, 0.5, bounds.w - 1, bounds.h - 1);
@@ -28,7 +28,7 @@ __extend(BoundsRenderingSystem, IteratingSystem, {
     }
   },
   r: function onEntityRemoved(entity) {
-    this.l.remove(entity.g(Bounds).gfx);
+    this.l.r(entity.g(Bounds).gfx);
   },
   ue: function updateEntity(entity) {
     var position = entity.g(Position);

@@ -37,8 +37,8 @@ function Buffer(canvas, width, height, scale) {
    */
   this.r = function render(stage) {
     // Draw game
-    renderer.render(stage);
-    ctx.drawImage(renderer.canvas, 0, 0, renderer.w, renderer.h, 0, 0, w, h);
+    renderer.r(stage);
+    ctx.drawImage(renderer.c, 0, 0, renderer.w, renderer.h, 0, 0, w, h);
 
     // Draw pixel filter
     ctx.fillStyle = texture;

@@ -3,125 +3,133 @@ function createCanvas() {
 }
 
 function Renderer(width, height) {
-  var canvas = this.canvas = createCanvas();
-  var ctx = this.ctx = canvas.getContext('2d');
+  var that = this; // Ugly minification trick
 
-  this.w = canvas.width = width;
-  this.h = canvas.height = height;
+  var canvas = that.c = createCanvas();
+  var ctx = canvas.getContext('2d');
+
+  that.w = canvas.width = width;
+  that.h = canvas.height = height;
+
+  __mixin(that, {
+    r: function render(stage) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillRect(0, 0, width, height);
+
+      stage._t();
+      that.o(stage);
+    },
+    o: function renderObject(object) {
+      if (!object.v) {
+        return;
+      }
+
+      if (object instanceof DisplayObjectContainer) {
+        var children = object._c, i = 0, n = children.length;
+        for (; i < n; i++) {
+          that.o(children[i]);
+        }
+
+        return;
+      }
+
+      ctx.save();
+      ctx.globalAlpha = object.o;
+
+      if (object instanceof Sprite) {
+        if (object.tx instanceof RenderTexture) {
+          ctx.setTransform(1, 0, 0, 1, 0, 0);
+          ctx.drawImage(object.tx.s, -object._x, -object._y, width, height, 0, 0, width, height);
+        } else {
+          var frame = object.tx.f;
+          ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
+          ctx.drawImage(object.tx.s, frame.x, frame.y, frame.w, frame.h, -object.c.x * frame.w | 0, -object.c.y * frame.h | 0, frame.w, frame.h);
+        }
+      } else if (object instanceof Graphics) {
+        ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
+        object._batch(ctx, object._color);
+      }
+
+      ctx.restore();
+    }
+  });
 }
 
 __define(Renderer, {
-  render: function(stage) {
-    var ctx = this.ctx;
-    var canvas = this.canvas;
-
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.fillRect(0, 0, this.w, this.h);
-
-    stage._transform();
-    this.renderObject(stage);
-  },
-  renderObject: function(object) {
-    if (!object.v) {
-      return;
-    }
-
-    if (object instanceof DisplayObjectContainer) {
-      var children = object._c;
-      for (var i = 0, n = children.length; i < n; i++) {
-        this.renderObject(children[i]);
-      }
-
-      return;
-    }
-
-    var ctx = this.ctx;
-
-    ctx.save();
-    ctx.globalAlpha = object.o;
-
-    if (object instanceof Sprite) {
-      if (object.texture instanceof RenderTexture) {
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.drawImage(object.texture.s, -object._x, -object._y, this.w, this.h, 0, 0, this.w, this.h);
-      } else {
-        var frame = object.texture.f;
-        ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
-        ctx.drawImage(object.texture.s, frame.x, frame.y, frame.w, frame.h, -object.c.x * frame.w | 0, -object.c.y * frame.h | 0, frame.w, frame.h);
-      }
-    } else if (object instanceof Graphics) {
-      ctx.setTransform(object.sx, 0, 0, object.sy, object._x, object._y);
-      object._batch(ctx, object._color);
-    }
-
-    ctx.restore();
-  }
 });
 
 function DisplayObject() {
-  this.x = this.y = 0;
-  this.o = 1;
-  this.v = 1;
-  this.sx = this.sy = 1;
+  var that = this;
 
-  this._x = this._y = 0;
-  this._o = 1;
-  this._p = null;
+  that.x = that.y = 0;
+  that.o = 1;
+  that.v = 1;
+  that.sx = that.sy = 1;
+
+  that._x = that._y = 0;
+  that._o = 1;
+  that._p = null;
 }
 
 __define(DisplayObject, {
-  _transform: function() {
-    var parent = this._p;
+  _t: function _transform() {
+    var that = this;
+    var parent = that._p;
 
     // Calculate effective position
-    this._x = parent._x + this.x;
-    this._y = parent._y + this.y;
+    that._x = parent._x + that.x;
+    that._y = parent._y + that.y;
 
     // Calculate effective alpha
-    this._o = parent._o + this.o;
+    that._o = parent._o + that.o;
   }
 });
 
 function Graphics(batch, color) {
-  DisplayObject.call(this);
-  this._batch = batch;
-  this._color = color;
+  var that = this;
+  DisplayObject.call(that);
+  that._batch = batch;
+  that._color = color;
 }
 
 __extend(Graphics, DisplayObject);
 
 function Sprite(texture, c) {
-  DisplayObject.call(this);
-  this.texture = texture;
-  this.c = c || {x: 0, y: 0};
+  var that = this;
+  DisplayObject.call(that);
+  that.tx = texture;
+  that.c = c || {x: 0, y: 0};
 }
 
 __extend(Sprite, DisplayObject);
 
 function AnimatedSprite(textures, animations, defaultAnimation, c) {
-  Sprite.call(this, 0, c);
-  this.t = textures;
-  this.a = animations;
-  this.play(defaultAnimation);
+  var that = this;
+  Sprite.call(that, 0, c);
+  that.t = textures;
+  that.a = animations;
+  that.p(defaultAnimation);
 }
 
 __extend(AnimatedSprite, Sprite, {
-  play: function(anim) {
-    if (this.an != anim) {
-      this.texture = this.t[this.a[this.an = anim].f[this.f = this.d = 0]];
+  p: function play(anim) {
+    var that = this;
+    if (that.an != anim) {
+      that.tx = that.t[that.a[that.an = anim].f[that.f = that.d = 0]];
     }
   },
-  advance: function(elapsed) {
-    if (this.an) {
-      var frames = this.a[this.an].f;
-      var duration = this.a[this.an].d;
+  pt: function advancePlayTime(elapsed) {
+    var that = this;
+    if (that.an) {
+      var frames = that.a[that.an].f;
+      var duration = that.a[that.an].d;
 
       // Go to the next frame
-      this.d += elapsed;
-      while (this.d >= duration) {
-        this.d -= duration;
-        this.f = (this.f + 1) % frames.length;
-        this.texture = this.t[frames[this.f]];
+      that.d += elapsed;
+      while (that.d >= duration) {
+        that.d -= duration;
+        that.f = (that.f + 1) % frames.length;
+        that.tx = that.t[frames[that.f]];
       }
     }
   }
@@ -133,16 +141,16 @@ function DisplayObjectContainer() {
 }
 
 __extend(DisplayObjectContainer, DisplayObject, {
-  add: function(child) {
+  a: function addChild(child) {
     if (child._p) {
-      child._p.remove(child);
+      child._p.r(child);
     }
 
     this._c.push(child);
     child._p = this;
     return child;
   },
-  remove: function(child) {
+  r: function removeChild(child) {
     var children = this._c;
     var i = children.indexOf(child);
     if (i >= 0) {
@@ -151,14 +159,14 @@ __extend(DisplayObjectContainer, DisplayObject, {
     }
     return child;
   },
-  _transform: function() {
-    DisplayObject.prototype._transform.call(this);
+  _t: function _transform() {
+    DisplayObject.prototype._t.call(this);
 
     var children = this._c;
     var i = children.length;
 
     while (i--) {
-      children[i]._transform();
+      children[i]._t();
     }
   }
 });
@@ -168,35 +176,36 @@ function Stage() {
 }
 
 __extend(Stage, DisplayObjectContainer, {
-  _transform: function() {
+  _t: function _transform() {
     var children = this._c;
     var i = children.length;
 
     while (i--) {
-      children[i]._transform();
+      children[i]._t();
     }
   }
 });
 
 function RenderTexture(width, height) {
-  this.frame = {
+  var that = this;
+  var renderer = new Renderer(width, height);
+
+  that.s = renderer.c;
+  that.frame = {
     x: 0,
     y: 0,
     w: width,
     h: height
   };
-  this.r = new Renderer(width, height);
-  this.s = this.r.canvas;
-}
 
-__define(RenderTexture, {
-  render: function(object, position) {
-    if (position) {
-      object._x = position.x;
-      object._y = position.y;
+  __mixin(that, {
+    r: function render(object, position) {
+      if (position) {
+        object._x = position.x;
+        object._y = position.y;
+      }
+
+      renderer.o(object);
     }
-
-    this.r.renderObject(object);
-  }
-});
-
+  });
+}

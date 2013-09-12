@@ -11,11 +11,11 @@ function RenderingSystem(layer) {
 __extend(RenderingSystem, IteratingSystem, {
   a: function onEntityAdded(entity) {
     // Add entity to the display list
-    this.l.add(entity.g(Display).gfx);
+    this.l.a(entity.g(Display).gfx);
   },
   r: function onEntityRemoved(entity) {
     // Remove entity from the display list
-    this.l.remove(entity.g(Display).gfx);
+    this.l.r(entity.g(Display).gfx);
   },
   u: function update(elapsed) {
     // Sort elements
@@ -37,7 +37,7 @@ __extend(RenderingSystem, IteratingSystem, {
 
     // Update animation
     if (gfx instanceof AnimatedSprite) {
-      gfx.advance(elapsed * 1000 | 0);
+      gfx.pt(elapsed * 1000 | 0);
     }
 
     // Fade

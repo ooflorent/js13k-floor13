@@ -26,7 +26,7 @@ function DamageSystem() {
 
         // Paint blood splash
         // FIXME: This is very ugly!
-        health.b && __tm.g(TAG_WORLD).g(Display).gfx.texture.b(position);
+        health.b && __tm.g(TAG_WORLD).g(Display).gfx.tx.b(position);
 
         __em.k(entity);
       }

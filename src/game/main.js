@@ -38,9 +38,16 @@ var STATE_IDLE = '_';
 var STATE_WALK = 'w';
 var STATE_ATTACK = 'a';
 
+// Weapons
+var WEAPON_PISTOL = 0;
+var WEAPON_SMG = 3;
+var WEAPON_SHOTGUN = 5;
+var WEAPON_RIFLE = 7;
+var WEAPON_SNIPER = 9;
 
-// Textures and animations
-// -----------------------
+
+// Textures
+// --------
 
 // World tiles
 __textureManager.s('r', 0, 0, 16, 16);    // Roof
@@ -55,11 +62,43 @@ __textureManager.s('a', 48, 30, 7, 10);   // Light arrow
 __textureManager.s('h', 16, 0, 8, 15, 12);  // Hero
 __textureManager.s('b', 16, 15, 8, 15, 12); // Bodyguard
 
+// Weapons
+__textureManager.s('w' + WEAPON_SMG, 0, 48, 8, 15, 12);     // SMG
+__textureManager.s('w' + WEAPON_RIFLE, 15, 48, 8, 18, 10);  // Rifle
+__textureManager.s('w' + WEAPON_PISTOL, 33, 48, 8, 13, 11); // Pistol
+__textureManager.s('w' + WEAPON_SNIPER, 46, 48, 8, 18, 10); // Sniper
+__textureManager.s('w' + WEAPON_SHOTGUN, 66, 48, 8, 18, 8); // Shotgun
+
 // Effects
-__textureManager.s('bh', 44, 47, 4, 1);   // Bullet
-__textureManager.s('bv', 48, 44, 1, 4);   // Bullet
+__textureManager.s('bh', 44, 47, 4, 1); // Horizontal bullet
+__textureManager.s('bv', 48, 44, 1, 4); // Vertical bullet
+
+// Digits
+__textureManager.s('9', 55, 29, 6, 7);  // 9
+__textureManager.s('8', 61, 29, 6, 7);  // 8
+__textureManager.s('7', 67, 29, 6, 7);  // 7
+__textureManager.s('6', 73, 29, 6, 7);  // 6
+__textureManager.s('5', 79, 29, 6, 7);  // 5
+__textureManager.s('4', 85, 29, 6, 7);  // 4
+__textureManager.s('3', 91, 29, 6, 7);  // 3
+__textureManager.s('2', 97, 29, 6, 7);  // 2
+__textureManager.s('1', 103, 29, 4, 7); // 1
+__textureManager.s('0', 107, 29, 6, 7); // 0
+__textureManager.s('/', 113, 29, 6, 7); // Slash
+
+// HUD
+__textureManager.s('hh', 55, 36, 10, 9);  // Heart
+__textureManager.s('hb', 65, 36, 10, 10); // Bullets
+__textureManager.s('bb', 76, 36, 1, 12);  // Box background
+__textureManager.s('bc', 76, 36, 5, 12);  // Box border
+__textureManager.s('hl', 82, 36, 4, 18);  // Big box left border
+__textureManager.s('hb', 86, 36, 1, 18);  // Big box background
+__textureManager.s('hr', 87, 36, 4, 18);  // Big box right border
+
 
 // Animations
+// ----------
+
 __textureManager.d('_s', [0]);             // Idle south
 __textureManager.d('_n', [1]);             // Idle north
 __textureManager.d('_h', [2]);             // Idle west or east
@@ -80,14 +119,14 @@ __textureManager.d('ah', [11]);            // Attacking west or east
 function main() {
   // Load the main spritesheet
   __textureManager.l(__PW_ASSETS_DIR + 't.png', function onLoad() {
-    __ticker.start(function titleLoop() {
+    __ticker.r(function titleLoop() {
       if (Input.a()) {
         // Initialize the game
         initializeGame();
 
         // Start the game loop
-        __ticker.stop();
-        __ticker.start(gameLoop);
+        __ticker.s();
+        __ticker.r(gameLoop);
 
         // Display game screen
         $('p').className = 'g';
@@ -111,11 +150,11 @@ function gameLoop(elapsed) {
 
 function initializeGame() {
   // Create game layers
-  var cameraLayer = __stage.add(new DisplayObjectContainer());
-  var hudLayer    = __stage.add(new DisplayObjectContainer());
-  var gameLayer   = cameraLayer.add(new DisplayObjectContainer());
-  var fogLayer    = cameraLayer.add(new DisplayObjectContainer());
-  var debugLayer  = __PW_DEBUG ? cameraLayer.add(new DisplayObjectContainer()) : null;
+  var cameraLayer = __stage.a(new DisplayObjectContainer());
+  var hudLayer    = __stage.a(new DisplayObjectContainer());
+  var gameLayer   = cameraLayer.a(new DisplayObjectContainer());
+  var fogLayer    = cameraLayer.a(new DisplayObjectContainer());
+  var debugLayer  = __PW_DEBUG ? cameraLayer.a(new DisplayObjectContainer()) : null;
 
   // Create game systems
   __sm.a(new KeyboardControlSystem());
@@ -141,7 +180,7 @@ function initializeGame() {
   AStar.init(dungeon.m, isWallTile);
 
   // Create player
-  var hero = EntityCreator.hero(dungeon.prev);
+  var hero = EntityCreator.hero(dungeon.p);
 
   // Create doors
   for (i = dungeon.d.length; i--;) {

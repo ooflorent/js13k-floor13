@@ -64,7 +64,7 @@ function TextureManager() {
       animations[name] = {
         n: name,
         f: frames,
-        d: duration ? (1 / duration * 1000 | 0) : 0xFFFFFFFF
+        d: duration ? (1 / duration * 1000 | 0) : 0xFFFF
       };
     },
     /**

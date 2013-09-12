@@ -10,7 +10,7 @@ function GroupManager(eventManager) {
   // Methods variables
   var group, i;
 
-  eventManager.a('$k', function onEntityKilled(entity) {
+  eventManager.a(EVENT_ENTITY_KILLED, function onEntityKilled(entity) {
     for (group in entitiesByGroup) {
       ~(i = entitiesByGroup[group].indexOf(entity)) && entitiesByGroup[group].splice(i, 1);
     }

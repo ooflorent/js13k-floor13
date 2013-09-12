@@ -8,8 +8,8 @@ function Dungeon(width, height, map, doors, chests, mobs, prev, next) {
   this.d = doors;
   this.c = chests;
   this.e = mobs;
-  this.prev = prev;
-  this.next = next;
+  this.p = prev;
+  this.n = next;
 }
 
 function isWall(dungeon, x, y) {

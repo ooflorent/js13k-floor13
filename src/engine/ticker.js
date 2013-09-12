@@ -11,7 +11,7 @@ function Ticker() {
      *
      * @param  {Function} callback
      */
-    start: function start(callback) {
+    r: function run(callback) {
       if (!requestID) {
         time = +new Date();
         requestID = requestAnimationFrame(update = function() {
@@ -23,7 +23,7 @@ function Ticker() {
     /**
      * Stop the game loop.
      */
-    stop: function stop() {
+    s: function stop() {
       if (requestID) {
         cancelAnimationFrame(requestID);
         requestID = 0;

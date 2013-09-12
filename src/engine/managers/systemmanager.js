@@ -8,14 +8,10 @@ function SystemManager(eventManager) {
   var systems = [];
   var systemsCount = 0;
 
-  // Shortcuts
-  var cancelAnimationFrame = window.cancelAnimationFrame;
-  var requestAnimationFrame = window.requestAnimationFrame;
-
   // Methods variables
   var system, i;
 
-  eventManager.a('$a', function onComponentAdded(entity) {
+  eventManager.a(EVENT_COMPONENT_ADDED, function onComponentAdded(entity) {
     for (i = systemsCount; i--;) {
       if ((system = systems[i]) && !system.h(entity) && entity.m.apply(null, system.t)) {
         system.e[entity.i] = entity;
@@ -24,7 +20,7 @@ function SystemManager(eventManager) {
     }
   });
 
-  eventManager.a('$r', function onComponentRemoved(entity, type, component) {
+  eventManager.a(EVENT_COMPONENT_REMOVED, function onComponentRemoved(entity, type, component) {
     for (i = systemsCount; i--;) {
       if ((system = systems[i]) && system.h(entity) && system.t.indexOf(component.constructor) >= 0) {
         delete system.e[entity.i];

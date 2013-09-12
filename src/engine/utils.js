@@ -74,13 +74,7 @@ function getRandomInt(min, max) {
  */
 function getRandomElement(arr) {
   var n = arr.length;
-  if (n > 1) {
-    return arr[getRandomInt(0, n - 1)];
-  } else if (n) {
-    return arr[0];
-  }
-
-  return null;
+  return (n > 1) ? arr[getRandomInt(0, n - 1)] :arr[0];
 }
 
 // Geom
@@ -109,8 +103,9 @@ __define(Rectangle, {
    * @return {Boolean}
    */
   c: function contains(x, y) {
-    return x >= this.x && x < (this.x + this.w) &&
-      y >= this.y && y < (this.y + this.y);
+    var that = this;
+    return x >= that.x && x < (that.x + that.w) &&
+      y >= that.y && y < (that.y + that.y);
   },
   /**
    * Returns whether or not another rectangle overlaps this one.
@@ -119,7 +114,8 @@ __define(Rectangle, {
    * @return {Boolean}
    */
   o: function overlap(other) {
-    return this.x < (other.x + other.w) && other.x < (this.x + this.w) &&
-      this.y < (other.y + other.h) && other.y < (this.y + this.h);
+    var that = this;
+    return that.x < (other.x + other.w) && other.x < (that.x + that.w) &&
+      that.y < (other.y + other.h) && other.y < (that.y + that.h);
   }
 });

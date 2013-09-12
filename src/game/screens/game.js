@@ -1,9 +1,9 @@
 function GameScreen() {
   // Create game layers
   var stage = new Stage();
-  var cameraLayer = stage.add(new DisplayObjectContainer());
-  var hudLayer    = stage.add(new DisplayObjectContainer());
-  var gameLayer   = cameraLayer.add(new DisplayObjectContainer());
+  var cameraLayer = stage.a(new DisplayObjectContainer());
+  var hudLayer    = stage.a(new DisplayObjectContainer());
+  var gameLayer   = cameraLayer.a(new DisplayObjectContainer());
 
   // Initialize game systems
   __sm.a(new KeyboardControlSystem());
@@ -14,7 +14,7 @@ function GameScreen() {
   __sm.a(new CameraSystem(cameraLayer));
 
   if (__PW_DEBUG) {
-    var debugLayer = cameraLayer.add(new DisplayObjectContainer());
+    var debugLayer = cameraLayer.a(new DisplayObjectContainer());
     __sm.a(new BoundsRendererSystem(debugLayer));
   }
 
@@ -33,7 +33,7 @@ function GameScreen() {
   var game = EntityCreator.game(cameraLayer);
 
   // Create player
-  var player = EntityCreator.player(map.prev);
+  var player = EntityCreator.player(map.p);
 
   // Create doors
   for (i = map.d.length; i--;) {
@@ -45,8 +45,8 @@ function GameScreen() {
     EntityCreator.skeleton(map.e[i]);
   }
 
-  EntityCreator.entrance(map.prev);
-  EntityCreator.exit(map.next);
+  EntityCreator.entrance(map.p);
+  EntityCreator.exit(map.n);
 
   // Run the game
   __sm.start();

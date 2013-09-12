@@ -11,7 +11,7 @@ function TagManager(eventManager) {
   // Methods variables
   var tag;
 
-  eventManager.a('$k', function onEntityKilled(entity) {
+  eventManager.a(EVENT_ENTITY_KILLED, function onEntityKilled(entity) {
     if (tag = tagByEntity[entity.i]) {
       delete tagByEntity[entity.i];
       delete entityByTag[tag];

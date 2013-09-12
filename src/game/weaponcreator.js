@@ -1,9 +1,3 @@
-var WEAPON_PISTOL = 0;
-var WEAPON_SMG = 3;
-var WEAPON_SHOTGUN = 5;
-var WEAPON_RIFLE = 7;
-var WEAPON_SNIPER = 9;
-
 var WeaponCreator = (function() {
   return {
     g: function generate(type, quality) {

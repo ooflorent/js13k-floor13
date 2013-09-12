@@ -11,7 +11,7 @@ function FogSystem(camera, layer) {
   this.f = [];
 
   var fog = new RenderTexture(16, 16);
-  fog.render(new Graphics(function(ctx) {
+  fog.r(new Graphics(function(ctx) {
     ctx.beginPath();
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, 16, 16);
@@ -28,7 +28,7 @@ function FogSystem(camera, layer) {
   for (var y = __PW_WORLD_HEIGHT; y--;) {
     this.f[y] = [];
     for (var x = __PW_WORLD_WIDTH; x--;) {
-      var tile = layer.add(new Sprite(fogTexture));
+      var tile = layer.a(new Sprite(fogTexture));
       this.f[y][x] = {
         s: tile,
         b: new Rectangle(tile.x = x * 16, tile.y = y * 16, 16, 16)

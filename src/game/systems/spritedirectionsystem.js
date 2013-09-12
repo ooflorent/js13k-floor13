@@ -25,6 +25,6 @@ __extend(SpriteDirectionSystem, IteratingSystem, {
     }
 
     // Adjust animation
-    gfx.play(state.s + direction);
+    gfx.p(state.s + direction);
   }
 });
