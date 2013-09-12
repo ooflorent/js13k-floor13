@@ -169,7 +169,8 @@ function initializeGame() {
   __PW_DEBUG && __sm.a(new BoundsRenderingSystem(debugLayer));
   __sm.a(new SpriteDirectionSystem());
   __sm.a(new RenderingSystem(gameLayer));
-  __sm.a(new FogSystem(cameraLayer, fogLayer));
+  !__PW_DEBUG && __sm.a(new FogSystem(cameraLayer, fogLayer));
+  __sm.a(new HUDSystem(gameLayer));
   __sm.a(new ExpirationSystem());
 
   // Generate world
