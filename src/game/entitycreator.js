@@ -59,7 +59,7 @@ var EntityCreator = (function() {
         new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('h')),
-        new Health(100000, true, gibsBlood),
+        new Health(__PW_PLAYER_LIFE, true, gibsBlood),
         new Cooldown(),
         new State(STATE_IDLE)
       ));
@@ -112,9 +112,19 @@ var EntityCreator = (function() {
     },
     weapon: function(pos, weapon) {
       __gm.a(GROUP_LOOTS, entity = __em.e(
-        weapon, position, // Reuse components
+        weapon, pos, // Reuse components
         new Display(new Sprite(__textureManager.g('l'), middleCenter)),
         new Bounds(3, 3)
+      ));
+
+      return entity;
+    },
+    medic: function(pos) {
+      __gm.a(GROUP_LOOTS, entity = __em.e(
+        pos, // Reuse component
+        new Medipack(),
+        new Display(new Sprite(__textureManager.g('m'), middleCenter)),
+        new Bounds(3, 4)
       ));
 
       return entity;

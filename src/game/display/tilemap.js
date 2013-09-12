@@ -117,9 +117,6 @@ function Tilemap(dungeon) {
   drawElevator(dungeon.p);
   drawElevator(dungeon.n, 1);
 
-  // Draw cadaver
-  that.b({x: dungeon.p.x * 16, y: dungeon.p.y * 16});
-
   Sprite.call(that, [renderTexture]);
 }
 

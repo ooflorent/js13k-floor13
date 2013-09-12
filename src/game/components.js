@@ -109,6 +109,11 @@ function Brain() {
 }
 
 /**
+ * Medipack.
+ */
+function Medipack() {}
+
+/**
  * Entity weapon.
  *
  * @param {int} type Type

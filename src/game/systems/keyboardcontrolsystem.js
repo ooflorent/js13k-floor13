@@ -41,14 +41,20 @@ __extend(KeyboardControlSystem, System, {
       }
 
       if (Input.j(86)) { // V
-        var loots = __gm.g(GROUP_LOOTS), loot;
+        var loots = __gm.g(GROUP_LOOTS), loot, weap, health;
         for (var i = loots.length; i--;) {
           loot = loots[i];
           if (loot.g(Bounds).o(player.g(Bounds))) {
-            player.r(Weapon);
-            player.a(loot.g(Weapon));
-            loot.r(Weapon);
-            loot.a(weapon);
+            if (weap = loot.g(Weapon)) {
+              player.r(Weapon);
+              player.a(loot.g(Weapon));
+              loot.r(Weapon);
+              loot.a(weapon);
+            } else {
+              __em.k(loot);
+              health = player.g(Health);
+              health.h = Math.min(health.h + __PW_MEDIC, __PW_PLAYER_LIFE);
+            }
           }
         }
       }
