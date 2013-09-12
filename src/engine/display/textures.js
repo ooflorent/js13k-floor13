@@ -50,6 +50,9 @@ function TextureManager() {
               h: height
             }
           });
+
+          // DEBUG: Store texture name
+          __PW_DEBUG && (frames[frames.length - 1].f.n = name);
         }
       }
     },
@@ -62,10 +65,12 @@ function TextureManager() {
      */
     d: function defineAnimation(name, frames, duration) {
       animations[name] = {
-        n: name,
         f: frames,
         d: duration ? (1 / duration * 1000 | 0) : 0xFFFF
       };
+
+      // DEBUG: Store animation name
+      __PW_DEBUG && (animations[name].n = name);
     },
     /**
      * Get the specified texture group.

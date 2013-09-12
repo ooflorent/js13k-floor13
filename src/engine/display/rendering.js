@@ -55,9 +55,6 @@ function Renderer(width, height) {
   });
 }
 
-__define(Renderer, {
-});
-
 function DisplayObject() {
   var that = this;
 
@@ -81,7 +78,7 @@ __define(DisplayObject, {
     that._y = parent._y + that.y;
 
     // Calculate effective alpha
-    that._o = parent._o + that.o;
+    that._o = parent._o * that.o;
   }
 });
 
@@ -94,10 +91,10 @@ function Graphics(batch, color) {
 
 __extend(Graphics, DisplayObject);
 
-function Sprite(texture, c) {
+function Sprite(textures, c, f) {
   var that = this;
   DisplayObject.call(that);
-  that.tx = texture;
+  that.tx = textures[f || 0];
   that.c = c || {x: 0, y: 0};
 }
 
@@ -105,7 +102,7 @@ __extend(Sprite, DisplayObject);
 
 function AnimatedSprite(textures, animations, defaultAnimation, c) {
   var that = this;
-  Sprite.call(that, 0, c);
+  Sprite.call(that, textures, c, 0);
   that.t = textures;
   that.a = animations;
   that.p(defaultAnimation);

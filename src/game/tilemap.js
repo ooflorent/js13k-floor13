@@ -2,8 +2,7 @@ function Tilemap(dungeon) {
   // Methods variables
   var that = this, texture, sprite, x, y, a, r, i, edges;
   var gibsBlood = ['#930', '#820', '#710'];
-
-  RenderTexture.call(that, dungeon.w * 16, dungeon.h * 16);
+  var renderTexture = new RenderTexture(dungeon.w * 16, dungeon.h * 16);
 
   /**
    * Paint blood splash
@@ -17,7 +16,7 @@ function Tilemap(dungeon) {
 
       a = Math.PI * getRandomInt(-180, 180) / 180;
       r = getRandomInt(0, 8);
-      that.r(sprite, {
+      renderTexture.r(sprite, {
         x: pos.x + Math.cos(a) * r,
         y: pos.y + Math.sin(a) * r,
       });
@@ -48,13 +47,13 @@ function Tilemap(dungeon) {
     y = pos.y * 16;
 
     // Draw the elevator
-    that.r(new Sprite(__textureManager.g('e')[0]), {x: x, y: y});
+    renderTexture.r(new Sprite(__textureManager.g('e')), {x: x, y: y});
 
     // Draw light arrow
     x += isFrontWall(dungeon, pos.x - 1, pos.y) ? -8 : (isFrontWall(dungeon, pos.x + 1, pos.y) ? 18 : (isWall(dungeon, pos.x - 1, pos.y) ? -8 : 18));
-    sprite = new Sprite(__textureManager.g('a')[0], {x: 0, y: 0.5});
+    sprite = new Sprite(__textureManager.g('a'), {x: 0, y: 0.5});
     sprite.sy = up ? -1 : 1;
-    that.r(sprite, {x: x, y: y + 9});
+    renderTexture.r(sprite, {x: x, y: y + 9});
   }
 
   // Render map
@@ -106,10 +105,10 @@ function Tilemap(dungeon) {
         texture = 'f';
       }
 
-      that.r(new Sprite(__textureManager.g(texture)[0]), pos);
+      renderTexture.r(new Sprite(__textureManager.g(texture)), pos);
 
       for (i = edges.length; i--;) {
-        that.r(new Graphics(edges[i], 'rgba(0,0,0,.2)'), pos);
+        renderTexture.r(new Graphics(edges[i], 'rgba(0,0,0,.2)'), pos);
       }
     }
   }
@@ -118,7 +117,10 @@ function Tilemap(dungeon) {
   drawElevator(dungeon.p);
   drawElevator(dungeon.n, 1);
 
+  // Draw cadaver
   that.b({x: dungeon.p.x * 16, y: dungeon.p.y * 16});
+
+  Sprite.call(that, [renderTexture]);
 }
 
-__extend(Tilemap, RenderTexture);
+__extend(Tilemap, Sprite);

@@ -25,9 +25,9 @@ function DamageSystem() {
         }
 
         // Paint blood splash
-        // FIXME: This is very ugly!
-        health.b && __tm.g(TAG_WORLD).g(Display).gfx.tx.b(position);
+        health.b && __tm.g(TAG_WORLD).g(Display).gfx.b(position);
 
+        // Die!
         __em.k(entity);
       }
     }

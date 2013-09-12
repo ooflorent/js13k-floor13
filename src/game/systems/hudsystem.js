@@ -11,15 +11,15 @@ function HUDSystem(layer) {
     var left, bg, right;
 
     // Left border
-    left = box.a(new Sprite(__textureManager.g('bl')[0]));
+    left = box.a(new Sprite(__textureManager.g('bl')));
 
     // Background
-    bg = box.a(new Sprite(__textureManager.g('bb')[0]));
+    bg = box.a(new Sprite(__textureManager.g('bb')));
     bg.x = left.tx.f.w;
     bg.sx = width;
 
     // Right corner
-    right = box.a(new Sprite(__textureManager.g('br')[0]));
+    right = box.a(new Sprite(__textureManager.g('br')));
     right.x = bg.x + width;
 
     return box;
@@ -30,11 +30,11 @@ function HUDSystem(layer) {
     var bg, right;
 
     // Background
-    bg = box.a(new Sprite(__textureManager.g('tb')[0]));
+    bg = box.a(new Sprite(__textureManager.g('tb')));
     bg.sx = width;
 
     // Right corner
-    right = box.a(new Sprite(__textureManager.g('tr')[0]));
+    right = box.a(new Sprite(__textureManager.g('tr')));
     right.x = width;
 
     return box;
@@ -55,8 +55,8 @@ function HUDSystem(layer) {
   healthTextBox.x = bulletTextBox.x = 14;
   healthTextBox.y = bulletTextBox.y = 3;
 
-  var heart = healthBox.a(new Sprite(__textureManager.g('hh')[0]));
-  var bullet = bulletBox.a(new Sprite(__textureManager.g('hb')[0]));
+  var heart = healthBox.a(new Sprite(__textureManager.g('hh')));
+  var bullet = bulletBox.a(new Sprite(__textureManager.g('hb')));
   heart.x = bullet.x = 2;
   heart.y = 5;
   bullet.y = 4;

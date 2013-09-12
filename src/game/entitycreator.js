@@ -36,13 +36,13 @@ var EntityCreator = (function() {
         entity = __em.e(
           new Position(x + 8, y + (pos.d > 2 ? 0 : 16)),
           new Bounds(16, 14),
-          new Display(new Sprite(__textureManager.g('dh')[0], middleCenter))
+          new Display(new Sprite(__textureManager.g('dh'), middleCenter))
         );
       } else {
         entity = __em.e(
           new Position(x + (pos.d ? 16 : 0), y + 3),
           new Bounds(3, 25),
-          new Display(new Sprite(__textureManager.g('dv')[0], middleCenter))
+          new Display(new Sprite(__textureManager.g('dv'), middleCenter))
         );
       }
 
@@ -94,7 +94,7 @@ var EntityCreator = (function() {
           new Position(pos.x + (v ? 0 : (pos.r > 0 ? 5 : -5)), pos.y + (v ? (!pos.r ? 10 : -10) : 0), pos.r),
           new Bounds(3, 3),
           new Motion(120 * Math.sin(r2) | 0, 120 * Math.cos(r2) | 0),
-          new Display(s = new Sprite(__textureManager.g(v ? 'bv' : 'bh')[0], v ? {x: 0, y: 1} : {x: 1, y: 0}))
+          new Display(s = new Sprite(__textureManager.g(v ? 'bv' : 'bh'), v ? {x: 0, y: 1} : {x: 1, y: 0}))
         ));
 
         s.sx = pos.r < 0 ? -1 : 1;
@@ -118,7 +118,7 @@ var EntityCreator = (function() {
 
       __tm.r(TAG_WORLD, entity = __em.e(
         new Position(),
-        new Display(new Sprite(new Tilemap(dungeon))),
+        new Display(new Tilemap(dungeon)),
         dungeon
       ));
 
