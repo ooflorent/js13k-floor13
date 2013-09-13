@@ -75,7 +75,7 @@ var EntityCreator = (function() {
       return entity;
     },
     bodyguard: function(pos) {
-      __gm.a(GROUP_ENEMIES, entity = __em.e(
+      return __em.e(
         WeaponCreator.g(-1),
         new Position(pos.x * 16 + 7, pos.y * 16 + 10),
         new Bounds(6, 13),
@@ -85,9 +85,7 @@ var EntityCreator = (function() {
         new Brain(),
         new Cooldown(),
         new State(STATE_IDLE)
-      ));
-
-      return entity;
+      );
     },
     bullet: function(pos, weapon) {
       var i = weapon.sp;

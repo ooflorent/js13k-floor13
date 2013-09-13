@@ -29,11 +29,9 @@ var TAG_WORLD = 2;
 var TAG_EXIT = 3;
 
 // Groups
-var GROUP_PORTALS = 1;
+var GROUP_BULLETS = 1;
 var GROUP_DOORS = 2;
-var GROUP_ENEMIES = 3;
-var GROUP_BULLETS = 4;
-var GROUP_LOOTS = 5;
+var GROUP_LOOTS = 3;
 
 // Events
 var EVENT_HIT = 'h';
