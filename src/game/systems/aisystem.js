@@ -6,12 +6,26 @@ function AISystem() {
 }
 
 __extend(AISystem, IteratingSystem, {
+  r: function onEntityRemoved(entity) {
+    if (getRandomInt(0, 99) < __PW_DROP_RATE_WEAPON) {
+      // Drop the current weapon
+      EntityCreator.weapon(entity.g(Position), entity.g(Weapon));
+    } else if (getRandomInt(0, 99) < __PW_DROP_RATE_MEDIC) {
+      // Drop the current weapon
+      EntityCreator.medic(entity.g(Position));
+    }
+  },
   ue: function update(entity) {
+    var player = __tm.g(TAG_PLAYER);
+    if (!player) {
+      return;
+    }
+
+    var playerPosition = player.g(Position);
     var brain = entity.g(Brain);
     var cooldown = entity.g(Cooldown);
     var position = entity.g(Position);
     var weapon = entity.g(Weapon);
-    var playerPosition = __tm.g(TAG_PLAYER).g(Position);
 
     var gridPosition = position.g();
     var playerGridPosition = playerPosition.g();

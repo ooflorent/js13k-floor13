@@ -40,14 +40,19 @@ function HUDSystem(layer) {
     return box;
   }
 
-  var weaponBox = layer.a(createBigBox(14));
-  var healthBox = layer.a(createBigBox(6));
-  var bulletBox = layer.a(createBigBox(6));
+  var container = layer.a(new DisplayObjectContainer());
 
-  weaponBox.x = 1;
-  healthBox.x = 27;
-  bulletBox.x = 59;
-  weaponBox.y = healthBox.y = bulletBox.y = 1;
+  container.x = 131;
+  container.y = 160;
+
+  var weaponBox = container.a(createBigBox(14));
+  var healthBox = container.a(createBigBox(6));
+  var bulletBox = container.a(createBigBox(6));
+
+  weaponBox.x = 0;
+  bulletBox.x = 25;
+  healthBox.x = 79;
+  weaponBox.y = healthBox.y = bulletBox.y = 0;
 
   var healthTextBox = healthBox.a(createTextBox(9));
   var bulletTextBox = bulletBox.a(createTextBox(32));
@@ -79,6 +84,11 @@ function HUDSystem(layer) {
   __mixin(this, {
     u: function update() {
       var player = __tm.g(TAG_PLAYER);
+      if (!player) {
+        healthText.t(0);
+        return;
+      }
+
       var health = player.g(Health);
       var weapon = player.g(Weapon);
 

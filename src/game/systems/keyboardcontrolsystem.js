@@ -8,9 +8,12 @@ function KeyboardControlSystem() {
 
 __extend(KeyboardControlSystem, System, {
   u: function update() {
-    var x = y = 0;
-
     var player = __tm.g(TAG_PLAYER);
+    if (!player) {
+      return;
+    }
+
+    var x = y = 0;
     var position = player.g(Position);
     var motion = player.g(Motion);
     var state = player.g(State);
@@ -37,6 +40,25 @@ __extend(KeyboardControlSystem, System, {
           // Reload weapon
           weapon.r();
           cooldown.s('reload', weapon.rt);
+        }
+      }
+
+      if (Input.j(86)) { // V
+        var loots = __gm.g(GROUP_LOOTS), loot, weap, health;
+        for (var i = loots.length; i--;) {
+          loot = loots[i];
+          if (loot.g(Bounds).o(player.g(Bounds))) {
+            if (weap = loot.g(Weapon)) {
+              player.r(Weapon);
+              player.a(loot.g(Weapon));
+              loot.r(Weapon);
+              loot.a(weapon);
+            } else {
+              __em.k(loot);
+              health = player.g(Health);
+              health.h = Math.min(health.h + __PW_MEDIC, __PW_PLAYER_LIFE);
+            }
+          }
         }
       }
 

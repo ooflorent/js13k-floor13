@@ -2,7 +2,7 @@
  * Manage bullets collisions.
  */
 function BulletSystem() {
-  IteratingSystem.call(this, Bounds);
+  IteratingSystem.call(this, Bounds, Health);
 }
 
 __extend(BulletSystem, IteratingSystem, {
@@ -30,7 +30,7 @@ __extend(BulletSystem, IteratingSystem, {
     var bullet;
     for (i = bullets.length; i--;) {
       bullet = bullets[i];
-      if (!~bullets.indexOf(entity) && bullet.g(Bounds).o(bounds)) {
+      if (bullet.g(Bounds).o(bounds)) {
         __evt.e(EVENT_HIT, entity, bullet);
         __em.k(bullet);
       }
