@@ -11,23 +11,78 @@
 <!-- @endif -->
 </head>
 <body>
+
+
   <div id="p" class="t">
+  
+    <!-- Game screen -->
     <!-- Game screen -->
     <canvas id="g"></canvas>
+    
+    
     <!-- Title screen -->
     <div id="t">
-      <div id="tx">
-        <kbd>X</kbd>
-      </div>
-      <p id="ta">ATTACK</p>
-      <div id="tk">
-        <kbd>↑</kbd>
-        <kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd>
-      </div>
-      <p id="tm">MOVE</p>
-      <p id="tp">PRESS ANY KEY TO CONTINUE</p>
+    	<div id="ts">
+	    	<p id="t1">
+		    	<i id="a">
+		    		<i id="a1"></i>
+		    		<i id="a2"></i>
+		    		<i id="a3"></i>
+		    		<i id="a4"></i>
+		    		<i id="a5"></i>
+		    		<i id="a6"></i>
+		    		<i id="a7"></i>
+		    		<i id="a8"></i>
+		    		<i id="a9"></i>
+		    		<i id="a10"></i>
+		    		<i id="a11"></i>
+		    		<i id="a12"></i>
+		    		<i id="a13"></i>
+		    		<i id="a14"></i>
+		    	</i>
+	    	</p>
+	    	<p id="t2">
+		    	<i id="b">
+		    		<i id="b1"></i>
+		    		<i id="b2">x</i>
+		    	</i>
+	    	</p>
+	    	<p id="t3">
+		    	<i id="c">
+		    		<i id="c1"></i>
+		    		<i id="c2">c</i>
+		    	</i>
+	    	</p>
+	    	<p id="t4">
+		    	<i id="d">
+		    		<i id="d1"></i>
+		    		<i id="d2">v</i>
+		    	</i>
+	    	</p>
+	    	<p id="t5"></p>
+	    	<p id="t6"></p>
+	    	<p id="t7"></p>
+	    	
+	    	<p id="t8">Move</p>
+	    	<p id="t9">Fire</p>
+	    	<p id="t10">Reload</p>
+	    	<p id="t11">Pick</p>
+	    	
+	    	<p id="t12">
+		    	Y<b>o</b>u j<b>u</b>st ki<b>ll</b>ed Mr. Johns<b>on</b>.<br />
+				Now i<b>t</b>'s time <b>t</b>o esc<b>ape</b>.<br />
+				Tr<b>y</b> to re<b>ac</b>h t<b>h</b>e gr<b>oun</b>d fl<b>oo</b>r.<br />
+				Th<b>at'</b>s 13 s<b>to</b>ries...
+	    	</p>
+	      	<p id="t13">PRESS ANY KEY TO CONTINUE</p>
+	      	<p id="t14">Fl<b>oo</b>r Thirt<b>ee</b>n</p>
+      	</div>
     </div>
+    
+    
   </div>
+  
+  
 <!-- @if NODE_ENV='dev' -->
   <!-- Constants -->
   <script src="../dist/constants.js"></script>
