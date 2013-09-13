@@ -3,7 +3,10 @@ body {
   padding: 20px 0;
   font: 16px Arial;
   color: #aaa;
-  background: #27191a;
+  background: #291b1c;
+  background: -webkit-linear-gradient(top, #1b1213, #291b1c);	
+    background-repeat: no-repeat;
+    background-attachment: fixed;	
   font-family: Consolas, Monaco, monospace;
 }
 
