@@ -9,5 +9,6 @@
   "DROP_RATE_MEDIC": 20,
   "DROP_RATE_WEAPON": 15,
   "LEVELS": 13,
+  "MEDIC": 20,
   "PLAYER_LIFE": 99
 }

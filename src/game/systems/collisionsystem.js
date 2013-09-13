@@ -11,6 +11,9 @@ __extend(CollisionSystem, System, {
 
     // Get player
     var player = __tm.g(TAG_PLAYER);
+    if (!player) {
+      return;
+    }
     var position = player.g(Position);
     var bounds = player.g(Bounds);
     var motion = player.g(Motion);

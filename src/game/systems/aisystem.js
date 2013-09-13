@@ -16,11 +16,16 @@ __extend(AISystem, IteratingSystem, {
     }
   },
   ue: function update(entity) {
+    var player = __tm.g(TAG_PLAYER);
+    if (!player) {
+      return;
+    }
+
+    var playerPosition = player.g(Position);
     var brain = entity.g(Brain);
     var cooldown = entity.g(Cooldown);
     var position = entity.g(Position);
     var weapon = entity.g(Weapon);
-    var playerPosition = __tm.g(TAG_PLAYER).g(Position);
 
     var gridPosition = position.g();
     var playerGridPosition = playerPosition.g();

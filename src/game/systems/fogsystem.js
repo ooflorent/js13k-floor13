@@ -39,8 +39,13 @@ function FogSystem(camera, layer) {
 
 __extend(FogSystem, System, {
   u: function update() {
+    var player = __tm.g(TAG_PLAYER);
+    if (!player) {
+      return;
+    }
+
     var map = __tm.g(TAG_WORLD).g(Dungeon);
-    var position = __tm.g(TAG_PLAYER).g(Position).g();
+    var position = player.g(Position).g();
     var viewport = new Rectangle(-this.c.x, -this.c.y, __PW_GAME_WIDTH, __PW_GAME_HEIGHT);
 
     // Culling

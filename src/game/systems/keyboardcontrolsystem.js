@@ -8,9 +8,12 @@ function KeyboardControlSystem() {
 
 __extend(KeyboardControlSystem, System, {
   u: function update() {
-    var x = y = 0;
-
     var player = __tm.g(TAG_PLAYER);
+    if (!player) {
+      return;
+    }
+
+    var x = y = 0;
     var position = player.g(Position);
     var motion = player.g(Motion);
     var state = player.g(State);

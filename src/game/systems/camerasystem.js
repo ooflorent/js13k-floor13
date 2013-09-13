@@ -10,7 +10,12 @@ function CameraSystem(layer) {
 
 __extend(CameraSystem, System, {
   u: function update() {
-    var position = __tm.g(TAG_PLAYER).g(Position);
+    var player = __tm.g(TAG_PLAYER);
+    if (!player) {
+      return;
+    }
+
+    var position = player.g(Position);
     var camera = this.l;
 
     camera.x = -clamp(position.x - __PW_GAME_WIDTH / 2 | 0, 0, __PW_WORLD_WIDTH * 16 - __PW_GAME_WIDTH);
