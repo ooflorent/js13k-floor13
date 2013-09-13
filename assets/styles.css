@@ -332,5 +332,12 @@ b {
 
 #t16 {
 	top: 195px;	
-	
+}
+#oo {
+	text-align: center;
+	padding: 20px 0;
+	width: 720px;
+	margin: 0 auto;
+	color: #524748;
+	text-shadow: 0 -1px 0 #000;
 }
