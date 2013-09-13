@@ -63,7 +63,7 @@ var EntityCreator = (function() {
     hero: function(pos, health, weapon) {
       __tm.r(TAG_PLAYER, entity = __em.e(
         health || new Health(__PW_PLAYER_LIFE, true, gibsBlood),
-        weapon ||WeaponCreator.g(WEAPON_PISTOL),
+        weapon ||WeaponCreator.g(WEAPON_PISTOL, 2),
         new Position(pos.x * 16 + 7, pos.y * 16 + 26),
         new Bounds(6, 13),
         new Motion(),
@@ -78,7 +78,7 @@ var EntityCreator = (function() {
       return __em.e(
         WeaponCreator.g(-1),
         new Position(pos.x * 16 + 7, pos.y * 16 + 10),
-        new Bounds(6, 13),
+        new Bounds(8, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('b')),
         new Health(5, true, gibsBlood),

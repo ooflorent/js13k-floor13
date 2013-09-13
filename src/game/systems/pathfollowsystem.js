@@ -21,10 +21,11 @@ __extend(PathFollowSystem, IteratingSystem, {
 
     // Move to the next point
     if (path.length) {
+      var speed = getRandomInt(30, 50);
       var pt = path[0];
       var a = Math.atan2((pt.y + 0.5) * 16 - position.y, (pt.x + 0.5) * 16 - position.x);
-      motion.dx = Math.cos(a) * 50;
-      motion.dy = Math.sin(a) * 50;
+      motion.dx = Math.cos(a) * speed;
+      motion.dy = Math.sin(a) * speed;
       state.s = STATE_WALK;
     } else {
       state.s = cooldown.g('atk') ? STATE_ATTACK : STATE_IDLE;

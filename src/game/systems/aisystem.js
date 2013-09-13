@@ -3,6 +3,26 @@
  */
 function AISystem() {
   IteratingSystem.call(this, Position, Brain, Weapon, Cooldown);
+
+  __evt.a(EVENT_HIT, function(entity) {
+    if (this.h(entity)) {
+      var player = __tm.g(TAG_PLAYER);
+      if (!player) {
+        return;
+      }
+
+      if (this.h(entity)) {
+        var brain = entity.g(Brain);
+        if (!brain.a) {
+          // Active the entity brain
+          brain.a = true;
+
+          // Add reaction cooldown
+          entity.g(Cooldown).s('react', 0.8);
+        }
+      }
+    }
+  }, this);
 }
 
 __extend(AISystem, IteratingSystem, {
@@ -60,7 +80,7 @@ __extend(AISystem, IteratingSystem, {
           brain.p = AStar.s(gridPosition, playerGridPosition);
 
           // Delay next decision
-          cooldown.s('react', 0.6);
+          cooldown.s('react', 1.0);
         }
       }
     } else {
@@ -69,7 +89,7 @@ __extend(AISystem, IteratingSystem, {
         brain.a = true;
 
         // Add reaction cooldown
-        cooldown.s('react', 0.2);
+        cooldown.s('react', 0.8);
       }
     }
   }
