@@ -18,6 +18,10 @@ __extend(CollisionSystem, System, {
     var bounds = player.g(Bounds);
     var motion = player.g(Motion);
 
+    if (!bounds) {
+      return;
+    }
+
     // Get world
     var world = __tm.g(TAG_WORLD);
     var map = world.g(Dungeon);

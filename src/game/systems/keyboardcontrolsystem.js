@@ -14,10 +14,15 @@ __extend(KeyboardControlSystem, System, {
 
     var x = y = 0;
     var position = player.g(Position);
+    var bounds = player.g(Bounds);
     var motion = player.g(Motion);
     var state = player.g(State);
     var cooldown = player.g(Cooldown);
     var weapon = player.g(Weapon);
+
+    if (!bounds) {
+      return;
+    }
 
     // Reset movement
     motion.dx = motion.dy = 0;
@@ -43,8 +48,6 @@ __extend(KeyboardControlSystem, System, {
       }
 
       if (Input.j(86)) { // V
-        var bounds = player.g(Bounds);
-
         // Pick loots
         var loots = __gm.g(GROUP_LOOTS), loot, weap, health;
         for (var i = loots.length; i--;) {
@@ -66,7 +69,10 @@ __extend(KeyboardControlSystem, System, {
         // Go to the next level
         var exit = __tm.g(TAG_EXIT);
         if (exit.g(Bounds).o(bounds)) {
-          console.log('next level');
+          // Remove player bounds
+          player.r(Bounds);
+          nextLevel();
+          return;
         }
       }
 

@@ -84,6 +84,8 @@ function EntityManager(eventManager) {
      */
     c: function clear() {
       entitiesList = [];
+      entitiesToComponents = [];
+      componentsToEntities = {};
       currentId = 0;
     }
   });

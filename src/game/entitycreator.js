@@ -60,14 +60,14 @@ var EntityCreator = (function() {
       __gm.a(GROUP_DOORS, entity);
       return entity;
     },
-    hero: function(pos) {
+    hero: function(pos, health, weapon) {
       __tm.r(TAG_PLAYER, entity = __em.e(
-        WeaponCreator.g(WEAPON_PISTOL),
+        health || new Health(__PW_PLAYER_LIFE, true, gibsBlood),
+        weapon ||WeaponCreator.g(WEAPON_PISTOL),
         new Position(pos.x * 16 + 7, pos.y * 16 + 26),
         new Bounds(6, 13),
         new Motion(),
         new Display(getFourWaysAnimatedSprite('h')),
-        new Health(__PW_PLAYER_LIFE, true, gibsBlood),
         new Cooldown(),
         new State(STATE_IDLE)
       ));

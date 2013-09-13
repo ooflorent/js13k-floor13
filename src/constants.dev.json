@@ -3,6 +3,6 @@
   "ASSETS_DIR": "../assets/",
   "DROP_RATE_MEDIC": 50,
   "DROP_RATE_WEAPON": 50,
-  "LEVELS": 3,
-  "PLAYER_LIFE": 999
+  "LEVELS": 2,
+  "PLAYER_LIFE": 99
 }

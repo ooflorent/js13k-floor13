@@ -8,11 +8,14 @@ var __gm = new GroupManager(__evt);
 var __sm = new SystemManager(__evt);
 var __tm = new TagManager(__evt);
 
+// Current level
+var __level;
+
 // Tick dispatcher
 var __ticker = new Ticker();
 
 // Rendering engine
-var __stage = new Stage();
+var __stage;
 var __buffer = new Buffer($('g'), __PW_GAME_WIDTH, __PW_GAME_HEIGHT, __PW_GAME_SCALE);
 var __textureManager = new TextureManager();
 
@@ -127,20 +130,25 @@ function main() {
 
   // Load the main spritesheet
   __textureManager.l(__PW_ASSETS_DIR + 't.png', function onLoad() {
-    __ticker.r(function titleLoop() {
-      if (Input.j(32)) { // SPACE
-        // Initialize the game
-        initializeGame();
-
-        // Start the game loop
-        __ticker.s();
-        __ticker.r(gameLoop);
-
-        // Display game screen
-        $('p').className = 'g';
-      }
-    });
+    __ticker.r(waitLoop);
   });
+}
+
+/**
+ * Wait until the game is started.
+ */
+function waitLoop() {
+  if (Input.j(32)) { // SPACE
+    // Initialize the game
+    loadLevel(__PW_LEVELS);
+
+    // Start the game loop
+    __ticker.s();
+    __ticker.r(gameLoop);
+
+    // Display game screen
+    $('p').className = 'g';
+  }
 }
 
 /**
@@ -156,7 +164,32 @@ function gameLoop(elapsed) {
 // Game initialization
 // -------------------
 
-function initializeGame() {
+function loadLevel(number) {
+  var health, weapon;
+
+  // Set current level
+  __level = number;
+
+  // Clear previous level
+  if (__stage) {
+    // Save player state
+    var player = __tm.g(TAG_PLAYER);
+    if (player) {
+      health = player.g(Health);
+      weapon = player.g(Weapon);
+    }
+
+    // Reset managers
+    __evt.c();
+    __em.c();
+    __gm.c();
+    __sm.c();
+    __tm.c();
+  }
+
+  // Create a new stage
+  __stage = new Stage();
+
   // Create game layers
   var cameraLayer = __stage.a(new DisplayObjectContainer());
   var hudLayer    = __stage.a(new DisplayObjectContainer());
@@ -189,10 +222,10 @@ function initializeGame() {
   AStar.init(dungeon.m, isWallTile);
 
   // Create player
-  var hero = EntityCreator.hero(dungeon.p);
+  EntityCreator.hero(dungeon.p, health, weapon);
 
   // Create exit
-  var exit = EntityCreator.exit(dungeon.n);
+  EntityCreator.exit(dungeon.n);
 
   // Create doors
   for (i = dungeon.d.length; i--;) {
@@ -203,4 +236,34 @@ function initializeGame() {
   for (i = dungeon.e.length; i--;) {
     EntityCreator.bodyguard(dungeon.e[i]);
   }
+}
+
+function nextLevel() {
+  // Stop the game
+  __ticker.s();
+
+  // Delay next screen
+  setTimeout(function() {
+    if (--__level) {
+      // Next level
+      loadLevel(__level);
+      __ticker.r(gameLoop);
+    } else {
+      // Display end screen
+      $('p').className = 'w';
+      __ticker.r(waitLoop);
+    }
+  }, 1500);
+}
+
+function gameOver() {
+  // Stop the game
+  __ticker.s();
+
+  // Delay game over screen
+  setTimeout(function() {
+    // Display game over screen
+    __ticker.r(waitLoop);
+    $('p').className = 'f';
+  }, 1500);
 }
