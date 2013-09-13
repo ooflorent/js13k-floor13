@@ -14,7 +14,6 @@ function Renderer(width, height) {
   __mixin(that, {
     r: function render(stage) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.fillRect(0, 0, width, height);
 
       stage._t();
       that.o(stage);
