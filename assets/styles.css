@@ -3,17 +3,13 @@ body {
   padding: 20px 0;
   font: 16px Arial;
   color: #aaa;
-  background: #291b1c;
-	
-	
-	background-color: #1c1213;
-background-image: linear-gradient(335deg, #211516 23px, transparent 23px),
-linear-gradient(155deg, #281d1e 23px, transparent 23px),
-linear-gradient(335deg, #281d1e 23px, transparent 23px),
-linear-gradient(155deg, #281d1e 23px, transparent 23px);
-background-size: 58px 58px;	
-background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
-	
+  background-color: #1c1213;
+  background-image: linear-gradient(335deg, #211516 23px, transparent 23px),
+	linear-gradient(155deg, #281d1e 23px, transparent 23px),
+	linear-gradient(335deg, #281d1e 23px, transparent 23px),
+	linear-gradient(155deg, #281d1e 23px, transparent 23px);
+  background-size: 58px 58px;	
+  background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
   font-family: Consolas, Monaco, monospace;
 }
 
@@ -35,27 +31,26 @@ p {
 }
 
 #p > * {
-  display: none;
+  opacity: 0;
   position: absolute;
-}
-
-#t {
 }
 
 #ts {
 	position: relative;
     -moz-transform: scale(1.1, 1.1) rotate(2deg);
-    -webkit-transform: scale(1.1, 1.1) rotate(2deg);	
+    -webkit-transform: scale(1.1, 1.1) rotate(2deg);
 }
 
-#p.g #g, #p.t #t {
-  display: block;
+#p.g #g, #p.t #t, #p.f #f, #p.w #w {
+	display: block;
+	-webkit-transition: opacity 1.0s ease-in;
+	-moz-transition: opacity 1.0s ease-in;
+	opacity: 1;
 }
 
 #a, #b, #c, #d {
 	position: relative;
 }
-
 
 /* Arrow */
 #a{
@@ -177,7 +172,7 @@ p {
 	display: block;
 }
 
-#b1, #c1, #b2, #c2, #d1, #d2, #t12, #t13, #t14 {
+#b1, #c1, #b2, #c2, #d1, #d2, #t12, #t13, #t14, #t15, #t16 {
 	position: absolute;	
 }
 
@@ -284,13 +279,13 @@ p {
 	left: 500px;	
 }
 
-#t12, #t13, #t14 {
+#t12, #t13, #t14, #t15, #t16 {
 	text-align: center;
 	width: 720px;
 	top: 100px;
 }
 
-#t12, #t8, #t9, #t10, #t11, #t13 {
+#t12, #t8, #t9, #t10, #t11, #t13, #t16 {
 	color: #aaa;
 	text-shadow:
     -1px -1px 1px #4c3a3c,
@@ -301,7 +296,7 @@ p {
     4px 4px 2px rgba(5,13,20,0.5);	
 }
 
-#t12 b, #t14 b {
+b {
 	color: #ccc;
 	font-weight: normal;
 }
@@ -319,7 +314,7 @@ p {
 	-webkit-animation-iteration-count:infinite; 
 }
 
-#t14 {
+#t14, #t15 {
 	top: 40px;
 	font-size: 32px;
 	text-shadow: -2px -2px 1px #aaa,
@@ -329,4 +324,13 @@ p {
     2px 2px 0 #4c3a3c,
     3px 3px 0 #4c3a3c,
     14px 14px 12px rgba(5,13,20,0.5);
+}
+
+#t15 {
+	top: 150px;
+}
+
+#t16 {
+	top: 195px;	
+	
 }
