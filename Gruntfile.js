@@ -107,7 +107,7 @@ module.exports = function(grunt) {
           footer: "\nmain();\n} (window, document, Object, Math)\n",
         },
         files: {
-          'dist/pixelwars.js': [files.engine, files.game],
+          'dist/floor13.js': [files.engine, files.game],
         },
       },
     },
@@ -130,7 +130,7 @@ module.exports = function(grunt) {
           },
         },
         files: {
-          'dist/p.js': ['dist/pixelwars.js'],
+          'dist/p.js': ['dist/floor13.js'],
         },
       },
     },
@@ -173,7 +173,7 @@ module.exports = function(grunt) {
     compress: {
       dist: {
         options: {
-          archive: 'dist/pixelwars.zip',
+          archive: 'dist/floor13.zip',
           mode: 'zip',
           level: 9,
         },
