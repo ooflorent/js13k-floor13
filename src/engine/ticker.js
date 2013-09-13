@@ -12,13 +12,14 @@ function Ticker() {
      * @param  {Function} callback
      */
     r: function run(callback) {
-      if (!requestID) {
-        time = +new Date();
-        requestID = requestAnimationFrame(update = function() {
-          callback(-(time - (time = +new Date())) / 1000);
-          requestID = requestAnimationFrame(update);
-        });
-      }
+      // Stop previous tick
+      requestID && this.s();
+
+      time = +new Date();
+      requestID = requestAnimationFrame(update = function() {
+        callback(-(time - (time = +new Date())) / 1000);
+        requestID = requestAnimationFrame(update);
+      });
     },
     /**
      * Stop the game loop.
