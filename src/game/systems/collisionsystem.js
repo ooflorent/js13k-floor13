@@ -7,13 +7,13 @@ function CollisionSystem() {
 
 __extend(CollisionSystem, System, {
   u: function update(elapsed) {
-    var fixPosition, i;
-
     // Get player
     var player = __tm.g(TAG_PLAYER);
     if (!player) {
       return;
     }
+
+    var fixPosition, i;
     var position = player.g(Position);
     var bounds = player.g(Bounds);
     var motion = player.g(Motion);

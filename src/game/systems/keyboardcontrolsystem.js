@@ -3,7 +3,6 @@
  */
 function KeyboardControlSystem() {
   System.call(this);
-  Input.c([37, 38, 39, 40]);
 }
 
 __extend(KeyboardControlSystem, System, {
@@ -44,10 +43,13 @@ __extend(KeyboardControlSystem, System, {
       }
 
       if (Input.j(86)) { // V
+        var bounds = player.g(Bounds);
+
+        // Pick loots
         var loots = __gm.g(GROUP_LOOTS), loot, weap, health;
         for (var i = loots.length; i--;) {
           loot = loots[i];
-          if (loot.g(Bounds).o(player.g(Bounds))) {
+          if (loot.g(Bounds).o(bounds)) {
             if (weap = loot.g(Weapon)) {
               player.r(Weapon);
               player.a(loot.g(Weapon));
@@ -59,6 +61,12 @@ __extend(KeyboardControlSystem, System, {
               health.h = Math.min(health.h + __PW_MEDIC, __PW_PLAYER_LIFE);
             }
           }
+        }
+
+        // Go to the next level
+        var exit = __tm.g(TAG_EXIT);
+        if (exit.g(Bounds).o(bounds)) {
+          console.log('next level');
         }
       }
 

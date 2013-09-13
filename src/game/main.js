@@ -23,6 +23,7 @@ var __textureManager = new TextureManager();
 // Tags
 var TAG_PLAYER = 1;
 var TAG_WORLD = 2;
+var TAG_EXIT = 3;
 
 // Groups
 var GROUP_PORTALS = 1;
@@ -71,10 +72,10 @@ __textureManager.s('w' + WEAPON_SNIPER, 46, 48, 18, 10); // Sniper
 __textureManager.s('w' + WEAPON_SHOTGUN, 64, 49, 18, 8); // Shotgun
 
 // Effects
-__textureManager.s('bh', 44, 47, 4, 1); // Horizontal bullet
-__textureManager.s('bv', 48, 44, 1, 4); // Vertical bullet
-__textureManager.s('l', 49, 40, 5, 5);  // Weapon loot
-__textureManager.s('m', 91, 37, 5, 6);  // Medipack
+__textureManager.s('bh', 44, 47, 4, 1);      // Horizontal bullet
+__textureManager.s('bv', 48, 44, 1, 4);      // Vertical bullet
+__textureManager.s('l', 91, 43, 5, 5, 1, 2); // Weapon loot
+__textureManager.s('m', 91, 37, 5, 6);       // Medipack
 
 // Digits
 __textureManager.s('9', 55, 30, 6, 7);  // 9
@@ -111,6 +112,7 @@ __textureManager.d('wh', [7, 2, 8, 2], 9); // Walking west or east
 __textureManager.d('as', [9]);             // Attacking south
 __textureManager.d('an', [10]);            // Attacking north
 __textureManager.d('ah', [11]);            // Attacking west or east
+__textureManager.d('l', [0, 1], 8);        // Shining loot
 
 
 // Game runner
@@ -120,10 +122,13 @@ __textureManager.d('ah', [11]);            // Attacking west or east
  * Start the game.
  */
 function main() {
+  // Capture game controls
+  Input.c([32, 37, 38, 39, 40]);
+
   // Load the main spritesheet
   __textureManager.l(__PW_ASSETS_DIR + 't.png', function onLoad() {
     __ticker.r(function titleLoop() {
-      if (Input.a()) {
+      if (Input.j(32)) { // SPACE
         // Initialize the game
         initializeGame();
 
@@ -172,7 +177,7 @@ function initializeGame() {
   __PW_DEBUG && __sm.a(new BoundsRenderingSystem(debugLayer));
   __sm.a(new SpriteDirectionSystem());
   __sm.a(new RenderingSystem(gameLayer));
-  __PW_DEBUG && __sm.a(new FogSystem(cameraLayer, fogLayer));
+  !__PW_DEBUG && __sm.a(new FogSystem(cameraLayer, fogLayer));
   __sm.a(new HUDSystem(hudLayer));
   __sm.a(new ExpirationSystem());
 
@@ -185,6 +190,9 @@ function initializeGame() {
 
   // Create player
   var hero = EntityCreator.hero(dungeon.p);
+
+  // Create exit
+  var exit = EntityCreator.exit(dungeon.n);
 
   // Create doors
   for (i = dungeon.d.length; i--;) {

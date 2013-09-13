@@ -29,6 +29,14 @@ var EntityCreator = (function() {
   }
 
   return {
+    exit: function(pos) {
+      __tm.r(TAG_EXIT, entity = __em.e(
+        new Position(pos.x * 16 + 6, pos.y * 16 + 10),
+        new Bounds(11, 16)
+      ));
+
+      return entity;
+    },
     door: function(pos) {
       var x = pos.x * 16;
       var y = pos.y * 16;
@@ -113,7 +121,7 @@ var EntityCreator = (function() {
     weapon: function(pos, weapon) {
       __gm.a(GROUP_LOOTS, entity = __em.e(
         weapon, pos, // Reuse components
-        new Display(new Sprite(__textureManager.g('l'), middleCenter)),
+        new Display(new AnimatedSprite(__textureManager.g('l'), {l: __textureManager.a('l')}, 'l', middleCenter)),
         new Bounds(3, 3)
       ));
 
