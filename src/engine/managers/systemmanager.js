@@ -22,7 +22,7 @@ function SystemManager(eventManager) {
 
   eventManager.a(EVENT_COMPONENT_REMOVED, function onComponentRemoved(entity, type, component) {
     for (var i = systemsCount; i--;) {
-      if ((system = systems[i]) && system.h(entity) && system.t.indexOf(component.constructor) >= 0) {
+      if ((system = systems[i]) && system.h(entity) && ~system.t.indexOf(component.constructor)) {
         delete system.e[entity.i];
         system.r(entity);
       }

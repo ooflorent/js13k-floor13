@@ -30,9 +30,13 @@ function EventManager() {
      * @param  {Function} func
      */
     r: function remove(type, func) {
-      var list = handlers[type] || [];
-      for (var i = list.length; i--;) {
-        func == list[i].f && list.splice(i, 1);
+      if (func) {
+        var list = handlers[type] || [];
+        for (var i = list.length; i--;) {
+          func == list[i].f && list.splice(i, 1);
+        }
+      } else {
+        delete handlers[type];
       }
     },
     /**

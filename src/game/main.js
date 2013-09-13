@@ -177,8 +177,10 @@ function loadLevel(number) {
       weapon = player.g(Weapon);
     }
 
+    // Unregister game events
+    __evt.r(EVENT_HIT);
+
     // Reset managers
-    __evt.c();
     __em.c();
     __gm.c();
     __sm.c();
